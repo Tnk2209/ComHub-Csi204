@@ -1,0 +1,18 @@
+# OS files
+Thumbs.db
+db
+.DS_Store
+
+# IDE and configuration folders
+.agents/
+.claude/
+.vscode/
+.idea/
+
+# Local build / Server files
+node_modules/
+dist/
+build/
+.env
+.env.local
+*.log
