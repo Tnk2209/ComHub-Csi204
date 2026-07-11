@@ -9,7 +9,7 @@
 โครงการ **ComHub** พัฒนาขึ้นเพื่อแก้ไขปัญหาของผู้ใช้ทั่วไปที่ไม่ทราบแนวทางการจัดสเปคคอมพิวเตอร์ให้ชิ้นส่วนต่างๆ เข้ากันได้ (Hardware Compatibility) และความยุ่งยากในการเปรียบเทียบข้อมูลจำเพาะเชิงเทคนิคและราคาอุปกรณ์คอมพิวเตอร์ โครงงานนี้สร้างระบบจัดสเปคคอมพิวเตอร์อัจฉริยะ (Advanced PC Builder) พร้อมกับฟังก์ชันอีคอมเมิร์ซครบวงจร และระบบการจัดการหลังบ้านสำหรับพนักงาน ผู้จัดการ และผู้ดูแลระบบตามกระบวนการพัฒนาซอฟต์แวร์แบบระบบ (SDLC)
 
 ### 🔗 เอกสารโครงการ (Project Documentation Links)
-*   **Repository URL:** `https://github.com/Tnk2209/ComHub-Csi204`
+*   **Repository URL:** `https://github.com/Tnk2209/ComHub-Csi204` 
 *   **GitHub Pages (Live Document):** `https://tnk2209.github.io/ComHub-Csi204/`
 *   **เอกสารข้อกำหนดระบบเชิงลึก (SRS Markdown):** [SRS.md](./SRS.md)
 

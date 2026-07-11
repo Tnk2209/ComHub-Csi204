@@ -31,14 +31,14 @@
             --text-main: #0f172a;
             --text-muted: #475569;
             --text-sidebar: #cbd5e1;
-            --text-sidebar-active: #10b981;
-            --primary: #10b981;
-            --primary-hover: #059669;
+            --text-sidebar-active: #38bdf8;
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
             --border-color: #e2e8f0;
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
             --code-bg: #f1f5f9;
             --code-text: #0f172a;
-            --accent-glow: rgba(16, 185, 129, 0.1);
+            --accent-glow: rgba(2, 132, 199, 0.15);
         }
 
         .dark-mode-vars {
@@ -49,14 +49,14 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --text-sidebar: #94a3b8;
-            --text-sidebar-active: #34d399;
-            --primary: #34d399;
-            --primary-hover: #059669;
+            --text-sidebar-active: #38bdf8;
+            --primary: #38bdf8;
+            --primary-hover: #0ea5e9;
             --border-color: #334155;
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
             --code-bg: #0b1329;
             --code-text: #e2e8f0;
-            --accent-glow: rgba(52, 211, 153, 0.1);
+            --accent-glow: rgba(56, 189, 248, 0.15);
         }
 
         * {
@@ -678,15 +678,15 @@
             <div class="tab-content" id="builderTabContent">
                 <div class="markdown-body">
                     <h1>แบบจำลองระบบวิเคราะห์สเปค (Interactive Mockup Showcase)</h1>
-                    <p>ส่วนนี้พัฒนาขึ้นแบบจำลองชั่วคราวเพื่อแสดงพฤติกรรมการทำงานของฟังก์ชันหลักในเอกสารวิเคราะห์ระบบ ได้แก่ <strong>[Compatibility Checker]</strong> และ <strong>[Wattage Calculator]</strong> บนเว็บเบราว์เซอร์</p>
-                    
+                    <p>ส่วนนี้พัฒนาขึ้นเป็นแบบจำลองเพื่อสาธิตฟังก์ชันหลักตามเอกสารข้อกำหนดความต้องการระบบ ได้แก่ <strong>[Compatibility Checker]</strong> (ตรวจเช็คขนาดอุปกรณ์และ Socket เมนบอร์ด) และ <strong>[Wattage Calculator]</strong> (คำนวณกำลังวัตต์ระบบและเลือกพาวเวอร์ซัพพลาย)</p>
+
                     <div class="info-alert">
                         <i class="fa-solid fa-circle-info"></i>
                         <div>
-                            <strong>คำอธิบายจำลองระบบวิศวกรรม:</strong> ระบบจะใช้เงื่อนไขจาก Database / JSON ในการเทียบเช็คความสอดคล้องกันของ CPU Socket กับ Mainboard Socket และคำนวณกำลังไฟวัตต์รวม (TDP) เพื่อกรองการเลือกพาวเวอร์ซัพพลาย (PSU) ที่เพียงพอโดยอัตโนมัติ
+                            <strong>หลักการทำงานของระบบวิเคราะห์สเปค (ComHub Spec Logic):</strong> ระบบจะทำการตรวจสอบ socket ของ CPU/Mainboard ตรวจสอบขนาดของบอร์ดและการ์ดจอกับเคส และคำนวณอัตรากินไฟรวมของอุปกรณ์ทั้งหมดเพื่อแจ้งเตือนความปลอดภัยของสเปค
                         </div>
                     </div>
-                    
+
                     <div class="mockup-grid">
                         <!-- Builder Selection Form -->
                         <div class="mockup-card">
@@ -706,23 +706,49 @@
                             
                             <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">2. เมนบอร์ด (Mainboard)</label>
                             <select class="form-select" id="mbSelect">
-                                <option value="" data-socket="" data-tdp="0">-- เลือก เมนบอร์ด --</option>
-                                <option value="mb-b760" data-socket="LGA1700" data-tdp="40">Gigabyte B760M DS3H (LGA1700, 40W)</option>
-                                <option value="mb-z790" data-socket="LGA1700" data-tdp="55">ASUS ROG Strix Z790 (LGA1700, 55W)</option>
-                                <option value="mb-b650" data-socket="AM5" data-tdp="35">MSI MAG B650 Tomahawk (AM5, 35W)</option>
-                                <option value="mb-x670" data-socket="AM5" data-tdp="50">ASRock X670E Steel Legend (AM5, 50W)</option>
+                                <option value="" data-socket="" data-tdp="0" data-size="">-- เลือก เมนบอร์ด --</option>
+                                <option value="mb-b760" data-socket="LGA1700" data-tdp="40" data-size="M-ATX">Gigabyte B760M DS3H (LGA1700, M-ATX, 40W)</option>
+                                <option value="mb-z790" data-socket="LGA1700" data-tdp="55" data-size="ATX">ASUS ROG Strix Z790 (LGA1700, ATX, 55W)</option>
+                                <option value="mb-b650" data-socket="AM5" data-tdp="35" data-size="ATX">MSI MAG B650 Tomahawk (AM5, ATX, 35W)</option>
+                                <option value="mb-x670" data-socket="AM5" data-tdp="50" data-size="ATX">ASRock X670E Steel Legend (AM5, ATX, 50W)</option>
+                                <option value="mb-b760i" data-socket="LGA1700" data-tdp="30" data-size="ITX">ASUS ROG Strix B760-I (LGA1700, ITX, 30W)</option>
+                                <option value="mb-b650i" data-socket="AM5" data-tdp="30" data-size="ITX">MSI MPG B650I Edge (AM5, ITX, 30W)</option>
                             </select>
 
                             <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">3. การ์ดจอ (GPU)</label>
                             <select class="form-select" id="gpuSelect">
-                                <option value="" data-tdp="0">-- เลือก GPU --</option>
-                                <option value="gpu-rtx3060" data-tdp="170">NVIDIA RTX 3060 12GB (170W)</option>
-                                <option value="gpu-rtx4070" data-tdp="200">NVIDIA RTX 4070 Ti 12GB (200W)</option>
-                                <option value="gpu-rtx4090" data-tdp="450">NVIDIA RTX 4090 24GB (450W)</option>
-                                <option value="gpu-rx7600" data-tdp="165">AMD Radeon RX 7600 (165W)</option>
+                                <option value="" data-tdp="0" data-length="0">-- เลือก GPU --</option>
+                                <option value="gpu-rtx3060" data-tdp="170" data-length="240">NVIDIA RTX 3060 12GB (170W, L=240mm)</option>
+                                <option value="gpu-rtx4070" data-tdp="200" data-length="300">NVIDIA RTX 4070 Ti 12GB (200W, L=300mm)</option>
+                                <option value="gpu-rtx4090" data-tdp="450" data-length="340">NVIDIA RTX 4090 24GB (450W, L=340mm)</option>
+                                <option value="gpu-rx7600" data-tdp="165" data-length="240">AMD Radeon RX 7600 (165W, L=240mm)</option>
                             </select>
 
-                            <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">4. พาวเวอร์ซัพพลาย (Power Supply Unit - PSU)</label>
+                            <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">4. หน่วยความจำ (RAM)</label>
+                            <select class="form-select" id="ramSelect">
+                                <option value="" data-tdp="0">-- เลือก RAM --</option>
+                                <option value="ram-ddr4-16" data-tdp="10">DDR4 16GB (8GBx2) 3200MHz (10W)</option>
+                                <option value="ram-ddr5-16" data-tdp="12">DDR5 16GB (8GBx2) 5600MHz (12W)</option>
+                                <option value="ram-ddr5-32" data-tdp="18">DDR5 32GB (16GBx2) 6000MHz (18W)</option>
+                            </select>
+
+                            <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">5. ที่เก็บข้อมูล (SSD Storage)</label>
+                            <select class="form-select" id="ssdSelect">
+                                <option value="" data-tdp="0">-- เลือก SSD --</option>
+                                <option value="ssd-500" data-tdp="6">M.2 NVMe SSD 500GB Gen4 (6W)</option>
+                                <option value="ssd-1000" data-tdp="8">M.2 NVMe SSD 1TB Gen4 (8W)</option>
+                                <option value="ssd-2000" data-tdp="10">M.2 NVMe SSD 2TB Gen4 (10W)</option>
+                            </select>
+
+                            <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">6. เคสคอมพิวเตอร์ (Case)</label>
+                            <select class="form-select" id="caseSelect">
+                                <option value="" data-size="" data-gpu-max="0">-- เลือก เคส --</option>
+                                <option value="case-itx" data-size="ITX" data-gpu-max="280">Thermaltake Core V1 (Mini-ITX, Max GPU 280mm)</option>
+                                <option value="case-mid" data-size="ATX" data-gpu-max="360">Corsair 4000D (ATX/M-ATX/ITX, Max GPU 360mm)</option>
+                                <option value="case-full" data-size="ATX" data-gpu-max="450">ASUS ROG Strix Helios (ATX/M-ATX/ITX, Max GPU 450mm)</option>
+                            </select>
+
+                            <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">7. พาวเวอร์ซัพพลาย (Power Supply Unit - PSU)</label>
                             <select class="form-select" id="psuSelect">
                                 <option value="" data-watt="0">-- เลือก PSU --</option>
                                 <option value="psu-550" data-watt="550">Corsair CV550 (550W)</option>
@@ -740,8 +766,16 @@
                             <!-- Compatibility status -->
                             <div>
                                 <div style="font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">ความเข้ากันได้ของซ็อกเก็ต (Socket Match):</div>
-                                <div id="socketMatchResult" class="status-badge badge-success" style="width:100%; padding:0.6rem; justify-content:center;">
+                                <div id="socketMatchResult" class="status-badge badge-warn" style="width:100%; padding:0.6rem; justify-content:center;">
                                     กรุณาเลือก CPU และ เมนบอร์ด
+                                </div>
+                            </div>
+
+                            <!-- Size compatibility check -->
+                            <div>
+                                <div style="font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">ความเข้ากันได้ของขนาดเคสและชิ้นส่วน (Size Compatibility):</div>
+                                <div id="sizeCompatResult" class="status-badge badge-warn" style="width:100%; padding:0.6rem; justify-content:center;">
+                                    กรุณาเลือกเคส เมนบอร์ด และการ์ดจอ
                                 </div>
                             </div>
                             
@@ -759,8 +793,8 @@
                             <!-- PSU adequacy check -->
                             <div>
                                 <div style="font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">สถานะการจ่ายกำลังไฟ (Power Capacity):</div>
-                                <div id="powerCapacityResult" class="status-badge badge-success" style="width:100%; padding:0.6rem; justify-content:center;">
-                                    กรุณาเลือกการ์ดจอและแหล่งจ่ายไฟ
+                                <div id="powerCapacityResult" class="status-badge badge-warn" style="width:100%; padding:0.6rem; justify-content:center;">
+                                    กรุณาเลือกแหล่งจ่ายไฟและอุปกรณ์หลัก
                                 </div>
                             </div>
                         </div>
@@ -984,9 +1018,13 @@
         const cpuSelect = document.getElementById('cpuSelect');
         const mbSelect = document.getElementById('mbSelect');
         const gpuSelect = document.getElementById('gpuSelect');
+        const ramSelect = document.getElementById('ramSelect');
+        const ssdSelect = document.getElementById('ssdSelect');
+        const caseSelect = document.getElementById('caseSelect');
         const psuSelect = document.getElementById('psuSelect');
         
         const socketMatchResult = document.getElementById('socketMatchResult');
+        const sizeCompatResult = document.getElementById('sizeCompatResult');
         const tdpSumValue = document.getElementById('tdpSumValue');
         const tdpFill = document.getElementById('tdpFill');
         const powerCapacityResult = document.getElementById('powerCapacityResult');
@@ -996,32 +1034,68 @@
             const selectedCpu = cpuSelect.options[cpuSelect.selectedIndex];
             const selectedMb = mbSelect.options[mbSelect.selectedIndex];
             const selectedGpu = gpuSelect.options[gpuSelect.selectedIndex];
+            const selectedRam = ramSelect.options[ramSelect.selectedIndex];
+            const selectedSsd = ssdSelect.options[ssdSelect.selectedIndex];
+            const selectedCase = caseSelect.options[caseSelect.selectedIndex];
             const selectedPsu = psuSelect.options[psuSelect.selectedIndex];
 
-            const cpuSocket = selectedCpu.getAttribute('data-socket');
-            const mbSocket = selectedMb.getAttribute('data-socket');
+            const cpuSocket = selectedCpu.getAttribute('data-socket') || '';
+            const mbSocket = selectedMb.getAttribute('data-socket') || '';
+            const mbSize = selectedMb.getAttribute('data-size') || '';
 
             const cpuTdp = parseInt(selectedCpu.getAttribute('data-tdp') || '0');
             const mbTdp = parseInt(selectedMb.getAttribute('data-tdp') || '0');
             const gpuTdp = parseInt(selectedGpu.getAttribute('data-tdp') || '0');
+            const gpuLength = parseInt(selectedGpu.getAttribute('data-length') || '0');
+            
+            const ramTdp = parseInt(selectedRam.getAttribute('data-tdp') || '0');
+            const ssdTdp = parseInt(selectedSsd.getAttribute('data-tdp') || '0');
+
+            const caseSize = selectedCase.getAttribute('data-size') || '';
+            const caseGpuMax = parseInt(selectedCase.getAttribute('data-gpu-max') || '0');
+
             const psuWatt = parseInt(selectedPsu.getAttribute('data-watt') || '0');
 
             // 1. Check Socket compatibility
+            let socketOk = false;
             if (!cpuSelect.value || !mbSelect.value) {
                 socketMatchResult.innerHTML = '<i class="fa-solid fa-circle-question"></i> กรุณาเลือก CPU และ เมนบอร์ด';
                 socketMatchResult.className = 'status-badge badge-warn';
             } else if (cpuSocket === mbSocket) {
-                socketMatchResult.innerHTML = `<i class="fa-solid fa-circle-check"></i> ข้อมูลเข้ากันได้: ${cpuSocket} Socket MATCH!`;
+                socketMatchResult.innerHTML = `<i class="fa-solid fa-circle-check"></i> ซ็อกเก็ตตรงกัน: ${cpuSocket} Socket MATCH!`;
                 socketMatchResult.className = 'status-badge badge-success';
+                socketOk = true;
             } else {
-                socketMatchResult.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ผิดพลาด: CPU (${cpuSocket}) ไม่สามารถใส่กับเมนบอร์ด (${mbSocket}) ได้`;
+                socketMatchResult.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ผิดพลาด: CPU (${cpuSocket}) ไม่รองรับกับบอร์ด (${mbSocket})`;
                 socketMatchResult.className = 'status-badge badge-danger';
             }
 
-            // 2. Sum estimated TDP watts
-            // Extra: add 100 watts buffer for standard RAM, storage, fans, and CPU spike headroom
-            const componentTdp = cpuTdp + mbTdp + gpuTdp;
-            const systemTdp = componentTdp > 0 ? componentTdp + 100 : 0;
+            // 2. Check Size and Case compatibility
+            let sizeOk = false;
+            if (!caseSelect.value || !mbSelect.value || !gpuSelect.value) {
+                sizeCompatResult.innerHTML = '<i class="fa-solid fa-circle-question"></i> กรุณาเลือกเคส เมนบอร์ด และการ์ดจอ';
+                sizeCompatResult.className = 'status-badge badge-warn';
+            } else {
+                // If Case is ITX, only ITX mainboard is allowed
+                if (caseSize === 'ITX' && mbSize !== 'ITX') {
+                    sizeCompatResult.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ผิดพลาด: บอร์ดขนาด ${mbSize} ใหญ่เกินไปสำหรับเคส Mini-ITX`;
+                    sizeCompatResult.className = 'status-badge badge-danger';
+                }
+                // Check GPU length
+                else if (gpuLength > caseGpuMax) {
+                    sizeCompatResult.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ผิดพลาด: การ์ดจอยาว ${gpuLength}mm เกินขนาดเคสที่รับได้ (${caseGpuMax}mm)`;
+                    sizeCompatResult.className = 'status-badge badge-danger';
+                } else {
+                    sizeCompatResult.innerHTML = `<i class="fa-solid fa-circle-check"></i> ขนาดเข้ากันได้: เคสใส่บอร์ด ${mbSize} และการ์ดจอได้พอดี`;
+                    sizeCompatResult.className = 'status-badge badge-success';
+                    sizeOk = true;
+                }
+            }
+
+            // 3. Sum estimated TDP watts
+            // Baseline 50W for system overhead
+            const componentTdp = cpuTdp + mbTdp + gpuTdp + ramTdp + ssdTdp;
+            const systemTdp = componentTdp > 0 ? componentTdp + 50 : 0;
             tdpSumValue.textContent = `${systemTdp} Watts`;
             
             // Set wattage bar width (maximum scale 800W)
@@ -1036,28 +1110,35 @@
                 tdpFill.style.backgroundColor = 'var(--primary)'; // Green safe
             }
 
-            // 3. Power capacity check
+            // 4. Power capacity check
+            let powerOk = false;
             if (!psuSelect.value || systemTdp === 0) {
-                powerCapacityResult.innerHTML = '<i class="fa-solid fa-circle-question"></i> กรุณาเลือกอุปกรณ์ให้ครบ';
+                powerCapacityResult.innerHTML = '<i class="fa-solid fa-circle-question"></i> กรุณาเลือกแหล่งจ่ายไฟและอุปกรณ์หลัก';
                 powerCapacityResult.className = 'status-badge badge-warn';
             } else if (psuWatt >= systemTdp) {
-                powerCapacityResult.innerHTML = `<i class="fa-solid fa-circle-check"></i> จ่ายไฟพอ: PSU ขนาด ${psuWatt}W เพียงพอกับไฟที่ใช้ (${systemTdp}W)`;
+                powerCapacityResult.innerHTML = `<i class="fa-solid fa-circle-check"></i> ไฟเพียงพอ: PSU ขนาด ${psuWatt}W จ่ายไฟพอสเปค (${systemTdp}W)`;
                 powerCapacityResult.className = 'status-badge badge-success';
+                powerOk = true;
             } else {
-                powerCapacityResult.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> จ่ายไฟไม่พอ: แนะนำให้เปลี่ยน PSU ให้ใหญ่กว่า ${systemTdp}W (ปัจจุบันเลือก ${psuWatt}W)`;
+                powerCapacityResult.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ไฟไม่พอ: แนะนำให้เปลี่ยน PSU ขนาดอย่างน้อย ${systemTdp}W (ปัจจุบันเลือก ${psuWatt}W)`;
                 powerCapacityResult.className = 'status-badge badge-danger';
             }
 
             // General Status indicator
-            if (cpuSelect.value && mbSelect.value && cpuSocket !== mbSocket) {
-                generalStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> พบจุดบกพร่องสเปค';
-                generalStatus.className = 'status-badge badge-danger';
-            } else if (psuSelect.value && systemTdp > 0 && psuWatt < systemTdp) {
-                generalStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> แหล่งจ่ายไฟไม่พอ';
-                generalStatus.className = 'status-badge badge-danger';
-            } else if (cpuSelect.value && mbSelect.value && gpuSelect.value && psuSelect.value) {
+            const allSelected = cpuSelect.value && mbSelect.value && gpuSelect.value && ramSelect.value && ssdSelect.value && caseSelect.value && psuSelect.value;
+            
+            if (allSelected && socketOk && sizeOk && powerOk) {
                 generalStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> จัดสเปคเสร็จสมบูรณ์';
                 generalStatus.className = 'status-badge badge-success';
+            } else if (cpuSelect.value && mbSelect.value && !socketOk) {
+                generalStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> ซ็อกเก็ตไม่เข้ากัน';
+                generalStatus.className = 'status-badge badge-danger';
+            } else if (caseSelect.value && mbSelect.value && gpuSelect.value && !sizeOk) {
+                generalStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> อุปกรณ์ไม่พอดีเคส';
+                generalStatus.className = 'status-badge badge-danger';
+            } else if (psuSelect.value && systemTdp > 0 && !powerOk) {
+                generalStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> แหล่งจ่ายไฟวัตต์ไม่พอ';
+                generalStatus.className = 'status-badge badge-danger';
             } else {
                 generalStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังปรับแต่งสเปค';
                 generalStatus.className = 'status-badge badge-warn';
@@ -1068,6 +1149,9 @@
         cpuSelect.addEventListener('change', updateAnalysis);
         mbSelect.addEventListener('change', updateAnalysis);
         gpuSelect.addEventListener('change', updateAnalysis);
+        ramSelect.addEventListener('change', updateAnalysis);
+        ssdSelect.addEventListener('change', updateAnalysis);
+        caseSelect.addEventListener('change', updateAnalysis);
         psuSelect.addEventListener('change', updateAnalysis);
     </script>
 </body>
