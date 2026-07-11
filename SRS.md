@@ -110,9 +110,9 @@
 ระบบจัดโครงสร้างสถาปัตยกรรม โดยแบ่งแยกส่วนแสดงผล ส่วนประมวลผลคำสั่ง และส่วนฐานข้อมูลออกจากกันผ่าน REST APIs เพื่อให้สามารถรองรับการปรับขยาย (Scalability) ในอนาคต
 
 
-### 5.1 โครงสร้างสถาปัตยกรรมเชิงเทคนิคแบบ
+### 5.1 โครงสร้างสถาปัตยกรรมเชิงเทคนิคแบบ 3-Tier (3-Tier Technical Architecture)
 
-*(ดูไฟล์โค้ด Mermaid แยกต่างหากได้ที่ [architecture.mermaid](file:///d:/Work/Comkub/architecture.mermaid))*
+*(ดูไฟล์โค้ด Mermaid แยกต่างหากได้ที่ [architecture.mermaid](./architecture.mermaid))*
 
 ```mermaid
 graph TD
@@ -165,7 +165,7 @@ graph TD
 
 แผนภาพนี้แสดงความเกี่ยวข้องระหว่างบทบาทของผู้ใช้งาน (Customer, Staff, Manager, Admin) อินเตอร์เฟสการเข้าใช้งาน (Interfaces) และฟังก์ชันการเข้าใช้งานเฉพาะเจาะจงที่แบ่งสิทธิ์ไว้ชัดเจน
 
-*(ดูไฟล์โค้ด Mermaid แยกต่างหากได้ที่ [roles_flow.mermaid](file:///d:/Work/Comkub/roles_flow.mermaid))*
+*(ดูไฟล์โค้ด Mermaid แยกต่างหากได้ที่ [roles_flow.mermaid](./roles_flow.mermaid))*
 
 ```mermaid
 graph LR
