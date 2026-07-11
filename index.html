@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="th" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComHub - System Requirement Specification (SRS)</title>
+    
+    <!-- Premium Fonts Pairing -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Marked.js Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Mermaid.js Diagram Engine -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    
+    <style>
+        /* Global CSS Variables and Styling System */
+        :root {
+            --font-primary: 'Inter', 'IBM Plex Sans Thai', sans-serif;
+            
+            /* Light Theme Palette */
+            --bg-page: #f8fafc;
+            --bg-sidebar: #0b1329;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-sidebar: #cbd5e1;
+            --text-sidebar-active: #10b981;
+            --primary: #10b981;
+            --primary-hover: #059669;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            --code-bg: #f1f5f9;
+            --code-text: #0f172a;
+            --accent-glow: rgba(16, 185, 129, 0.1);
+        }
+
+        .dark-mode-vars {
+            /* Dark Theme Palette */
+            --bg-page: #0f172a;
+            --bg-sidebar: #020617;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-sidebar: #94a3b8;
+            --text-sidebar-active: #34d399;
+            --primary: #34d399;
+            --primary-hover: #059669;
+            --border-color: #334155;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --code-bg: #0b1329;
+            --code-text: #e2e8f0;
+            --accent-glow: rgba(52, 211, 153, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+        }
+
+        html, body {
+            font-family: var(--font-primary);
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            scroll-behavior: smooth;
+        }
+
+        /* Layout Structure */
+        aside.csi-sidebar {
+            width: 300px;
+            height: 100vh;
+            background-color: var(--bg-sidebar);
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            z-index: 50;
+            padding: 1.5rem 1rem;
+            color: var(--text-sidebar);
+        }
+
+        main.csi-content {
+            margin-left: 300px;
+            padding: 2.5rem;
+            width: calc(100% - 300px);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Sidebar Logo / Header */
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1.5rem;
+        }
+
+        .sidebar-brand i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .sidebar-brand-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar-brand-text p {
+            font-size: 0.75rem;
+            color: #84cc16;
+            font-weight: 500;
+        }
+
+        /* Navigation Table of Contents */
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding-right: 0.25rem;
+        }
+
+        .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .nav-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.075em;
+            color: var(--text-muted);
+            margin: 1.25rem 0 0.5rem 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 0.65rem 0.75rem;
+            text-decoration: none;
+            color: var(--text-sidebar);
+            font-size: 0.875rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-nav a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .sidebar-nav a.active {
+            background-color: var(--accent-glow);
+            color: var(--text-sidebar-active);
+            font-weight: 600;
+            border-left: 3px solid var(--primary);
+        }
+
+        .sidebar-nav a.toc-h3 {
+            padding-left: 1.75rem;
+            font-size: 0.8rem;
+            opacity: 0.85;
+        }
+
+        /* Sidebar Footer Settings */
+        .sidebar-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-sidebar);
+            cursor: pointer;
+            font-size: 1.125rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+
+        /* Main Content Container & Markdown Rendering styles */
+        .doc-card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        /* Styled Table of Contents Container */
+        .srs-toc-container {
+            background-color: var(--bg-page);
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .srs-toc-container ul {
+            list-style-type: none !important;
+            padding-left: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .srs-toc-container li {
+            margin-bottom: 0.75rem !important;
+            position: relative;
+            padding-left: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .srs-toc-container li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            position: absolute;
+            left: 1rem;
+            top: 0;
+        }
+
+        .srs-toc-container li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .srs-toc-container li a:hover {
+            color: var(--primary);
+            padding-left: 0.25rem;
+        }
+
+        .srs-toc-container ul ul {
+            padding-left: 1.5rem !important;
+            margin-top: 0.5rem;
+        }
+
+        .srs-toc-container ul ul li {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem !important;
+        }
+
+        .srs-toc-container ul ul li::before {
+            content: "◦" !important;
+            color: var(--text-muted);
+            font-weight: normal;
+        }
+
+        .srs-toc-container ul ul ul {
+            padding-left: 1.25rem !important;
+        }
+
+        .srs-toc-container ul ul ul li::before {
+            content: "▪" !important;
+            font-size: 0.7rem;
+            top: 0.1rem;
+        }
+
+        .page-container-transition {
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Markdown content styling */
+        .markdown-body h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .markdown-body h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            scroll-margin-top: 2rem;
+        }
+
+        .markdown-body h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-top: 1.75rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+            scroll-margin-top: 2rem;
+        }
+
+        .markdown-body p {
+            line-height: 1.75;
+            margin-bottom: 1.25rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .markdown-body ul, .markdown-body ol {
+            margin-bottom: 1.25rem;
+            padding-left: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .markdown-body li {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            font-size: 0.9rem;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .markdown-body th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border: 1px solid var(--primary);
+        }
+
+        .markdown-body td {
+            padding: 0.85rem 1rem;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            background-color: var(--bg-card);
+        }
+
+        .markdown-body tr:nth-child(even) td {
+            background-color: rgba(0,0,0,0.01);
+        }
+
+        .dark .markdown-body tr:nth-child(even) td {
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        /* Mermaid Graph Container */
+        .mermaid {
+            background-color: #0b1329 !important;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+
+        /* Revision History Table Design (as shown in image) */
+        .revision-table-container {
+            margin-bottom: 2rem;
+        }
+        
+        .revision-title {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        /* Mobile Layout & Hamburger Button */
+        .mobile-header {
+            display: none;
+            background-color: var(--bg-sidebar);
+            color: white;
+            padding: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Interactive Showcase Prototype Tab Switcher */
+        .showcase-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-family: var(--font-primary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .tab-btn i {
+            margin-right: 0.5rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Premium Interactive Mockup UI styling (Advanced PC Builder) */
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .mockup-card {
+            background-color: var(--bg-page);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .mockup-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.65rem;
+            border-radius: 6px;
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            margin-bottom: 0.75rem;
+            font-family: var(--font-primary);
+            font-size: 0.875rem;
+        }
+
+        .wattage-meter {
+            height: 10px;
+            background-color: var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+            position: relative;
+        }
+
+        .wattage-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary);
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .badge-danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .badge-warn {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        /* Error/Info Alert Banner */
+        .info-alert {
+            display: flex;
+            gap: 0.75rem;
+            background-color: var(--accent-glow);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1.25rem 0;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .info-alert i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            aside.csi-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            aside.csi-sidebar.open {
+                transform: translateX(0);
+            }
+
+            main.csi-content {
+                margin-left: 0;
+                width: 100%;
+                padding-top: 5rem;
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+
+            .mobile-header {
+                display: flex;
+            }
+            
+            .mockup-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fa-solid fa-laptop-code" style="color: var(--primary);"></i>
+            <span style="font-weight: 700; font-size: 1.1rem; letter-spacing: 0.05em;">ComHub</span>
+        </div>
+        <button class="mobile-menu-btn" id="menuToggle">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- Navigation Sidebar -->
+    <aside class="csi-sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-laptop-code"></i>
+            <div class="sidebar-brand-text">
+                <h1>ComHub</h1>
+                <p>System Specification v1.0</p>
+            </div>
+        </div>
+
+        <div class="sidebar-nav">
+            <div class="nav-label">มุมมองเอกสาร (View)</div>
+            <a href="#" class="active" id="docTabBtn"><i class="fa-solid fa-file-lines" style="width: 20px; margin-right: 0.5rem;"></i> เอกสารข้อกำหนดระบบ (SRS)</a>
+            <a href="#" id="builderTabBtn"><i class="fa-solid fa-circle-nodes" style="width: 20px; margin-right: 0.5rem;"></i> ตัวอย่างคำนวณสเปค (Interactive)</a>
+            
+            <div class="nav-label" id="tocLabel">สารบัญเอกสาร</div>
+            <div id="tableOfContents">
+                <!-- Dynamically loaded from headings -->
+                <div style="padding-left: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">กำลังโหลดสารบัญ...</div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <button class="theme-toggle-btn" id="themeToggle" title="สลับธีม สว่าง/มืด">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">
+                <i class="fa-solid fa-shield-halved"></i> CS204 | CSI Framework
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="csi-content">
+        <div class="doc-card page-container-transition">
+            
+            <!-- tab switcher -->
+            <div class="showcase-tabs">
+                <button class="tab-btn active" id="tabDocBtn"><i class="fa-solid fa-book"></i> เอกสารข้อกำหนดระบบ</button>
+                <button class="tab-btn" id="tabBuilderBtn"><i class="fa-solid fa-sliders"></i> แบบจำลองตัวตรวจเช็คสเปค</button>
+            </div>
+            
+            <!-- SECTION 1: DOCUMENTATION (Dynamic from SRS.md) -->
+            <div class="tab-content active" id="docTabContent">
+                
+                
+                
+                <div class="markdown-body" id="MDContent">
+                    <p style="text-align: center; padding: 2rem;"><i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--primary);"></i><br><br>กำลังดาวน์โหลดและเรนเดอร์เอกสาร SRS.md...</p>
+                </div>
+            </div>
+            
+            <!-- SECTION 2: INTERACTIVE MOCKUP SHOWCASE (Advanced PC Builder) -->
+            <div class="tab-content" id="builderTabContent">
+                <div class="markdown-body">
+                    <h1>แบบจำลองระบบวิเคราะห์สเปค (Interactive Mockup Showcase)</h1>
+                    <p>ส่วนนี้พัฒนาขึ้นแบบจำลองชั่วคราวเพื่อแสดงพฤติกรรมการทำงานของฟังก์ชันหลักในเอกสารวิเคราะห์ระบบ ได้แก่ <strong>[Compatibility Checker]</strong> และ <strong>[Wattage Calculator]</strong> บนเว็บเบราว์เซอร์</p>
+                    
+                    <div class="info-alert">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <div>
+                            <strong>คำอธิบายจำลองระบบวิศวกรรม:</strong> ระบบจะใช้เงื่อนไขจาก Database / JSON ในการเทียบเช็คความสอดคล้องกันของ CPU Socket กับ Mainboard Socket และคำนวณกำลังไฟวัตต์รวม (TDP) เพื่อกรองการเลือกพาวเวอร์ซัพพลาย (PSU) ที่เพียงพอโดยอัตโนมัติ
+                        </div>
+                    </div>
+                    
+                    <div class="mockup-grid">
+                        <!-- Builder Selection Form -->
+                        <div class="mockup-card">
+                            <div class="mockup-title">
+                                <span><i class="fa-solid fa-list-check" style="color: var(--primary);"></i> เลือกอุปกรณ์จัดสเปคคอม</span>
+                                <span class="status-badge badge-success" id="generalStatus"><i class="fa-solid fa-circle-check"></i> พร้อมทำงาน</span>
+                            </div>
+                            
+                            <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">1. หน่วยประมวลผล (CPU)</label>
+                            <select class="form-select" id="cpuSelect">
+                                <option value="" data-socket="" data-tdp="0">-- เลือก CPU --</option>
+                                <option value="intel-i5" data-socket="LGA1700" data-tdp="65">Intel Core i5-13400F (LGA1700, 65W)</option>
+                                <option value="intel-i9" data-socket="LGA1700" data-tdp="125">Intel Core i9-13900K (LGA1700, 125W)</option>
+                                <option value="amd-ryzen5" data-socket="AM5" data-tdp="65">AMD Ryzen 5 7600 (AM5, 65W)</option>
+                                <option value="amd-ryzen9" data-socket="AM5" data-tdp="120">AMD Ryzen 9 7900X (AM5, 120W)</option>
+                            </select>
+                            
+                            <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">2. เมนบอร์ด (Mainboard)</label>
+                            <select class="form-select" id="mbSelect">
+                                <option value="" data-socket="" data-tdp="0">-- เลือก เมนบอร์ด --</option>
+                                <option value="mb-b760" data-socket="LGA1700" data-tdp="40">Gigabyte B760M DS3H (LGA1700, 40W)</option>
+                                <option value="mb-z790" data-socket="LGA1700" data-tdp="55">ASUS ROG Strix Z790 (LGA1700, 55W)</option>
+                                <option value="mb-b650" data-socket="AM5" data-tdp="35">MSI MAG B650 Tomahawk (AM5, 35W)</option>
+                                <option value="mb-x670" data-socket="AM5" data-tdp="50">ASRock X670E Steel Legend (AM5, 50W)</option>
+                            </select>
+
+                            <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">3. การ์ดจอ (GPU)</label>
+                            <select class="form-select" id="gpuSelect">
+                                <option value="" data-tdp="0">-- เลือก GPU --</option>
+                                <option value="gpu-rtx3060" data-tdp="170">NVIDIA RTX 3060 12GB (170W)</option>
+                                <option value="gpu-rtx4070" data-tdp="200">NVIDIA RTX 4070 Ti 12GB (200W)</option>
+                                <option value="gpu-rtx4090" data-tdp="450">NVIDIA RTX 4090 24GB (450W)</option>
+                                <option value="gpu-rx7600" data-tdp="165">AMD Radeon RX 7600 (165W)</option>
+                            </select>
+
+                            <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">4. พาวเวอร์ซัพพลาย (Power Supply Unit - PSU)</label>
+                            <select class="form-select" id="psuSelect">
+                                <option value="" data-watt="0">-- เลือก PSU --</option>
+                                <option value="psu-550" data-watt="550">Corsair CV550 (550W)</option>
+                                <option value="psu-750" data-watt="750">Cooler Master V750 (750W)</option>
+                                <option value="psu-1000" data-watt="1000">SilverStone Hela 1000W (1000W)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Analysis Results Output -->
+                        <div class="mockup-card" style="display:flex; flex-direction:column; gap:1rem;">
+                            <div class="mockup-title">
+                                <span><i class="fa-solid fa-chart-simple" style="color: var(--primary);"></i> ผลวิเคราะห์ความเข้ากันได้</span>
+                            </div>
+                            
+                            <!-- Compatibility status -->
+                            <div>
+                                <div style="font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">ความเข้ากันได้ของซ็อกเก็ต (Socket Match):</div>
+                                <div id="socketMatchResult" class="status-badge badge-success" style="width:100%; padding:0.6rem; justify-content:center;">
+                                    กรุณาเลือก CPU และ เมนบอร์ด
+                                </div>
+                            </div>
+                            
+                            <!-- Wattage Calculation TDP -->
+                            <div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">
+                                    <span>การใช้พลังงานระบบรวม (TDP Est.):</span>
+                                    <span id="tdpSumValue" style="color:var(--primary);">0 Watts</span>
+                                </div>
+                                <div class="wattage-meter">
+                                    <div class="wattage-fill" id="tdpFill"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- PSU adequacy check -->
+                            <div>
+                                <div style="font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">สถานะการจ่ายกำลังไฟ (Power Capacity):</div>
+                                <div id="powerCapacityResult" class="status-badge badge-success" style="width:100%; padding:0.6rem; justify-content:center;">
+                                    กรุณาเลือกการ์ดจอและแหล่งจ่ายไฟ
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <script>
+        // DOM Elements
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+        const themeToggle = document.getElementById('themeToggle');
+        
+        const docTabBtn = document.getElementById('docTabBtn');
+        const builderTabBtn = document.getElementById('builderTabBtn');
+        
+        const tabDocBtn = document.getElementById('tabDocBtn');
+        const tabBuilderBtn = document.getElementById('tabBuilderBtn');
+        
+        const docTabContent = document.getElementById('docTabContent');
+        const builderTabContent = document.getElementById('builderTabContent');
+        
+        const tocLabel = document.getElementById('tocLabel');
+        const tableOfContents = document.getElementById('tableOfContents');
+
+        // Mobile sidebar control
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 1024 && !sidebar.contains(e.target) && e.target !== menuToggle && !menuToggle.contains(e.target)) {
+                sidebar.classList.remove('open');
+            }
+        });
+
+        // Theme Toggle (Light / Dark)
+        themeToggle.addEventListener('click', () => {
+            const html = document.documentElement;
+            if (html.classList.contains('light')) {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                html.classList.add('dark-mode-vars');
+                themeToggle.innerHTML = '<i class="fa-solid fa-sun" style="color: #f59e0b;"></i>';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.classList.remove('dark');
+                html.classList.remove('dark-mode-vars');
+                html.classList.add('light');
+                themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
+                localStorage.setItem('theme', 'light');
+            }
+            
+            // Re-render mermaid if it's initialized to match current theme
+            setTimeout(renderMermaidDiagrams, 50);
+        });
+
+        // Restore saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.remove('light');
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.add('dark-mode-vars');
+            themeToggle.innerHTML = '<i class="fa-solid fa-sun" style="color: #f59e0b;"></i>';
+        }
+
+        // Tab selection logic
+        function switchTab(target) {
+            if (target === 'doc') {
+                docTabBtn.classList.add('active');
+                builderTabBtn.classList.remove('active');
+                tabDocBtn.classList.add('active');
+                tabBuilderBtn.classList.remove('active');
+                
+                docTabContent.classList.add('active');
+                builderTabContent.classList.remove('active');
+                
+                tocLabel.style.display = 'block';
+                tableOfContents.style.display = 'block';
+            } else {
+                builderTabBtn.classList.add('active');
+                docTabBtn.classList.remove('active');
+                tabBuilderBtn.classList.add('active');
+                tabDocBtn.classList.remove('active');
+                
+                builderTabContent.classList.add('active');
+                docTabContent.classList.remove('active');
+                
+                tocLabel.style.display = 'none';
+                tableOfContents.style.display = 'none';
+            }
+            // Close mobile menu on tab switch
+            sidebar.classList.remove('open');
+        }
+
+        docTabBtn.addEventListener('click', (e) => { e.preventDefault(); switchTab('doc'); });
+        builderTabBtn.addEventListener('click', (e) => { e.preventDefault(); switchTab('builder'); });
+        tabDocBtn.addEventListener('click', () => switchTab('doc'));
+        tabBuilderBtn.addEventListener('click', () => switchTab('builder'));
+
+        // Load & Parse SRS.md using AJAX (Option B as requested by user)
+        fetch('SRS.md')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('ไม่สามารถโหลดไฟล์ SRS.md ได้ กรุณารันด้วยเว็บเซิร์ฟเวอร์ (เช่น Live Server หรือ python -m http.server)');
+                }
+                return response.text();
+            })
+            .then(markdownText => {
+                // Configure Marked
+                marked.setOptions({
+                    headerIds: true,
+                    gfm: true,
+                    breaks: true
+                });
+
+                // Parse Markdown
+                const renderedHtml = marked.parse(markdownText);
+                const mdContainer = document.getElementById('MDContent');
+                mdContainer.innerHTML = renderedHtml;
+
+                // Post-process to replace language-mermaid with div.mermaid
+                const codeBlocks = mdContainer.querySelectorAll('pre code.language-mermaid');
+                codeBlocks.forEach(codeBlock => {
+                    const preElement = codeBlock.parentElement;
+                    const mermaidDiv = document.createElement('div');
+                    mermaidDiv.className = 'mermaid';
+                    mermaidDiv.textContent = codeBlock.textContent;
+                    preElement.replaceWith(mermaidDiv);
+                });
+
+                // Generate Table of Contents
+                generateTOC(mdContainer);
+
+                // Render Mermaid Diagrams
+                renderMermaidDiagrams();
+            })
+            .catch(error => {
+                console.error(error);
+                document.getElementById('MDContent').innerHTML = `
+                    <div class="info-alert" style="background-color:rgba(239, 68, 68, 0.1); border-left-color:#ef4444;">
+                        <i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i>
+                        <div>
+                            <strong>เกิดข้อผิดพลาดในการโหลดไฟล์เอกสาร (CORS Blocked):</strong><br>
+                            ${error.message}<br><br>
+                            <span style="font-size:0.85rem; opacity:0.85;">
+                                * หมายเหตุ: เนื่องจากบราว์เซอร์บล็อกคำสั่ง AJAX dynamic fetch เมื่อเปิดไฟล์ HTML ตรงๆ ผ่านโปรโตคอล <code>file://</code><br>
+                                <strong>แนวทางแก้ไข:</strong> ให้รันไฟล์นี้ด้วยโปรแกรม Live Server ของ VS Code หรือรันผ่านคำสั่ง Terminal: <code>python -m http.server 8000</code> แล้วเข้าผ่าน <code>http://localhost:8000</code> เพื่อแสดงผลตัวอย่างครับ
+                            </span>
+                        </div>
+                    </div>
+                `;
+            });
+
+        // Generate Table of Contents from h2 and h3
+        function generateTOC(container) {
+            const headings = container.querySelectorAll('h2, h3');
+            tableOfContents.innerHTML = '';
+
+            if (headings.length === 0) {
+                tableOfContents.innerHTML = '<div style="font-size:0.85rem; color:var(--text-muted); padding-left:0.5rem;">ไม่มีหัวข้อหลัก</div>';
+                return;
+            }
+
+            headings.forEach((heading, idx) => {
+                // Ensure heading has an ID
+                if (!heading.id) {
+                    heading.id = 'heading-' + idx;
+                }
+
+                const navLink = document.createElement('a');
+                navLink.href = '#' + heading.id;
+                navLink.textContent = heading.textContent;
+                
+                if (heading.tagName === 'H2') {
+                    navLink.className = 'toc-h2';
+                } else if (heading.tagName === 'H3') {
+                    navLink.className = 'toc-h3';
+                }
+
+                // Add scroll spy or manual active toggle
+                navLink.addEventListener('click', (e) => {
+                    const allLinks = tableOfContents.querySelectorAll('a');
+                    allLinks.forEach(l => l.classList.remove('active'));
+                    navLink.classList.add('active');
+                });
+
+                tableOfContents.appendChild(navLink);
+            });
+        }
+
+        // Initialize and render Mermaid Diagrams
+        function renderMermaidDiagrams() {
+            const mermaidDivs = document.querySelectorAll('.mermaid');
+            if (mermaidDivs.length === 0) return;
+
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: isDark ? 'dark' : 'neutral',
+                securityLevel: 'loose',
+                themeVariables: {
+                    fontFamily: 'Inter, sans-serif'
+                }
+            });
+
+            // Re-render using mermaid.run
+            mermaid.run({
+                nodes: mermaidDivs
+            }).catch(err => {
+                console.error("Mermaid parsing error:", err);
+            });
+        }
+
+        // Interactive PC Builder Mockup logic
+        const cpuSelect = document.getElementById('cpuSelect');
+        const mbSelect = document.getElementById('mbSelect');
+        const gpuSelect = document.getElementById('gpuSelect');
+        const psuSelect = document.getElementById('psuSelect');
+        
+        const socketMatchResult = document.getElementById('socketMatchResult');
+        const tdpSumValue = document.getElementById('tdpSumValue');
+        const tdpFill = document.getElementById('tdpFill');
+        const powerCapacityResult = document.getElementById('powerCapacityResult');
+        const generalStatus = document.getElementById('generalStatus');
+
+        function updateAnalysis() {
+            const selectedCpu = cpuSelect.options[cpuSelect.selectedIndex];
+            const selectedMb = mbSelect.options[mbSelect.selectedIndex];
+            const selectedGpu = gpuSelect.options[gpuSelect.selectedIndex];
+            const selectedPsu = psuSelect.options[psuSelect.selectedIndex];
+
+            const cpuSocket = selectedCpu.getAttribute('data-socket');
+            const mbSocket = selectedMb.getAttribute('data-socket');
+
+            const cpuTdp = parseInt(selectedCpu.getAttribute('data-tdp') || '0');
+            const mbTdp = parseInt(selectedMb.getAttribute('data-tdp') || '0');
+            const gpuTdp = parseInt(selectedGpu.getAttribute('data-tdp') || '0');
+            const psuWatt = parseInt(selectedPsu.getAttribute('data-watt') || '0');
+
+            // 1. Check Socket compatibility
+            if (!cpuSelect.value || !mbSelect.value) {
+                socketMatchResult.innerHTML = '<i class="fa-solid fa-circle-question"></i> กรุณาเลือก CPU และ เมนบอร์ด';
+                socketMatchResult.className = 'status-badge badge-warn';
+            } else if (cpuSocket === mbSocket) {
+                socketMatchResult.innerHTML = `<i class="fa-solid fa-circle-check"></i> ข้อมูลเข้ากันได้: ${cpuSocket} Socket MATCH!`;
+                socketMatchResult.className = 'status-badge badge-success';
+            } else {
+                socketMatchResult.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ผิดพลาด: CPU (${cpuSocket}) ไม่สามารถใส่กับเมนบอร์ด (${mbSocket}) ได้`;
+                socketMatchResult.className = 'status-badge badge-danger';
+            }
+
+            // 2. Sum estimated TDP watts
+            // Extra: add 100 watts buffer for standard RAM, storage, fans, and CPU spike headroom
+            const componentTdp = cpuTdp + mbTdp + gpuTdp;
+            const systemTdp = componentTdp > 0 ? componentTdp + 100 : 0;
+            tdpSumValue.textContent = `${systemTdp} Watts`;
+            
+            // Set wattage bar width (maximum scale 800W)
+            const percent = Math.min((systemTdp / 800) * 100, 100);
+            tdpFill.style.width = `${percent}%`;
+
+            if (percent > 85) {
+                tdpFill.style.backgroundColor = '#ef4444'; // Red for high power draw
+            } else if (percent > 60) {
+                tdpFill.style.backgroundColor = '#f59e0b'; // Amber for medium high
+            } else {
+                tdpFill.style.backgroundColor = 'var(--primary)'; // Green safe
+            }
+
+            // 3. Power capacity check
+            if (!psuSelect.value || systemTdp === 0) {
+                powerCapacityResult.innerHTML = '<i class="fa-solid fa-circle-question"></i> กรุณาเลือกอุปกรณ์ให้ครบ';
+                powerCapacityResult.className = 'status-badge badge-warn';
+            } else if (psuWatt >= systemTdp) {
+                powerCapacityResult.innerHTML = `<i class="fa-solid fa-circle-check"></i> จ่ายไฟพอ: PSU ขนาด ${psuWatt}W เพียงพอกับไฟที่ใช้ (${systemTdp}W)`;
+                powerCapacityResult.className = 'status-badge badge-success';
+            } else {
+                powerCapacityResult.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> จ่ายไฟไม่พอ: แนะนำให้เปลี่ยน PSU ให้ใหญ่กว่า ${systemTdp}W (ปัจจุบันเลือก ${psuWatt}W)`;
+                powerCapacityResult.className = 'status-badge badge-danger';
+            }
+
+            // General Status indicator
+            if (cpuSelect.value && mbSelect.value && cpuSocket !== mbSocket) {
+                generalStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> พบจุดบกพร่องสเปค';
+                generalStatus.className = 'status-badge badge-danger';
+            } else if (psuSelect.value && systemTdp > 0 && psuWatt < systemTdp) {
+                generalStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> แหล่งจ่ายไฟไม่พอ';
+                generalStatus.className = 'status-badge badge-danger';
+            } else if (cpuSelect.value && mbSelect.value && gpuSelect.value && psuSelect.value) {
+                generalStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> จัดสเปคเสร็จสมบูรณ์';
+                generalStatus.className = 'status-badge badge-success';
+            } else {
+                generalStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังปรับแต่งสเปค';
+                generalStatus.className = 'status-badge badge-warn';
+            }
+        }
+
+        // Attach listeners
+        cpuSelect.addEventListener('change', updateAnalysis);
+        mbSelect.addEventListener('change', updateAnalysis);
+        gpuSelect.addEventListener('change', updateAnalysis);
+        psuSelect.addEventListener('change', updateAnalysis);
+    </script>
+</body>
+</html>
