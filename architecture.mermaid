@@ -1,0 +1,45 @@
+graph TD
+    %% Styling Configuration
+    classDef client fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff;
+    classDef logic fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#fff;
+    classDef storage fill:#0f172a,stroke:#f59e0b,stroke-width:2px,color:#fff;
+    
+    subgraph Client_Layer ["Client & Frontend Layer (Vercel Host)"]
+        A["React SPA Frontend"]:::client
+        B["Tailwind CSS UI Component"]:::client
+        C["LocalStorage Cache (Cart & Temp Build)"]:::client
+    end
+    
+    subgraph Gateway_Layer ["API Gateway & Middleware Layer"]
+        D["API Gateway / Routing"]:::logic
+        E["JWT Auth & Role-Based Middleware"]:::logic
+    end
+    
+    subgraph Service_Layer ["Business Logic & Application Layer (Render Host)"]
+        F["Node.js & Express API Server"]:::logic
+        G["Compatibility Engine (Socket/Size Checks)"]:::logic
+        H["TDP Calculator Engine"]:::logic
+        I["Order & Assembly Processor"]:::logic
+    end
+    
+    subgraph Database_Storage_Layer ["Data Storage Layer (Cloud)"]
+        J[(Supabase / PostgreSQL DB)]:::storage
+    end
+
+    %% Flow Relationships
+    A <-->|User Interaction| B
+    A <-->|Local Read/Write| C
+    A ==>|HTTP Request / JSON| D
+    D -->|Intercept & Validate| E
+    E -->|Valid Request| F
+    
+    F -->|Run Checks| G
+    F -->|Sum TDP Power| H
+    F -->|Update Status| I
+    
+    F <-->|Queries / Transactions| J
+    
+    %% Direction Legend
+    linkStyle default stroke:#64748b,stroke-width:1.5px;
+    linkStyle 2 stroke:#38bdf8,stroke-width:2.5px;
+    linkStyle 8 stroke:#38bdf8,stroke-width:2.5px;
