@@ -1,0 +1,141 @@
+classDiagram
+    class User {
+        +int id
+        +string email
+        +string password_hash
+        +string first_name
+        +string last_name
+        +string role
+        +datetime created_at
+        +register() bool
+        +login() string
+    }
+
+    class Product {
+        +int id
+        +string name
+        +string category
+        +double price
+        +int stock_quantity
+        +string image_url
+        +json specifications
+        +bool is_active
+        +createProduct() bool
+        +updateStock() bool
+    }
+
+    class Order {
+        +int id
+        +int user_id
+        +double total_price
+        +string coupon_code
+        +double discount_amount
+        +string payment_status
+        +string order_status
+        +string shipping_address
+        +string payment_slip_url
+        +bool is_assembled
+        +string tracking_number
+        +datetime created_at
+        +createOrder() bool
+        +updateStatus() bool
+    }
+
+    class OrderItem {
+        +int id
+        +int order_id
+        +int product_id
+        +int quantity
+        +double price_per_unit
+    }
+
+    class Review {
+        +int id
+        +int order_id
+        +int product_id
+        +int rating
+        +string comment
+        +string review_image_url
+        +string status
+        +submitReview() bool
+        +approveReview() bool
+    }
+
+    class PrebuiltTemplate {
+        +int id
+        +string template_name
+        +string price_range_tag
+        +string description
+        +datetime created_at
+        +createTemplate() bool
+    }
+
+    class TemplateItem {
+        +int id
+        +int template_id
+        +int product_id
+        +int quantity
+    }
+
+    class WishlistItem {
+        +int id
+        +int user_id
+        +int product_id
+        +bool is_alert_enabled
+        +datetime created_at
+        +addWishlist() bool
+        +removeWishlist() bool
+    }
+
+    class AssemblyRecord {
+        +int id
+        +int order_id
+        +int staff_id
+        +double cpu_temperature
+        +double gpu_temperature
+        +string burn_in_status
+        +string notes
+        +datetime tested_at
+        +submitRecord() bool
+    }
+
+    class OrderLog {
+        +int id
+        +int order_id
+        +string status
+        +int changed_by_user_id
+        +datetime created_at
+        +createLog() bool
+    }
+
+    class GalleryPost {
+        +int id
+        +int user_id
+        +int order_id
+        +string title
+        +string description
+        +string image_url
+        +string status
+        +int likes_count
+        +datetime created_at
+        +createPost() bool
+        +likePost() bool
+        +approvePost() bool
+    }
+
+    %% Relationships
+    User "1" --> "*" Order : places
+    Order "1" *-- "*" OrderItem : contains
+    Product "1" --> "*" OrderItem : ordered_in
+    Order "1" --> "0..*" Review : has
+    Product "1" --> "0..*" Review : reviewed_under
+    PrebuiltTemplate "1" *-- "*" TemplateItem : contains
+    Product "1" --> "*" TemplateItem : itemized_in
+    User "1" --> "*" WishlistItem : maintains
+    Product "1" --> "*" WishlistItem : added_to
+    Order "1" --> "0..1" AssemblyRecord : tested_by
+    User "1" --> "*" AssemblyRecord : assembles
+    Order "1" *-- "*" OrderLog : logs
+    User "1" --> "*" OrderLog : changes
+    User "1" --> "*" GalleryPost : posts
+    Order "1" --> "0..1" GalleryPost : shared_as
