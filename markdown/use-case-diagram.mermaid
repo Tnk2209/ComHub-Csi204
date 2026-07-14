@@ -16,11 +16,16 @@ graph LR
     %% System Boundary
     subgraph ComHub_System ["ระบบ ComHub (System Boundary)"]
         
+        %% --- COMMON WORKFLOW ---
+        subgraph Common_Flow ["0. ฟังก์ชันระบบร่วมกัน (Common Use Cases)"]
+            Sys_Login("เข้าสู่ระบบ"):::baseUC
+            Sys_Logout("ออกจากระบบ"):::baseUC
+        end
+        
         %% --- CUSTOMER WORKFLOW ---
         subgraph Customer_Flow ["1. ฟังก์ชันฝั่งลูกค้า (Customer Use Cases)"]
             %% Base Use Cases
             C_Register("สมัครสมาชิก"):::baseUC
-            C_Login("เข้าสู่ระบบ"):::baseUC
             C_Profile("จัดการข้อมูลส่วนตัว"):::baseUC
             C_Browse("ค้นหา & ดูสินค้า"):::baseUC
             C_Compare("เปรียบเทียบสเปคสินค้า"):::baseUC
@@ -31,7 +36,9 @@ graph LR
             C_Track("ติดตามสถานะการประกอบ"):::baseUC
             C_Review("รีวิวสินค้า & ให้คะแนน"):::baseUC
             C_Wishlist("จัดการรายการโปรด (Wishlist)"):::baseUC
-            
+            C_Prebuilt("เลือกเซ็ตสเปคแนะนำ<br>(Pre-built Templates)"):::baseUC
+            C_Gallery("แกลเลอรี่คอมมูนิตี้<br>(PC Build Gallery)"):::baseUC
+
             %% Included/Extended Use Cases
             C_Verify("ยืนยันตัวตน<br>(อีเมล/เบอร์โทร)"):::subUC
             C_EditProfile("แก้ไขข้อมูลส่วนตัว"):::subUC
@@ -44,7 +51,13 @@ graph LR
             C_SelectPay("เลือกวิธีชำระเงิน"):::subUC
             C_UploadSlip("อัปโหลดภาพสลิป WebP"):::subUC
             C_UploadReviewImg("แนบรูปถ่ายประกอบรีวิว"):::subUC
-            
+            C_PrebuiltOrder("สั่งซื้อเซ็ตทันที"):::subUC
+            C_PrebuiltEdit("ดึงเซ็ตไปปรับแต่งใน Builder"):::subUC
+            C_GalleryShare("แชร์สเปคสู่แกลเลอรี่"):::subUC
+            C_GalleryClone("โคลนสเปคจากโพสต์อื่น"):::subUC
+            C_GalleryLike("กดถูกใจโพสต์"):::subUC
+            C_AssemblyOpt("เลือกบริการประกอบ<br>(ให้ร้านประกอบ & เทสเครื่อง)"):::subUC
+
             %% Relations inside Customer
             C_Register -.->|"<<include>>"| C_Verify
             C_Profile -.->|"<<include>>"| C_EditProfile
@@ -54,10 +67,18 @@ graph LR
             C_Builder -.->|"<<include>>"| C_SumPrice
             C_Cart -.->|"<<include>>"| C_SumPrice
             C_Cart -.->|"<<extend>>"| C_Coupon
+            C_Cart -.->|"<<extend>>"| C_AssemblyOpt
             C_Order -.->|"<<include>>"| C_Address
             C_Pay -.->|"<<include>>"| C_SelectPay
             C_Pay -.->|"<<include>>"| C_UploadSlip
             C_Review -.->|"<<extend>>"| C_UploadReviewImg
+            C_Prebuilt -.->|"<<extend>>"| C_PrebuiltOrder
+            C_Prebuilt -.->|"<<extend>>"| C_PrebuiltEdit
+            C_PrebuiltEdit -.->|"<<include>>"| C_Builder
+            C_Gallery -.->|"<<extend>>"| C_GalleryShare
+            C_Gallery -.->|"<<extend>>"| C_GalleryClone
+            C_Gallery -.->|"<<extend>>"| C_GalleryLike
+            C_GalleryClone -.->|"<<include>>"| C_Builder
         end
         
         %% --- STAFF WORKFLOW ---
@@ -87,12 +108,14 @@ graph LR
             M_Dashboard("ตรวจสอบแดชบอร์ดร้าน"):::managerUC
             
             M_EditParts("เพิ่ม/แก้ไขชิ้นส่วนเทมเพลต"):::subUC
+            M_DeleteTemplate("ลบเทมเพลต"):::subUC
             M_ApproveImg("ตรวจสอบ & อนุมัติรูปภาพ"):::subUC
             M_Pin("ปักหมุดสเปคเด่นขึ้นหน้าแรก"):::subUC
             M_AnalyzeSales("วิเคราะห์ยอดขาย/สินค้าขายดี"):::subUC
             M_AlertStock("ตรวจสอบสต็อกใกล้หมด"):::subUC
             
             M_Templates -.->|"<<include>>"| M_EditParts
+            M_Templates -.->|"<<extend>>"| M_DeleteTemplate
             M_Moderation -.->|"<<include>>"| M_ApproveImg
             M_Moderation -.->|"<<extend>>"| M_Pin
             M_Dashboard -.->|"<<include>>"| M_AnalyzeSales
@@ -104,25 +127,49 @@ graph LR
             A_Products("จัดการฐานข้อมูลสินค้า"):::adminUC
             A_Specs("ตั้งค่ากฎเทคนิคระบบ"):::adminUC
             A_Users("จัดการผู้ใช้งานหลังบ้าน (RBAC)"):::adminUC
-            
+            A_Payment("อนุมัติสลิปโอนเงิน"):::adminUC
+
             A_CRUD("เพิ่ม/ลด/แก้ไขข้อมูลในสต็อก"):::subUC
             A_Socket("ตั้งคู่แอตทริบิวต์ Socket"):::subUC
+            A_SizeLimit("ตั้งค่าขีดจำกัดขนาดเคส/GPU"):::subUC
             A_TDP("ระบุค่ากินไฟ TDP ทุกลำดับ"):::subUC
             A_CreateStaff("สร้างบัญชีพนักงาน Staff/Manager"):::subUC
             A_SetMenu("กำหนดสิทธิ์การเข้าถึงเมนู"):::subUC
-            
+            A_DeleteAccount("ลบบัญชีพนักงาน"):::subUC
+            A_ApprovePay("อนุมัติการชำระเงิน"):::subUC
+            A_RejectPay("ปฏิเสธ & Rollback สต็อก"):::subUC
+
             A_Products -.->|"<<include>>"| A_CRUD
             A_Specs -.->|"<<include>>"| A_Socket
+            A_Specs -.->|"<<include>>"| A_SizeLimit
             A_Specs -.->|"<<include>>"| A_TDP
             A_Users -.->|"<<include>>"| A_CreateStaff
             A_Users -.->|"<<include>>"| A_SetMenu
+            A_Users -.->|"<<include>>"| A_DeleteAccount
+            A_Payment -.->|"<<extend>>"| A_ApprovePay
+            A_Payment -.->|"<<extend>>"| A_RejectPay
         end
         
     end
 
+    %% Actor Vertical Layout Constraints (Force Customer to top, Admin to bottom)
+    Customer ~~~ Staff
+    Staff ~~~ Manager
+    Manager ~~~ Admin
+
+    %% Common Use Case Connections (Login & Logout for all roles)
+    Customer ---> Sys_Login
+    Staff ---> Sys_Login
+    Manager ---> Sys_Login
+    Admin ---> Sys_Login
+
+    Customer ---> Sys_Logout
+    Staff ---> Sys_Logout
+    Manager ---> Sys_Logout
+    Admin ---> Sys_Logout
+
     %% Actor Connections to Base Use Cases (Left to Center)
     Customer ---> C_Register
-    Customer ---> C_Login
     Customer ---> C_Profile
     Customer ---> C_Browse
     Customer ---> C_Compare
@@ -133,19 +180,22 @@ graph LR
     Customer ---> C_Track
     Customer ---> C_Review
     Customer ---> C_Wishlist
+    Customer ---> C_Prebuilt
+    Customer ---> C_Gallery
 
-    %% Staff Connections (Right to Center)
-    S_CheckOrder ---> Staff
-    S_Assembly ---> Staff
-    S_BurnIn ---> Staff
-    S_Logistics ---> Staff
+    %% Staff Connections (Left to Center)
+    Staff ---> S_CheckOrder
+    Staff ---> S_Assembly
+    Staff ---> S_BurnIn
+    Staff ---> S_Logistics
 
-    %% Manager Connections (Right to Center)
-    M_Templates ---> Manager
-    M_Moderation ---> Manager
-    M_Dashboard ---> Manager
+    %% Manager Connections (Left to Center)
+    Manager ---> M_Templates
+    Manager ---> M_Moderation
+    Manager ---> M_Dashboard
 
-    %% Admin Connections (Right to Center)
-    A_Products ---> Admin
-    A_Specs ---> Admin
-    A_Users ---> Admin
+    %% Admin Connections (Left to Center)
+    Admin ---> A_Products
+    Admin ---> A_Specs
+    Admin ---> A_Users
+    Admin ---> A_Payment

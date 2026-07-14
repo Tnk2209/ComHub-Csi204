@@ -1,0 +1,313 @@
+%% ============================================================
+%% ComHub - Use Case Diagram
+%% แหล่งข้อมูล: markdown/project-scope.md
+%% CSI204 - Software Engineering
+%% ============================================================
+graph LR
+    %% Styling Configuration
+    classDef actor fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff;
+    classDef baseUC fill:#0369a1,stroke:#bae6fd,stroke-width:1.5px,color:#fff;
+    classDef subUC fill:#0f172a,stroke:#10b981,stroke-width:1.2px,color:#fff;
+    classDef adminUC fill:#b91c1c,stroke:#fecaca,stroke-width:1.5px,color:#fff;
+
+    %% Actors
+    Customer["ลูกค้า<br>(Customer)"]:::actor
+    Staff["พนักงานประกอบเครื่อง<br>(Staff)"]:::actor
+    Manager["ผู้จัดการร้าน<br>(Manager)"]:::actor
+    Admin["ผู้ดูแลระบบ<br>(Admin)"]:::actor
+
+    subgraph ComHub_System ["ระบบ ComHub (System Boundary)"]
+
+        %% --- CUSTOMER USE CASES ---
+        subgraph Customer_Flow ["1. ลูกค้า (Customer)"]
+            C_Register("สมัครสมาชิก<br>(Register)"):::baseUC
+            C_Login("ล็อกอินเข้าสู่ระบบ<br>(Login)"):::baseUC
+            C_Builder("จัดสเปคคอมพิวเตอร์<br>(PC Builder)"):::baseUC
+            C_Compat("ตรวจสอบความเข้ากันได้<br>(Compatibility Checker)"):::baseUC
+            C_Wattage("คำนวณกำลังไฟ<br>(Wattage Calculator)"):::baseUC
+            C_Prebuilt("เซ็ตสเปคแนะนำ<br>(Pre-built Templates)"):::baseUC
+            C_Compare("เปรียบเทียบสินค้า<br>(Product Comparison)"):::baseUC
+            C_Wishlist("บันทึกสินค้าโปรด<br>(Wishlist & Stock Alert)"):::baseUC
+            C_Review("เขียนรีวิว<br>(Review with Photos)"):::baseUC
+            C_Gallery("แกลเลอรี่คอมมูนิตี้<br>(PC Build Gallery)"):::baseUC
+            C_Cart("ตะกร้าสินค้าและสั่งซื้อ<br>(Cart & Checkout)"):::baseUC
+            C_Track("ติดตามสถานะประกอบ<br>(Assembly Tracking)"):::baseUC
+
+            %% Sub use cases: PC Builder
+            C_SelectPart("เลือกชิ้นส่วน"):::subUC
+            C_SwapPart("เปลี่ยนชิ้นส่วน"):::subUC
+            C_RemovePart("ลบชิ้นส่วน"):::subUC
+            C_ViewSummary("ดูสรุปสเปค"):::subUC
+
+            %% Sub use cases: Compatibility Checker
+            C_CheckSocket("ตรวจสอบ Socket"):::subUC
+            C_CheckCaseSize("ตรวจสอบขนาดเคส"):::subUC
+            C_CheckGpuSize("ตรวจสอบขนาดการ์ดจอ"):::subUC
+            C_CheckRamType("ตรวจสอบชนิด RAM"):::subUC
+
+            %% Sub use cases: Wattage Calculator
+            C_ViewTDP("ดูผลคำนวณ TDP"):::subUC
+            C_RecommendPSU("แนะนำ PSU"):::subUC
+
+            %% Sub use cases: Pre-built Templates
+            C_ViewPrebuilt("ดูเซ็ตแนะนำ"):::subUC
+            C_OrderPrebuilt("สั่งซื้อเซ็ตทันที"):::subUC
+            C_EditPrebuilt("ดึงเซ็ตไปปรับแต่ง"):::subUC
+
+            %% Sub use cases: Product Comparison
+            C_AddCompare("เพิ่มสินค้าเข้าเปรียบเทียบ"):::subUC
+            C_ViewCompareTable("ดูตารางเปรียบเทียบ"):::subUC
+            C_RemoveCompare("ลบสินค้าจากการเปรียบเทียบ"):::subUC
+
+            %% Sub use cases: Wishlist
+            C_AddWishlist("เพิ่มสินค้าเข้า Wishlist"):::subUC
+            C_RemoveWishlist("ลบสินค้าจาก Wishlist"):::subUC
+            C_EnableAlert("เปิดแจ้งเตือนสต็อก"):::subUC
+            C_DisableAlert("ปิดแจ้งเตือนสต็อก"):::subUC
+
+            %% Sub use cases: Review
+            C_WriteReview("เขียนรีวิวใหม่"):::subUC
+            C_AttachImage("แนบรูปภาพ"):::subUC
+            C_ViewReview("ดูรีวิวสินค้า"):::subUC
+
+            %% Sub use cases: Gallery
+            C_ShareGallery("แชร์สเปคสู่แกลเลอรี่"):::subUC
+            C_ViewGallery("ดูโพสต์คนอื่น"):::subUC
+            C_CloneSpec("โคลนสเปค"):::subUC
+            C_LikePost("กดถูกใจ"):::subUC
+
+            %% Sub use cases: Cart & Checkout
+            C_AddCart("เพิ่มสินค้าลงตะกร้า"):::subUC
+            C_EditQty("แก้ไขจำนวน"):::subUC
+            C_RemoveCart("ลบสินค้าจากตะกร้า"):::subUC
+            C_FillAddress("กรอกที่อยู่จัดส่ง"):::subUC
+            C_SelectAssembly("เลือกบริการประกอบ"):::subUC
+            C_UseCoupon("ใส่คูปองส่วนลด"):::subUC
+            C_UploadSlip("อัปโหลดสลิปโอนเงิน"):::subUC
+
+            %% Sub use cases: Assembly Tracking
+            C_ViewStatus("ดูสถานะออเดอร์"):::subUC
+            C_ViewLogHistory("ดูประวัติล็อก"):::subUC
+            C_ViewBurnIn("ดูผลทดสอบ Burn-in"):::subUC
+            C_ViewTrackingNo("ดูเลข Tracking"):::subUC
+
+            %% Relations: include/extend
+            C_Builder -.->|"<<include>>"| C_SelectPart
+            C_Builder -.->|"<<include>>"| C_SwapPart
+            C_Builder -.->|"<<include>>"| C_RemovePart
+            C_Builder -.->|"<<include>>"| C_ViewSummary
+
+            C_Compat -.->|"<<include>>"| C_CheckSocket
+            C_Compat -.->|"<<include>>"| C_CheckCaseSize
+            C_Compat -.->|"<<include>>"| C_CheckGpuSize
+            C_Compat -.->|"<<include>>"| C_CheckRamType
+            C_Builder -.->|"<<include>>"| C_Compat
+
+            C_Wattage -.->|"<<include>>"| C_ViewTDP
+            C_Wattage -.->|"<<include>>"| C_RecommendPSU
+            C_Builder -.->|"<<include>>"| C_Wattage
+
+            C_Prebuilt -.->|"<<include>>"| C_ViewPrebuilt
+            C_Prebuilt -.->|"<<extend>>"| C_OrderPrebuilt
+            C_Prebuilt -.->|"<<extend>>"| C_EditPrebuilt
+            C_EditPrebuilt -.->|"<<include>>"| C_Builder
+            C_OrderPrebuilt -.->|"<<include>>"| C_Cart
+
+            C_Compare -.->|"<<include>>"| C_AddCompare
+            C_Compare -.->|"<<include>>"| C_ViewCompareTable
+            C_Compare -.->|"<<extend>>"| C_RemoveCompare
+
+            C_Wishlist -.->|"<<include>>"| C_AddWishlist
+            C_Wishlist -.->|"<<extend>>"| C_RemoveWishlist
+            C_Wishlist -.->|"<<extend>>"| C_EnableAlert
+            C_Wishlist -.->|"<<extend>>"| C_DisableAlert
+
+            C_Review -.->|"<<include>>"| C_WriteReview
+            C_Review -.->|"<<extend>>"| C_AttachImage
+            C_Review -.->|"<<include>>"| C_ViewReview
+
+            C_Gallery -.->|"<<include>>"| C_ViewGallery
+            C_Gallery -.->|"<<extend>>"| C_ShareGallery
+            C_Gallery -.->|"<<extend>>"| C_CloneSpec
+            C_Gallery -.->|"<<extend>>"| C_LikePost
+            C_CloneSpec -.->|"<<include>>"| C_Builder
+
+            C_Cart -.->|"<<include>>"| C_AddCart
+            C_Cart -.->|"<<include>>"| C_EditQty
+            C_Cart -.->|"<<include>>"| C_RemoveCart
+            C_Cart -.->|"<<include>>"| C_FillAddress
+            C_Cart -.->|"<<extend>>"| C_SelectAssembly
+            C_Cart -.->|"<<extend>>"| C_UseCoupon
+            C_Cart -.->|"<<include>>"| C_UploadSlip
+
+            C_Track -.->|"<<include>>"| C_ViewStatus
+            C_Track -.->|"<<extend>>"| C_ViewLogHistory
+            C_Track -.->|"<<extend>>"| C_ViewBurnIn
+            C_Track -.->|"<<extend>>"| C_ViewTrackingNo
+        end
+
+        %% --- STAFF USE CASES ---
+        subgraph Staff_Flow ["2. พนักงานประกอบเครื่อง (Staff)"]
+            S_Login("ล็อกอินเข้าสู่ระบบพนักงาน<br>(Login)"):::baseUC
+            S_Build("จัดการคิวงานประกอบ<br>(Build Management)"):::baseUC
+            S_BurnIn("บันทึกผล Burn-in Test"):::baseUC
+            S_Logistics("ออกใบจัดส่ง<br>(Logistics)"):::baseUC
+
+            S_ViewQueue("ดูรายการคิวประกอบ"):::subUC
+            S_ViewBOM("ดูรายการอุปกรณ์ (BOM)"):::subUC
+            S_UpdateAssembling("อัปเดตสถานะ \"กำลังประกอบ\""):::subUC
+            S_UpdateTesting("อัปเดตสถานะ \"กำลังเทสระบบ\""):::subUC
+
+            S_CpuTemp("กรอกอุณหภูมิ CPU"):::subUC
+            S_GpuTemp("กรอกอุณหภูมิ GPU"):::subUC
+            S_PassFail("ประเมินผล Pass/Fail"):::subUC
+            S_Notes("เขียนโน้ตหมายเหตุ"):::subUC
+
+            S_PrintBill("พิมพ์ใบนำส่งพัสดุ"):::subUC
+            S_FillTracking("กรอก Tracking Number"):::subUC
+            S_UpdateShipped("อัปเดตสถานะ \"จัดส่งแล้ว\""):::subUC
+
+            S_Build -.->|"<<include>>"| S_ViewQueue
+            S_Build -.->|"<<include>>"| S_ViewBOM
+            S_Build -.->|"<<include>>"| S_UpdateAssembling
+            S_Build -.->|"<<include>>"| S_UpdateTesting
+            S_Build -.->|"<<include>>"| S_BurnIn
+
+            S_BurnIn -.->|"<<include>>"| S_CpuTemp
+            S_BurnIn -.->|"<<include>>"| S_GpuTemp
+            S_BurnIn -.->|"<<include>>"| S_PassFail
+            S_BurnIn -.->|"<<extend>>"| S_Notes
+
+            S_Logistics -.->|"<<include>>"| S_PrintBill
+            S_Logistics -.->|"<<include>>"| S_FillTracking
+            S_Logistics -.->|"<<include>>"| S_UpdateShipped
+        end
+
+        %% --- MANAGER USE CASES ---
+        subgraph Manager_Flow ["3. ผู้จัดการร้าน (Manager)"]
+            Mg_Login("ล็อกอินเข้าสู่ระบบผู้จัดการ<br>(Login)"):::baseUC
+            Mg_Template("จัดการเทมเพลตแนะนำ<br>(Pre-built Management)"):::baseUC
+            Mg_Gallery("ตรวจสอบแกลเลอรี่<br>(Gallery Moderation)"):::baseUC
+            Mg_Dashboard("แดชบอร์ดยอดขาย<br>(Sales Dashboard)"):::baseUC
+
+            Mg_CreateTpl("สร้างเทมเพลตใหม่"):::subUC
+            Mg_AddItem("เพิ่มชิ้นส่วนเข้าเทมเพลต"):::subUC
+            Mg_EditTpl("แก้ไขเทมเพลต"):::subUC
+            Mg_DeleteTpl("ลบเทมเพลต"):::subUC
+
+            Mg_ViewPending("ดูรายการรอตรวจ"):::subUC
+            Mg_Approve("อนุมัติเผยแพร่ (Approve)"):::subUC
+            Mg_Reject("ปฏิเสธ (Reject)"):::subUC
+            Mg_Pin("ปักหมุดโพสต์"):::subUC
+            Mg_Unpin("ยกเลิกปักหมุด"):::subUC
+
+            Mg_SalesChart("ดูกราฟยอดขาย"):::subUC
+            Mg_TopProduct("ดูสินค้ายอดนิยม"):::subUC
+            Mg_LowStock("ดูเตือนสต็อกต่ำ"):::subUC
+
+            Mg_Template -.->|"<<include>>"| Mg_CreateTpl
+            Mg_CreateTpl -.->|"<<include>>"| Mg_AddItem
+            Mg_Template -.->|"<<extend>>"| Mg_EditTpl
+            Mg_Template -.->|"<<extend>>"| Mg_DeleteTpl
+
+            Mg_Gallery -.->|"<<include>>"| Mg_ViewPending
+            Mg_Gallery -.->|"<<extend>>"| Mg_Approve
+            Mg_Gallery -.->|"<<extend>>"| Mg_Reject
+            Mg_Gallery -.->|"<<extend>>"| Mg_Pin
+            Mg_Gallery -.->|"<<extend>>"| Mg_Unpin
+
+            Mg_Dashboard -.->|"<<include>>"| Mg_SalesChart
+            Mg_Dashboard -.->|"<<include>>"| Mg_TopProduct
+            Mg_Dashboard -.->|"<<include>>"| Mg_LowStock
+        end
+
+        %% --- ADMIN USE CASES ---
+        subgraph Admin_Flow ["4. ผู้ดูแลระบบ (Admin)"]
+            A_Login("ล็อกอินเข้าสู่ระบบแอดมิน<br>(Login)"):::baseUC
+            A_Database("จัดการคลังสินค้า<br>(Database CRUD)"):::adminUC
+            A_Rules("ตั้งค่ากฎความเข้ากันได้<br>(Rules Configuration)"):::adminUC
+            A_Power("ตั้งค่ากำลังไฟ<br>(Power Allocation)"):::adminUC
+            A_Access("จัดการสิทธิ์ผู้ใช้<br>(Role & Access Control)"):::adminUC
+            A_Payment("อนุมัติสลิปโอนเงิน<br>(Payment Review)"):::adminUC
+
+            A_AddProduct("เพิ่มสินค้า"):::subUC
+            A_EditProduct("แก้ไขสินค้า"):::subUC
+            A_SoftDelete("ปิดขายสินค้า (Soft Delete)"):::subUC
+            A_ReEnable("เปิดขายสินค้าอีกครั้ง"):::subUC
+            A_ViewAll("ดูรายการสินค้าทั้งหมด"):::subUC
+
+            A_AddSocket("เพิ่มกฎ Socket Matching"):::subUC
+            A_EditSocket("แก้ไขกฎ Socket"):::subUC
+            A_AddSize("เพิ่มกฎ Size Limitation"):::subUC
+            A_EditSize("แก้ไขกฎ Size"):::subUC
+
+            A_SetTDP("กำหนด TDP Watts"):::subUC
+            A_EditTDP("แก้ไข TDP Watts"):::subUC
+
+            A_CreateStaff("สร้างบัญชี Staff/Manager"):::subUC
+            A_EditPermission("แก้ไขสิทธิ์"):::subUC
+            A_DeleteAccount("ลบบัญชี"):::subUC
+
+            A_ViewPending("ดูสลิปรอตรวจ"):::subUC
+            A_ApprovePay("อนุมัติการชำระเงิน (Approved)"):::subUC
+            A_RejectPay("ปฏิเสธการชำระเงิน (Rejected)"):::subUC
+
+            A_Database -.->|"<<include>>"| A_ViewAll
+            A_Database -.->|"<<extend>>"| A_AddProduct
+            A_Database -.->|"<<extend>>"| A_EditProduct
+            A_Database -.->|"<<extend>>"| A_SoftDelete
+            A_Database -.->|"<<extend>>"| A_ReEnable
+
+            A_Rules -.->|"<<include>>"| A_AddSocket
+            A_Rules -.->|"<<extend>>"| A_EditSocket
+            A_Rules -.->|"<<include>>"| A_AddSize
+            A_Rules -.->|"<<extend>>"| A_EditSize
+
+            A_Power -.->|"<<include>>"| A_SetTDP
+            A_Power -.->|"<<extend>>"| A_EditTDP
+
+            A_Access -.->|"<<include>>"| A_CreateStaff
+            A_Access -.->|"<<extend>>"| A_EditPermission
+            A_Access -.->|"<<extend>>"| A_DeleteAccount
+
+            A_Payment -.->|"<<include>>"| A_ViewPending
+            A_Payment -.->|"<<extend>>"| A_ApprovePay
+            A_Payment -.->|"<<extend>>"| A_RejectPay
+        end
+    end
+
+    %% Actor Vertical Layout Constraints
+    Customer ~~~ Staff
+    Staff ~~~ Manager
+    Manager ~~~ Admin
+
+    %% Actor -> Use Case Connections
+    Customer ---> C_Register
+    Customer ---> C_Login
+    Customer ---> C_Builder
+    Customer ---> C_Compat
+    Customer ---> C_Wattage
+    Customer ---> C_Prebuilt
+    Customer ---> C_Compare
+    Customer ---> C_Wishlist
+    Customer ---> C_Review
+    Customer ---> C_Gallery
+    Customer ---> C_Cart
+    Customer ---> C_Track
+
+    Staff ---> S_Login
+    Staff ---> S_Build
+    Staff ---> S_BurnIn
+    Staff ---> S_Logistics
+
+    Manager ---> Mg_Login
+    Manager ---> Mg_Template
+    Manager ---> Mg_Gallery
+    Manager ---> Mg_Dashboard
+
+    Admin ---> A_Login
+    Admin ---> A_Database
+    Admin ---> A_Rules
+    Admin ---> A_Power
+    Admin ---> A_Access
+    Admin ---> A_Payment

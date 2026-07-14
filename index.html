@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ComHub - System Requirement Specification (SRS)</title>
+    <title>ComHub - Project Overview & Specifications</title>
     
     <!-- Premium Fonts Pairing -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -630,13 +630,13 @@
             <i class="fa-solid fa-laptop-code"></i>
             <div class="sidebar-brand-text">
                 <h1>ComHub</h1>
-                <p>System Specification v1.0</p>
+                <p>Project Specifications</p>
             </div>
         </div>
 
         <div class="sidebar-nav">
             <div class="nav-label">มุมมองเอกสาร (View)</div>
-            <a href="#" class="active" id="docTabBtn"><i class="fa-solid fa-file-lines" style="width: 20px; margin-right: 0.5rem;"></i> เอกสารข้อกำหนดระบบ (SRS)</a>
+            <a href="#" class="active" id="docTabBtn"><i class="fa-solid fa-file-lines" style="width: 20px; margin-right: 0.5rem;"></i> ภาพรวมโครงการ</a>
             <a href="#" id="builderTabBtn"><i class="fa-solid fa-circle-nodes" style="width: 20px; margin-right: 0.5rem;"></i> ตัวอย่างคำนวณสเปค (Interactive)</a>
             
             <div class="nav-label" id="tocLabel">สารบัญเอกสาร</div>
@@ -662,17 +662,17 @@
             
             <!-- tab switcher -->
             <div class="showcase-tabs">
-                <button class="tab-btn active" id="tabDocBtn"><i class="fa-solid fa-book"></i> เอกสารข้อกำหนดระบบ</button>
+                <button class="tab-btn active" id="tabDocBtn"><i class="fa-solid fa-book"></i> ภาพรวมโครงการ</button>
                 <button class="tab-btn" id="tabBuilderBtn"><i class="fa-solid fa-sliders"></i> แบบจำลองตัวตรวจเช็คสเปค</button>
             </div>
             
-            <!-- SECTION 1: DOCUMENTATION (Dynamic from SRS.md) -->
+            <!-- SECTION 1: DOCUMENTATION (Dynamic from README.md) -->
             <div class="tab-content active" id="docTabContent">
                 
                 
                 
                 <div class="markdown-body" id="MDContent">
-                    <p style="text-align: center; padding: 2rem;"><i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--primary);"></i><br><br>กำลังดาวน์โหลดและเรนเดอร์เอกสาร SRS.md...</p>
+                    <p style="text-align: center; padding: 2rem;"><i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--primary);"></i><br><br>กำลังดาวน์โหลดและเรนเดอร์เอกสาร README.md...</p>
                 </div>
             </div>
             
@@ -700,62 +700,54 @@
                             <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">1. หน่วยประมวลผล (CPU)</label>
                             <select class="form-select" id="cpuSelect">
                                 <option value="" data-socket="" data-tdp="0">-- เลือก CPU --</option>
-                                <option value="intel-i5" data-socket="LGA1700" data-tdp="65">Intel Core i5-13400F (LGA1700, 65W)</option>
-                                <option value="intel-i9" data-socket="LGA1700" data-tdp="125">Intel Core i9-13900K (LGA1700, 125W)</option>
-                                <option value="amd-ryzen5" data-socket="AM5" data-tdp="65">AMD Ryzen 5 7600 (AM5, 65W)</option>
-                                <option value="amd-ryzen9" data-socket="AM5" data-tdp="120">AMD Ryzen 9 7900X (AM5, 120W)</option>
+                                <option value="cpu-1" data-socket="LGA1700" data-tdp="125">Intel Core i7-14700K (LGA1700, 125W)</option>
+                                <option value="cpu-2" data-socket="AM5" data-tdp="120">AMD Ryzen 7 7800X3D (AM5, 120W)</option>
+                                <option value="cpu-3" data-socket="AM5" data-tdp="65">AMD Ryzen 5 7600 (AM5, 65W)</option>
                             </select>
                             
                             <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">2. เมนบอร์ด (Mainboard)</label>
                             <select class="form-select" id="mbSelect">
                                 <option value="" data-socket="" data-tdp="0" data-size="">-- เลือก เมนบอร์ด --</option>
-                                <option value="mb-b760" data-socket="LGA1700" data-tdp="40" data-size="M-ATX">Gigabyte B760M DS3H (LGA1700, M-ATX, 40W)</option>
-                                <option value="mb-z790" data-socket="LGA1700" data-tdp="55" data-size="ATX">ASUS ROG Strix Z790 (LGA1700, ATX, 55W)</option>
-                                <option value="mb-b650" data-socket="AM5" data-tdp="35" data-size="ATX">MSI MAG B650 Tomahawk (AM5, ATX, 35W)</option>
-                                <option value="mb-x670" data-socket="AM5" data-tdp="50" data-size="ATX">ASRock X670E Steel Legend (AM5, ATX, 50W)</option>
-                                <option value="mb-b760i" data-socket="LGA1700" data-tdp="30" data-size="ITX">ASUS ROG Strix B760-I (LGA1700, ITX, 30W)</option>
-                                <option value="mb-b650i" data-socket="AM5" data-tdp="30" data-size="ITX">MSI MPG B650I Edge (AM5, ITX, 30W)</option>
+                                <option value="mb-1" data-socket="AM5" data-tdp="30" data-size="ATX">ASUS ROG STRIX B650-A GAMING WIFI (AM5, ATX, 30W)</option>
+                                <option value="mb-2" data-socket="LGA1700" data-tdp="35" data-size="ATX">MSI PRO Z790-A MAX WIFI (LGA1700, ATX, 35W)</option>
+                                <option value="mb-3" data-socket="AM5" data-tdp="30" data-size="ATX">Gigabyte B650 AORUS ELITE AX (AM5, ATX, 30W)</option>
                             </select>
 
                             <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">3. การ์ดจอ (GPU)</label>
                             <select class="form-select" id="gpuSelect">
                                 <option value="" data-tdp="0" data-length="0">-- เลือก GPU --</option>
-                                <option value="gpu-rtx3060" data-tdp="170" data-length="240">NVIDIA RTX 3060 12GB (170W, L=240mm)</option>
-                                <option value="gpu-rtx4070" data-tdp="200" data-length="300">NVIDIA RTX 4070 Ti 12GB (200W, L=300mm)</option>
-                                <option value="gpu-rtx4090" data-tdp="450" data-length="340">NVIDIA RTX 4090 24GB (450W, L=340mm)</option>
-                                <option value="gpu-rx7600" data-tdp="165" data-length="240">AMD Radeon RX 7600 (165W, L=240mm)</option>
+                                <option value="gpu-1" data-tdp="450" data-length="340">NVIDIA RTX 4090 Founders Edition (450W, L=340mm)</option>
+                                <option value="gpu-2" data-tdp="285" data-length="310">NVIDIA RTX 4070 Ti Super (285W, L=310mm)</option>
+                                <option value="gpu-3" data-tdp="263" data-length="280">AMD Radeon RX 7800 XT (263W, L=280mm)</option>
                             </select>
 
                             <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">4. หน่วยความจำ (RAM)</label>
                             <select class="form-select" id="ramSelect">
                                 <option value="" data-tdp="0">-- เลือก RAM --</option>
-                                <option value="ram-ddr4-16" data-tdp="10">DDR4 16GB (8GBx2) 3200MHz (10W)</option>
-                                <option value="ram-ddr5-16" data-tdp="12">DDR5 16GB (8GBx2) 5600MHz (12W)</option>
-                                <option value="ram-ddr5-32" data-tdp="18">DDR5 32GB (16GBx2) 6000MHz (18W)</option>
+                                <option value="ram-1" data-tdp="10">Corsair Vengeance RGB 32GB (2x16GB) DDR5 6000MHz (10W)</option>
+                                <option value="ram-2" data-tdp="12">G.Skill Trident Z5 Neo 32GB (2x16GB) DDR5 6400MHz (12W)</option>
                             </select>
 
                             <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">5. ที่เก็บข้อมูล (SSD Storage)</label>
                             <select class="form-select" id="ssdSelect">
                                 <option value="" data-tdp="0">-- เลือก SSD --</option>
-                                <option value="ssd-500" data-tdp="6">M.2 NVMe SSD 500GB Gen4 (6W)</option>
-                                <option value="ssd-1000" data-tdp="8">M.2 NVMe SSD 1TB Gen4 (8W)</option>
-                                <option value="ssd-2000" data-tdp="10">M.2 NVMe SSD 2TB Gen4 (10W)</option>
+                                <option value="ssd-1" data-tdp="8">Samsung 990 Pro 2TB NVMe M.2 SSD (8W)</option>
+                                <option value="ssd-2" data-tdp="7">Crucial T500 2TB PCIe Gen4 NVMe SSD (7W)</option>
                             </select>
 
                             <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">6. เคสคอมพิวเตอร์ (Case)</label>
                             <select class="form-select" id="caseSelect">
                                 <option value="" data-size="" data-gpu-max="0">-- เลือก เคส --</option>
-                                <option value="case-itx" data-size="ITX" data-gpu-max="280">Thermaltake Core V1 (Mini-ITX, Max GPU 280mm)</option>
-                                <option value="case-mid" data-size="ATX" data-gpu-max="360">Corsair 4000D (ATX/M-ATX/ITX, Max GPU 360mm)</option>
-                                <option value="case-full" data-size="ATX" data-gpu-max="450">ASUS ROG Strix Helios (ATX/M-ATX/ITX, Max GPU 450mm)</option>
+                                <option value="case-1" data-size="ATX" data-gpu-max="435">NZXT H9 Flow Dual-Chamber Mid-Tower (ATX, Max GPU 435mm)</option>
+                                <option value="case-2" data-size="ATX" data-gpu-max="360">Corsair 4000D Airflow Tempered Glass (ATX, Max GPU 360mm)</option>
                             </select>
 
                             <label style="font-size: 0.8rem; font-weight:600; margin-bottom: 0.25rem; display:block;">7. พาวเวอร์ซัพพลาย (Power Supply Unit - PSU)</label>
                             <select class="form-select" id="psuSelect">
                                 <option value="" data-watt="0">-- เลือก PSU --</option>
-                                <option value="psu-550" data-watt="550">Corsair CV550 (550W)</option>
-                                <option value="psu-750" data-watt="750">Cooler Master V750 (750W)</option>
-                                <option value="psu-1000" data-watt="1000">SilverStone Hela 1000W (1000W)</option>
+                                <option value="psu-1" data-watt="850">Corsair RM850x 850W 80+ Gold Fully Modular (850W)</option>
+                                <option value="psu-2" data-watt="750">Seasonic Focus GX-750 750W 80+ Gold Modular (750W)</option>
+                                <option value="psu-3" data-watt="650">MSI MAG A650BN 650W 80+ Bronze Non-Modular (650W)</option>
                             </select>
                         </div>
                         
@@ -901,11 +893,11 @@
         tabDocBtn.addEventListener('click', () => switchTab('doc'));
         tabBuilderBtn.addEventListener('click', () => switchTab('builder'));
 
-        // Load & Parse SRS.md using AJAX (Option B as requested by user)
-        fetch('SRS.md')
+        // Load & Parse README.md using AJAX (Option B as requested by user)
+        fetch('README.md')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('ไม่สามารถโหลดไฟล์ SRS.md ได้ กรุณารันด้วยเว็บเซิร์ฟเวอร์ (เช่น Live Server หรือ python -m http.server)');
+                    throw new Error('ไม่สามารถโหลดไฟล์ README.md ได้ กรุณารันด้วยเว็บเซิร์ฟเวอร์ (เช่น Live Server หรือ python -m http.server)');
                 }
                 return response.text();
             })
