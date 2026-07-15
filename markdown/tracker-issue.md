@@ -42,9 +42,9 @@
 
 ### **[2026-07-13] Session 1: วางแผนโครงการขั้นเริ่มต้น (SDLC Planning & Tasking)**
 - **การเปลี่ยนแปลงโค้ด/โครงสร้าง:**
-  - สร้างไฟล์แผนดำเนินงานหลัก [sdlc-planning.md](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/sdlc-planning.md)
+  - สร้างไฟล์แผนดำเนินงานหลัก [sdlc-planning.md](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/markdown/sdlc-planning.md)
   - สร้างไฟล์ [summary-issue.md](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/markdown/summary-issue.md) และ [tracker-issue.md](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/markdown/tracker-issue.md)
   - สร้างไฟล์ประเด็นงาน 20 หัวข้อ (Issue 001 - Issue 020)
-  - สร้างไฟล์ข้อมูลระบบโดยละเอียด [CODEBASE.md](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/CODEBASE.md)
+  - สร้างไฟล์ข้อมูลระบบโดยละเอียด [CODEBASE.md](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/markdown/CODEBASE.md)
 - **ผลลัพธ์การทดสอบ:** 
   - สร้างไฟล์สำเร็จ โครงสร้าง Monorepo พร้อมเข้าสู่ขั้นตอนถัดไป

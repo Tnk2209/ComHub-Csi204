@@ -25,7 +25,27 @@
     *   [5.2 แผนผังเส้นทางการใช้งานจำแนกตามบทบาทผู้ใช้ (Role-Based Access & Feature Flow)](#52-แผนผังเส้นทางการใช้งานจำแนกตามบทบาทผู้ใช้-role-based-access--feature-flow)
 *   [6. แผนการดำเนินงาน 4 สัปดาห์ (Project Timeline)](#6-แผนการดำเนินงาน-4-สัปดาห์-project-timeline)
 *   [7. เครื่องมือและเทคโนโลยีที่ใช้ (Tools & Technologies)](#7-เครื่องมือและเทคโนโลยีที่ใช้-tools--technologies)
-*   [8. ความเสี่ยงและการจัดการความเสี่ยง (Risk Management)](#8-ความเสี�### ขอบเขตระบบแยกตามสิทธิ์ผู้ใช้งาน (System Scope by Actors)
+*   [8. ความเสี่ยงและการจัดการความเสี่ยง (Risk Management)](#8-ความเสี่ยงและการจัดการความเสี่ยง-risk-management)
+
+</div>
+
+---
+
+## 1. ภาพรวมโครงการ (Project Overview)
+
+ComHub คือแพลตฟอร์มอีคอมเมิร์ซสำหรับจัดสเปคและจำหน่ายอุปกรณ์คอมพิวเตอร์ครบวงจร ที่ช่วยให้ลูกค้าสามารถเลือกประกอบคอมพิวเตอร์ได้ด้วยตนเองผ่านระบบ PC Builder ซึ่งตรวจสอบความเข้ากันได้ของฮาร์ดแวร์ (Compatibility Checker) และคำนวณกำลังไฟที่ต้องใช้ (Wattage Calculator) โดยอัตโนมัติ พร้อมทั้งมีระบบหลังบ้านที่รองรับการบริหารจัดการคิวงานประกอบเครื่อง การทดสอบ Burn-in แดชบอร์ดวิเคราะห์ยอดขาย และระบบจัดการสิทธิ์ผู้ใช้งานแบบ Role-Based Access Control (RBAC) ครบทั้ง 4 บทบาท ได้แก่ ลูกค้า (Customer), พนักงานประกอบเครื่อง (Staff), ผู้จัดการร้าน (Manager) และผู้ดูแลระบบ (Admin)
+
+เอกสารนี้จัดทำขึ้นเพื่อประกอบวิชา **CSI204 — วิศวกรรมซอฟต์แวร์ (Software Engineering)** โดยระบุข้อกำหนดความต้องการของระบบทั้งด้านฟังก์ชันการทำงาน (Functional Requirements) และด้านที่ไม่ใช่ฟังก์ชัน (Non-Functional Requirements) รวมถึงสถาปัตยกรรมระบบ แผนการดำเนินงาน และการบริหารความเสี่ยงของโครงการ
+
+## 2. เป้าหมายทางธุรกิจและขอบเขตระบบ (Business Goals & Scope)
+
+### เป้าหมายทางธุรกิจ (Business Goals)
+
+1. เพื่อพัฒนาระบบอีคอมเมิร์ซสำหรับซื้อขายและเปรียบเทียบสเปคอุปกรณ์คอมพิวเตอร์ที่ตอบโจทย์กลุ่มผู้ใช้ทั้ง 4 บทบาท (Customer, Staff, Manager, Admin)
+2. เพื่อสร้างระบบจัดสเปคคอมพิวเตอร์ (PC Builder) ที่มี Compatibility Checker ตรวจสอบ Socket, ขนาดเคส/การ์ดจอ, ชนิด RAM และระบบ Wattage Calculator คำนวณกำลังไฟ TDP อัตโนมัติพร้อมเผื่อ 20%
+3. เพื่อพัฒนาระบบหลังบ้านครบวงจร ได้แก่ ระบบจัดคิวประกอบเครื่อง, บันทึกผลทดสอบ Burn-in Test, แดชบอร์ดวิเคราะห์ยอดขาย และระบบจัดการสิทธิ์ผู้ใช้ (RBAC)
+
+### ขอบเขตระบบแยกตามสิทธิ์ผู้ใช้งาน (System Scope by Actors)
 ระบบ ComHub แบ่งการใช้งานออกเป็น 4 บทบาทหลัก ดังนี้:
 
 #### 👤 ลูกค้า (Customer)
@@ -132,14 +152,6 @@
   - ปิดขายสินค้า (Soft Delete) : สลับสถานะ is_active เป็น false เพื่อซ่อนจากหน้าร้านแต่ยังเก็บประวัติ
   - เปิดขายสินค้าอีกครั้ง : สลับ is_active กลับเป็น true เพื่อนำกลับมาขายใหม่
   - ดูรายการสินค้าทั้งหมด : แสดงรายการสินค้าพร้อมสถานะ Active/Inactive
-- **ตั้งค่ากฎความเข้ากันได้ (Rules Configuration)**
-  - เพิ่มกฎ Socket Matching : กำหนดจับคู่ Socket ของ CPU กับ Mainboard (เช่น AM5, LGA1700)
-  - แก้ไขกฎ Socket : อัปเดตเงื่อนไขการจับคู่ Socket
-  - เพิ่มกฎ Size Limitation : กำหนดขีดจำกัดขนาด/ความยาวการ์ดจอกับเคส
-  - แก้ไขกฎ Size : อัปเดตเงื่อนไขการตรวจสอบขนาด
-- **ตั้งค่ากำลังไฟ (Power Allocation)**
-  - กำหนด TDP Watts : ระบุอัตรากำลังไฟฟ้า (Watts) ให้กับอุปกรณ์แต่ละชิ้นในระบบ
-  - แก้ไข TDP Watts : อัปเดตค่า TDP ของอุปกรณ์ที่มีอยู่
 - **จัดการสิทธิ์ผู้ใช้ (Role & Access Control)**
   - สร้างบัญชี Staff/Manager : เพิ่มบัญชีพนักงานหรือผู้จัดการใหม่เข้าระบบ
   - แก้ไขสิทธิ์ : เปลี่ยนบทบาท (Role) ของผู้ใช้ระหว่าง Staff/Manager
@@ -147,46 +159,15 @@
 - **อนุมัติสลิปโอนเงิน (Payment Review)**
   - ดูสลิปรอตรวจ : แสดงรายการออเดอร์ที่อัปโหลดสลิปแล้วรอการตรวจสอบ
   - อนุมัติการชำระเงิน (Approved) : ยืนยันสลิปถูกต้อง ส่งคิวต่อให้ช่างประกอบ
-  - ปฏิเสธการชำระเงิน (Rejected) : ปฏิเสธสลิปปลอม ระบบจะทำ Stock Rollback คืนสินค้ากลับคลังอัตโนมัติ
+  - ปฏิเสธการชำระเงิน (Rejected) : ปฏิเสธสลิปปลอม *(Stock Rollback ยังไม่ implement อัตโนมัติ — gap feature, ดู [prd.md §7](./markdown/prd.md))*
 
 ## 3. ความต้องการด้านฟังก์ชันการทำงาน (Functional Requirements)
 
-| รหัส | ฟังก์ชันระบบ | รายละเอียด | สิทธิ์ผู้ใช้ |
-|:---:|:---|:---|:---:|
-| **SYS-01** | Authentication & Auth | สมัครสมาชิก, ล็อกอิน, JWT Token Verification | ทุกบทบาท |
-| **SYS-02** | Cart & Checkout Flow | จัดการตะกร้า (LocalStorage), กรอกที่อยู่, อัปโหลดสลิป | C, S |
-| **SYS-03** | Client-side WebP Compression | บีบอัดรูปภาพสลิป/รีวิวเป็น WebP 80% ผ่าน Canvas API | C, M, A |
-| **C-01** | PC Builder Page | เลือกชิ้นส่วน 7 หมวดหมู่ พร้อม Bento Grid UI | C |
-| **C-02** | Compatibility Checker | กรอง Socket, ขนาดเคส/GPU, ชนิด RAM (DDR4/DDR5) | C, A |
-| **C-03** | Wattage Calculator | คำนวณ TDP รวม, แนะนำ PSU ที่จ่ายไฟ ≥ 1.2x | C |
-| **C-04** | Pre-built Templates | เซ็ตคอมสำเร็จรูปตามงบ กดสั่งซื้อทันทีหรือปรับแต่งต่อ | C |
-| **C-05** | Product Comparison | เปรียบเทียบสเปคเชิงเทคนิค สูงสุด 3 ชิ้น | C |
-| **C-06** | Wishlist & Stock Alert | บันทึกของโปรด, แจ้งเตือนเมื่อสต็อกกลับมา | C |
-| **C-07** | Review with Photos | รีวิว 1-5 ดาว, ข้อความ, อัปโหลดรูปถ่ายจริง | C |
-| **C-08** | PC Build Gallery | แกลเลอรี่คอมมูนิตี้ พร้อมปุ่มโคลนสเปค | C, M |
-| **C-09** | Assembly Tracking UI | ติดตาม 4 ขั้นตอน + ดูผลอุณหภูมิ Burn-in | C, S |
-| **S-01** | Build Assembly Management | คิวงานประกอบ, อัปเดตสถานะ Real-time | S |
-| **S-02** | Burn-in Test Record | บันทึกอุณหภูมิ CPU/GPU, ผลประเมิน Pass/Fail | S |
-| **S-03** | Logistics | พิมพ์ใบจัดส่ง, บันทึก Tracking Number | S |
-| **M-01** | Pre-built Management | CRUD เทมเพลตสเปคแนะนำ + แท็กงบประมาณ | M |
-| **M-02** | Gallery Moderation | อนุมัติรีวิว/ภาพ, ปักหมุดโพสต์ | M |
-| **M-03** | Sales Dashboard | กราฟยอดขาย, สินค้ายอดนิยม, เตือนสต็อกต่ำ | M |
-| **A-01** | Database Management CRUD | เพิ่ม/ลบ/แก้ไข/Soft Delete (is_active) สินค้า | A |
-| **A-02** | Rules Configuration | ตั้งค่า Socket Matching, Size Limitation | A |
-| **A-03** | Power Allocation Settings | กำหนด TDP Watts ให้อุปกรณ์ทุกชิ้น | A |
-| **A-04** | Role & Access Control | สร้างบัญชี Staff/Manager, กำหนดสิทธิ์ RBAC | A |
-
-> **หมายเหตุ:** C = Customer, S = Staff, M = Manager, A = Admin
+> ดู [FR/NFR Matrix ฉบับสมบูรณ์](./markdown/project-scope.md) สำหรับตารางฟังก์ชัน (SYS-XX, C-XX, S-XX, M-XX, A-XX) และข้อกำหนดคุณภาพทั้งหมด — **project-scope.md** คือแหล่งข้อมูลหลัก
 
 ## 4. ความต้องการด้านที่ไม่ใช่ฟังก์ชัน (Non-Functional Requirements)
 
-| ด้าน | ข้อกำหนด |
-|:---|:---|
-| **Performance** | Compatibility Checker และ Wattage Calculator ต้องตอบสนองภายใน **500ms** (Sub-second) |
-| **Security & RBAC** | Password Hashing (bcrypt), JWT Verification, แยกสิทธิ์ API Endpoint ตาม Role |
-| **Reliability** | ข้อมูลตะกร้าและสเปคค้างจัดบันทึกใน **LocalStorage** ป้องกันเน็ตหลุด, ระบบป้องกัน Overselling |
-| **UI/UX Standards** | Fullscreen Responsive (100% width), ฟอนต์คู่ `IBM Plex Sans Thai` + `Inter`, ธีม Dark Mode |
-| **Cloud Optimization** | รูปภาพอัปโหลดถูกบีบอัดเป็น **WebP 80%** ผ่าน Canvas API ก่อนส่งขึ้น Supabase Storage (1 GB) |
+> ดู [project-scope.md §2 NFR](./markdown/project-scope.md) สรุปสั้น: Performance < 500ms, bcrypt + JWT RBAC, LocalStorage Reliability, Dark Mode + IBM Plex/Inter, WebP 80% Cloud
 
 ---
 
@@ -370,10 +351,9 @@ graph LR
 
 | เครื่องมือ | หน้าที่ |
 |:---|:---|
-| Figma | ออกแบบ UI Mockup และ Wireframe |
-| Lucidchart | วาด System Diagram |
-| Draw.io | วาด Flowchart และ Activity Diagram |
-| StarUML | วาด UML Diagram (Use Case, Class, Sequence) |
+| Google Stitch | ใช้ออกแบบหน้า UI / Wireframe |
+| Figma | ใช้สำหรับการ Customize UI / Wireframe ที่ import มาจาก Google Stitch |
+| mermaid | ใช้ออกแบบ Diagram ต่างๆ |
 
 ### 🔀 Version Control
 

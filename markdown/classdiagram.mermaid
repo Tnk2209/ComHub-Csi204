@@ -10,12 +10,15 @@ classDiagram
         +int id
         +string email
         +string password_hash
+        +string oauth_provider
+        +string oauth_id
         +string first_name
         +string last_name
         +string role
         +datetime created_at
         +register() bool
         +login() string
+        +loginWithGoogle() string
         +logout() bool
     }
 
@@ -74,17 +77,11 @@ classDiagram
     }
 
     class Admin {
-        %% A-01 ~ A-04
+        %% A-01, A-04
         +createProduct(data) bool
         +updateProduct(productId, data) bool
         +setProductActive(productId, isActive) bool
         +listAllProducts() list
-        +addCompatibilityRule(cpuSocket, mbSocket) bool
-        +editCompatibilityRule(ruleId) bool
-        +addSizeLimitRule(caseTag, maxMbSize, maxGpuLength) bool
-        +editSizeLimitRule(ruleId) bool
-        +setTdpWatts(productId, watts) bool
-        +editTdpWatts(productId, watts) bool
         +createStaffAccount(data) bool
         +updateUserRole(userId, role) bool
         +deleteAccount(userId) bool
@@ -102,24 +99,7 @@ classDiagram
         +int stock_quantity
         +string image_url
         +json specifications
-        +double tdp_watts
         +bool is_active
-    }
-
-    class CompatibilityRule {
-        %% A-02
-        +int id
-        +string cpu_socket
-        +string mainboard_socket
-        +datetime created_at
-    }
-
-    class SizeLimitRule {
-        %% A-02
-        +int id
-        +string case_size_tag
-        +double max_mainboard_size
-        +double max_gpu_length_mm
     }
 
     %% ---------------- Pre-built Templates (C-04 / M-01) ----------------
@@ -261,7 +241,5 @@ classDiagram
 
     %% Admin domain
     Admin "1" --> "*" Product : manages
-    Admin "1" --> "*" CompatibilityRule : configures
-    Admin "1" --> "*" SizeLimitRule : configures
     Admin "1" --> "*" Order : reviews_payment
     Admin "1" --> "*" User : manages_rbac

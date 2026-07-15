@@ -22,6 +22,8 @@ graph LR
         subgraph Customer_Flow ["1. ลูกค้า (Customer)"]
             C_Register("สมัครสมาชิก<br>(Register)"):::baseUC
             C_Login("ล็อกอินเข้าสู่ระบบ<br>(Login)"):::baseUC
+            C_RegisterGoogle("สมัครด้วย Google<br>(Google OAuth Register)"):::subUC
+            C_LoginGoogle("ล็อกอินด้วย Google<br>(Google OAuth Login)"):::subUC
             C_Builder("จัดสเปคคอมพิวเตอร์<br>(PC Builder)"):::baseUC
             C_Compat("ตรวจสอบความเข้ากันได้<br>(Compatibility Checker)"):::baseUC
             C_Wattage("คำนวณกำลังไฟ<br>(Wattage Calculator)"):::baseUC
@@ -93,8 +95,8 @@ graph LR
 
             %% Relations: include/extend
             C_Builder -.->|"<<include>>"| C_SelectPart
-            C_Builder -.->|"<<include>>"| C_SwapPart
-            C_Builder -.->|"<<include>>"| C_RemovePart
+            C_SwapPart -.->|"<<extend>>"| C_Builder
+            C_RemovePart -.->|"<<extend>>"| C_Builder
             C_Builder -.->|"<<include>>"| C_ViewSummary
 
             C_Compat -.->|"<<include>>"| C_CheckSocket
@@ -133,8 +135,8 @@ graph LR
             C_CloneSpec -.->|"<<include>>"| C_Builder
 
             C_Cart -.->|"<<include>>"| C_AddCart
-            C_Cart -.->|"<<include>>"| C_EditQty
-            C_Cart -.->|"<<include>>"| C_RemoveCart
+            C_EditQty -.->|"<<extend>>"| C_Cart
+            C_RemoveCart -.->|"<<extend>>"| C_Cart
             C_Cart -.->|"<<include>>"| C_FillAddress
             C_Cart -.->|"<<extend>>"| C_SelectAssembly
             C_Cart -.->|"<<extend>>"| C_UseCoupon
@@ -225,8 +227,6 @@ graph LR
         subgraph Admin_Flow ["4. ผู้ดูแลระบบ (Admin)"]
             A_Login("ล็อกอินเข้าสู่ระบบแอดมิน<br>(Login)"):::baseUC
             A_Database("จัดการคลังสินค้า<br>(Database CRUD)"):::adminUC
-            A_Rules("ตั้งค่ากฎความเข้ากันได้<br>(Rules Configuration)"):::adminUC
-            A_Power("ตั้งค่ากำลังไฟ<br>(Power Allocation)"):::adminUC
             A_Access("จัดการสิทธิ์ผู้ใช้<br>(Role & Access Control)"):::adminUC
             A_Payment("อนุมัติสลิปโอนเงิน<br>(Payment Review)"):::adminUC
 
@@ -235,14 +235,6 @@ graph LR
             A_SoftDelete("ปิดขายสินค้า (Soft Delete)"):::subUC
             A_ReEnable("เปิดขายสินค้าอีกครั้ง"):::subUC
             A_ViewAll("ดูรายการสินค้าทั้งหมด"):::subUC
-
-            A_AddSocket("เพิ่มกฎ Socket Matching"):::subUC
-            A_EditSocket("แก้ไขกฎ Socket"):::subUC
-            A_AddSize("เพิ่มกฎ Size Limitation"):::subUC
-            A_EditSize("แก้ไขกฎ Size"):::subUC
-
-            A_SetTDP("กำหนด TDP Watts"):::subUC
-            A_EditTDP("แก้ไข TDP Watts"):::subUC
 
             A_CreateStaff("สร้างบัญชี Staff/Manager"):::subUC
             A_EditPermission("แก้ไขสิทธิ์"):::subUC
@@ -257,14 +249,6 @@ graph LR
             A_Database -.->|"<<extend>>"| A_EditProduct
             A_Database -.->|"<<extend>>"| A_SoftDelete
             A_Database -.->|"<<extend>>"| A_ReEnable
-
-            A_Rules -.->|"<<include>>"| A_AddSocket
-            A_Rules -.->|"<<extend>>"| A_EditSocket
-            A_Rules -.->|"<<include>>"| A_AddSize
-            A_Rules -.->|"<<extend>>"| A_EditSize
-
-            A_Power -.->|"<<include>>"| A_SetTDP
-            A_Power -.->|"<<extend>>"| A_EditTDP
 
             A_Access -.->|"<<include>>"| A_CreateStaff
             A_Access -.->|"<<extend>>"| A_EditPermission
@@ -284,6 +268,8 @@ graph LR
     %% Actor -> Use Case Connections
     Customer ---> C_Register
     Customer ---> C_Login
+    C_LoginGoogle -.->|"<<extend>>"| C_Login
+    C_RegisterGoogle -.->|"<<extend>>"| C_Register
     Customer ---> C_Builder
     Customer ---> C_Compat
     Customer ---> C_Wattage
@@ -307,7 +293,5 @@ graph LR
 
     Admin ---> A_Login
     Admin ---> A_Database
-    Admin ---> A_Rules
-    Admin ---> A_Power
     Admin ---> A_Access
     Admin ---> A_Payment

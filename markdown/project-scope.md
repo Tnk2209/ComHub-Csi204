@@ -7,10 +7,13 @@
 ## 📌 1. ผู้ใช้งานและสิทธิ์การเข้าถึง (Actors & Role-Based Access Control)
 
 ### 👤 1.1 ลูกค้า (Customer)
+
 - **สมัครสมาชิก (Register)**
-  - สร้างบัญชีใหม่ : ลงทะเบียนด้วยอีเมลและรหัสผ่านเพื่อเปิดใช้งานฟีเจอร์บันทึกประวัติ
+  - สมัครบัญชี Native : กรอก username, password, confirm password และข้อมูลส่วนตัว
+  - สมัครด้วย Google OAuth : ลงทะเบียนด้วย Google Account ผ่าน Google OAuth 2.0 (Google จัดการยืนยันตัวตนผ่าน Gmail เอง)
 - **ล็อกอินเข้าสู่ระบบ (Login)**
-  - เข้าสู่ระบบ : ตรวจสอบสิทธิ์ด้วย JWT Token เพื่อดึงสเปคบันทึกส่วนตัวและประวัติการสั่งซื้อ
+  - เข้าสู่ระบบ Native : กรอก username + password ตรวจสอบสิทธิ์ด้วย JWT Token
+  - เข้าสู่ระบบด้วย Google OAuth : คลิก "Sign in with Google" ผ่าน Google OAuth 2.0 (Google จัดการ 2FA/OTP เอง)
 - **จัดสเปคคอมพิวเตอร์ (PC Builder)**
   - เลือกชิ้นส่วน : เลือกอุปกรณ์ทีละชิ้นจาก 7 หมวดหมู่หลัก (CPU, Mainboard, GPU, RAM, SSD, Case, PSU) ผ่านกล่อง Bento Grid
   - เปลี่ยนชิ้นส่วน : สลับเปลี่ยนอุปกรณ์ที่เลือกไว้ในแต่ละหมวดหมู่ได้ตลอดเวลา
@@ -61,6 +64,7 @@
   - ดูเลข Tracking : ดูหมายเลขพัสดุเพื่อติดตามกับบริษัทขนส่ง
 
 ### 👷 1.2 พนักงานประกอบเครื่อง (Staff)
+
 - **ล็อกอินเข้าสู่ระบบพนักงาน (Login)**
   - เข้าสู่ระบบ : ตรวจสอบสิทธิ์เข้าใช้ระบบหลังบ้านด้วย JWT Token
 - **จัดการคิวงานประกอบ (Build Management)**
@@ -79,6 +83,7 @@
   - อัปเดตสถานะเป็น "จัดส่งแล้ว" : เปลี่ยนสถานะออเดอร์เมื่อส่งของเรียบร้อย
 
 ### 📊 1.3 ผู้จัดการร้าน (Manager)
+
 - **ล็อกอินเข้าสู่ระบบผู้จัดการ (Login)**
   - เข้าสู่ระบบ : ตรวจสอบสิทธิ์เข้าหน้ารายงานทางธุรกิจและจัดการโปรโมชั่น
 - **จัดการเทมเพลตแนะนำ (Pre-built Management)**
@@ -98,6 +103,7 @@
   - ดูเตือนสต็อกต่ำ : แสดงรายการสินค้าที่มีจำนวนคงเหลือ ≤ 3 ชิ้น
 
 ### 🔐 1.4 ผู้ดูแลระบบ (Admin)
+
 - **ล็อกอินเข้าสู่ระบบแอดมิน (Login)**
   - เข้าสู่ระบบ : ตรวจสอบสิทธิ์เพื่อเข้าถึงเมนูตั้งค่าระดับลึกสุดของระบบ
 - **จัดการคลังสินค้า (Database CRUD)**
@@ -106,14 +112,6 @@
   - ปิดขายสินค้า (Soft Delete) : สลับสถานะ is_active เป็น false เพื่อซ่อนจากหน้าร้านแต่ยังเก็บประวัติ
   - เปิดขายสินค้าอีกครั้ง : สลับ is_active กลับเป็น true เพื่อนำกลับมาขายใหม่
   - ดูรายการสินค้าทั้งหมด : แสดงรายการสินค้าพร้อมสถานะ Active/Inactive
-- **ตั้งค่ากฎความเข้ากันได้ (Rules Configuration)**
-  - เพิ่มกฎ Socket Matching : กำหนดจับคู่ Socket ของ CPU กับ Mainboard (เช่น AM5, LGA1700)
-  - แก้ไขกฎ Socket : อัปเดตเงื่อนไขการจับคู่ Socket
-  - เพิ่มกฎ Size Limitation : กำหนดขีดจำกัดขนาด/ความยาวการ์ดจอกับเคส
-  - แก้ไขกฎ Size : อัปเดตเงื่อนไขการตรวจสอบขนาด
-- **ตั้งค่ากำลังไฟ (Power Allocation)**
-  - กำหนด TDP Watts : ระบุอัตรากำลังไฟฟ้า (Watts) ให้กับอุปกรณ์แต่ละชิ้นในระบบ
-  - แก้ไข TDP Watts : อัปเดตค่า TDP ของอุปกรณ์ที่มีอยู่
 - **จัดการสิทธิ์ผู้ใช้ (Role & Access Control)**
   - สร้างบัญชี Staff/Manager : เพิ่มบัญชีพนักงานหรือผู้จัดการใหม่เข้าระบบ
   - แก้ไขสิทธิ์ : เปลี่ยนบทบาท (Role) ของผู้ใช้ระหว่าง Staff/Manager
@@ -121,36 +119,36 @@
 - **อนุมัติสลิปโอนเงิน (Payment Review)**
   - ดูสลิปรอตรวจ : แสดงรายการออเดอร์ที่อัปโหลดสลิปแล้วรอการตรวจสอบ
   - อนุมัติการชำระเงิน (Approved) : ยืนยันสลิปถูกต้อง ส่งคิวต่อให้ช่างประกอบ
-  - ปฏิเสธการชำระเงิน (Rejected) : ปฏิเสธสลิปปลอม ระบบจะทำ Stock Rollback คืนสินค้ากลับคลังอัตโนมัติ
+  - ปฏิเสธการชำระเงิน (Rejected) : ปฏิเสธสลิปปลอม *(Stock Rollback ยังไม่ implement อัตโนมัติ — gap feature, ดู [prd.md §7](./prd.md))*
 
 ---
 
 ## 📌 2. ตารางฟังก์ชันระบบทั้งหมด (Functional Requirements Matrix)
 
-| รหัส | ฟังก์ชันระบบ | รายละเอียด | สิทธิ์ผู้ใช้ |
-|:---:|:---|:---|:---:|
-| **SYS-01** | Authentication & Auth | สมัครสมาชิก, ล็อกอิน, JWT Token Verification | ทุกบทบาท |
-| **SYS-02** | Cart & Checkout Flow | จัดการตะกร้า (LocalStorage), กรอกที่อยู่, อัปโหลดสลิป | Customer, Staff |
-| **SYS-03** | Client-side WebP Compression | บีบอัดรูปภาพสลิป/รีวิวเป็น WebP 80% ผ่าน Canvas API | Customer, Manager, Admin |
-| **C-01** | PC Builder Page | เลือกชิ้นส่วน 7 หมวดหมู่ พร้อม Bento Grid UI | Customer |
-| **C-02** | Compatibility Checker | กรอง Socket, ขนาดเคส/GPU, ชนิด RAM (DDR4/DDR5) | Customer, Admin |
-| **C-03** | Wattage Calculator | คำนวณ TDP รวม, แนะนำ PSU ที่จ่ายไฟ ≥ 1.2x | Customer |
-| **C-04** | Pre-built Templates | เซ็ตคอมสำเร็จรูปตามงบ กดสั่งซื้อทันทีหรือปรับแต่งต่อ | Customer |
-| **C-05** | Product Comparison | เปรียบเทียบสเปคเชิงเทคนิค สูงสุด 3 ชิ้น | Customer |
-| **C-06** | Wishlist & Stock Alert | บันทึกของโปรด, แจ้งเตือนเมื่อสต็อกกลับมา | Customer |
-| **C-07** | Review with Photos | รีวิว 1-5 ดาว, ข้อความ, อัปโหลดรูปถ่ายจริง | Customer |
-| **C-08** | PC Build Gallery | แกลเลอรี่คอมมูนิตี้ พร้อมปุ่มโคลนสเปค | Customer, Manager |
-| **C-09** | Assembly Tracking UI | ติดตาม 4 ขั้นตอน + ดูผลอุณหภูมิ Burn-in | Customer, Staff |
-| **S-01** | Build Assembly Management | คิวงานประกอบ, อัปเดตสถานะ Real-time | Staff |
-| **S-02** | Burn-in Test Record | บันทึกอุณหภูมิ CPU/GPU, ผลประเมิน Pass/Fail | Staff |
-| **S-03** | Logistics | พิมพ์ใบจัดส่ง, บันทึก Tracking Number | Staff |
-| **M-01** | Pre-built Management | CRUD เทมเพลตสเปคแนะนำ + แท็กงบประมาณ | Manager |
-| **M-02** | Gallery Moderation | อนุมัติรีวิว/ภาพ, ปักหมุดโพสต์ | Manager |
-| **M-03** | Sales Dashboard | กราฟยอดขาย, สินค้ายอดนิยม, เตือนสต็อกต่ำ | Manager |
-| **A-01** | Database Management CRUD | เพิ่ม/ลบ/แก้ไข/Soft Delete (is_active) สินค้า | Admin |
-| **A-02** | Rules Configuration | ตั้งค่า Socket Matching, Size Limitation | Admin |
-| **A-03** | Power Allocation Settings | กำหนด TDP Watts ให้อุปกรณ์ทุกชิ้น | Admin |
-| **A-04** | Role & Access Control | สร้างบัญชี Staff/Manager, กำหนดสิทธิ์ RBAC | Admin |
+|     รหัส     | ฟังก์ชันระบบ     | รายละเอียด                                                                                    | สิทธิ์ผู้ใช้ |
+| :--------------: | :--------------------------- | :------------------------------------------------------------------------------------------------------ | :----------------------: |
+| **SYS-01** | Authentication & Auth        | สมัครสมาชิก/ล็อกอิน Native + Google OAuth 2.0 (Passport.js), JWT Token Verification  |     ทุกบทบาท     |
+| **SYS-02** | Cart & Checkout Flow         | จัดการตะกร้า (LocalStorage), กรอกที่อยู่, อัปโหลดสลิป                 |     Customer, Staff     |
+| **SYS-03** | Client-side WebP Compression | บีบอัดรูปภาพสลิป/รีวิวเป็น WebP 80% ผ่าน Canvas API                        | Customer, Manager, Admin |
+|  **C-01**  | PC Builder Page              | เลือกชิ้นส่วน 7 หมวดหมู่ พร้อม Bento Grid UI                                  |         Customer         |
+|  **C-02**  | Compatibility Checker        | กรอง Socket, ขนาดเคส/GPU, ชนิด RAM (DDR4/DDR5)                                           |     Customer, Admin     |
+|  **C-03**  | Wattage Calculator           | คำนวณ TDP รวม, แนะนำ PSU ที่จ่ายไฟ ≥ 1.2x                                        |         Customer         |
+|  **C-04**  | Pre-built Templates          | เซ็ตคอมสำเร็จรูปตามงบ กดสั่งซื้อทันทีหรือปรับแต่งต่อ |         Customer         |
+|  **C-05**  | Product Comparison           | เปรียบเทียบสเปคเชิงเทคนิค สูงสุด 3 ชิ้น                              |         Customer         |
+|  **C-06**  | Wishlist & Stock Alert       | บันทึกของโปรด, แจ้งเตือนเมื่อสต็อกกลับมา                          |         Customer         |
+|  **C-07**  | Review with Photos           | รีวิว 1-5 ดาว, ข้อความ, อัปโหลดรูปถ่ายจริง                             |         Customer         |
+|  **C-08**  | PC Build Gallery             | แกลเลอรี่คอมมูนิตี้ พร้อมปุ่มโคลนสเปค                               |    Customer, Manager    |
+|  **C-09**  | Assembly Tracking UI         | ติดตาม 4 ขั้นตอน + ดูผลอุณหภูมิ Burn-in                                        |     Customer, Staff     |
+|  **C-10**  | Google OAuth Authentication  | ล็อกอิน/สมัครสมาชิกด้วย Google Account ผ่าน Passport.js + passport-google-oauth20 |       Customer       |
+|  **C-11**  | Assembly Service Fee         | ค่าบริการประกอบและทดสอบเครื่อง +500 บาท แสดงในหน้า Checkout เมื่อลูกค้าเลือกบริการประกอบ |       Customer       |
+|  **S-01**  | Build Assembly Management    | คิวงานประกอบ, อัปเดตสถานะ Real-time                                              |          Staff          |
+|  **S-02**  | Burn-in Test Record          | บันทึกอุณหภูมิ CPU/GPU, ผลประเมิน Pass/Fail                                      |          Staff          |
+|  **S-03**  | Logistics                    | พิมพ์ใบจัดส่ง, บันทึก Tracking Number                                                |          Staff          |
+|  **M-01**  | Pre-built Management         | CRUD เทมเพลตสเปคแนะนำ + แท็กงบประมาณ                                        |         Manager         |
+|  **M-02**  | Gallery Moderation           | อนุมัติรีวิว/ภาพ, ปักหมุดโพสต์                                               |         Manager         |
+|  **M-03**  | Sales Dashboard              | กราฟยอดขาย, สินค้ายอดนิยม, เตือนสต็อกต่ำ                            |         Manager         |
+|  **A-01**  | Database Management CRUD     | เพิ่ม/ลบ/แก้ไข/Soft Delete (is_active) สินค้า                                         |          Admin          |
+|  **A-04**  | Role & Access Control        | สร้างบัญชี Staff/Manager, กำหนดสิทธิ์ RBAC                                         |          Admin          |
 
 ---
 

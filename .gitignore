@@ -8,6 +8,7 @@ db
 .claude/
 .vscode/
 .idea/
+ClaudeFile/
 
 # Local build / Server files
 node_modules/

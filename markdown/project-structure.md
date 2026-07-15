@@ -2,6 +2,8 @@
 
 เอกสารนี้แสดงการออกแบบโครงสร้างโฟลเดอร์และไฟล์ของระบบ **ComHub** ในรูปแบบ Monorepo ซึ่งแยกออกเป็นสองส่วนหลักคือ `frontend/` (React + Vite + Tailwind) และ `backend/` (Node.js + Express + TypeScript) เพื่อความง่ายในการพัฒนาและสอดคล้องกับข้อกำหนดการ Deploy ขึ้น Vercel
 
+> **⚠️ Target Architecture — ยังไม่ได้ implement ทั้งหมด:** โครงสร้างโฟลเดอร์ด้านล่างคือสถาปัตยกรรมเป้าหมาย (Target Architecture) ที่วางแผนไว้ ยังไม่ได้ implement จริงทั้งหมด สถานะปัจจุบัน: repo มีเฉพาะโฟลเดอร์ `FrontEnd/` (ชื่อต่างจาก `frontend/` ตรงนี้) ที่เขียนด้วย JavaScript (`.jsx`) — ยังไม่มี TypeScript (`.tsx`), ไม่มี `backend/` directory, ไม่มี `tailwind.config.js` (ใช้ Tailwind v4 CSS-first แทน), และไม่มี `vercel.json`
+
 ---
 
 ## 📂 แผนผังโครงสร้างภาพรวม (Directory Tree)

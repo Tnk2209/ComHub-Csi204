@@ -15,10 +15,23 @@
 
 ## Figma Design Details (รายละเอียดหน้าตาเว็บตามดีไซน์ Figma)
 - **ลิงก์โครงการ:** [Figma - ComHub Design](https://www.figma.com/design/zf5S2YxamVRHNaeoE1J54j/Untitled?node-id=0-1&p=f&t=KRCm3kU3n9biGjB1-0)
-- **ชุดสีและสไตล์การตกแต่ง (Theme & Palette):** 
-  - ใช้ **Sleek Dark Mode** เป็นสีพื้นหลังหลัก (ดาร์กช็อกโกแลต/เทาดำเกือบสนิท) 
-  - ใช้ **Carbon/Turquoise Blue (#138X/00C2FF)** เป็นสีเน้นเด่น (Accent Color) ในการติดสถานะ Active, ขอบกล่องข้อความ และปุ่มสำคัญ เพื่อให้หลีกเลี่ยงสีม่วงตามกฎ Purple Ban
-  - เลือกใช้ฟอนต์ตัวอักษรแนวเทคโนโลยีที่มีความลื่นไหล สะอาดตา อ่านง่าย
+- **ชุดสีและสไตล์การตกแต่ง (Theme & Palette) ตามระบบที่ใช้จริงในโค้ด:** 
+  - รองรับระบบ **Multi-Theme (Light Mode เป็นค่าเริ่มต้น และ Dark Mode)** ผ่าน CSS Custom Properties:
+    - **Light Mode (Default):**
+      - **Background หลัก:** `#f8fafc` (`--color-app-bg` ใน [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css))
+      - **Surface / Card / Table / Modal:** `#ffffff` (`--color-app-surface` ใน [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css))
+      - **Border / Lines:** `#e2e8f0` (`--color-app-border` ใน [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css))
+      - **Text Color:** `#0f172a` (หลัก) และ `#64748b` (เทาหม่น/Muted)
+      - **Accent / Brand Blue:** `#05187a` / `#0284c7` (คอนทราสต์ดีขึ้นในโหมดสว่าง)
+    - **Dark Mode:**
+      - **Background หลัก:** `#0d0f12` (เปิดสลับด้วยคลาส `.dark`)
+      - **Surface / Card / Table / Modal:** `#161a1f`
+      - **Border / Lines:** `#222a36`
+      - **Text Color:** `#f3f4f6` (หลัก) และ `#9ca3af` (เทาหม่น/Muted)
+      - **Accent / Brand Blue:** `#0284c7` / `#00c2ff`
+  - **ข้อกำหนดสำคัญ (Purple Ban):** ห้ามใช้โทนสีม่วง/ไวโอเล็ตเด็ดขาด
+  - **ระบบภาษา (i18n):** รองรับภาษาไทย (`th` - ค่าเริ่มต้น) และภาษาอังกฤษ (`en`) ผ่านระบบสวิตช์สไลด์แบบเม็ดยา (Capsule Toggle) ที่อยู่ใน Settings dropdown (ไอคอนฟันเฟือง) ขวาบนของ Header
+  - **ฟอนต์หลัก (Typography Scale):** ใช้ฟอนต์ loopless สไตล์มินิมอล `'IBM Plex Sans Thai'` (ภาษาไทย) และ `'Inter'` (ภาษาอังกฤษ/ตัวเลข) โหลดจาก Google Fonts เพื่อการจัดหน้าจอที่อ่านง่าย คมชัด และพรีเมียม
 - **หน้าจอจัดสเปคคอมพิวเตอร์ (PC Builder Layout):**
   - **ฝั่งซ้าย (System Configuration):** ตารางไอเทมแนวตั้ง 7 ชนิดอุปกรณ์หลัก แสดงภาพสินค้า รายละเอียดชื่อ ปุ่มตัวเลือก `+ Select` หรือปุ่มถังขยะสำหรับเคลียร์สินค้าออก
   - **ฝั่งขวา (Analysis Board):** 
@@ -33,28 +46,187 @@
   - ด้านล่างมีแผง UAT Report แสดงตัวเลขอุณหภูมิ CPU/GPU ที่ช่างบันทึกความร้อนจริงจากการเทสระบบหลังบ้าน
 
 ## 🚀 แผนขั้นตอนการพัฒนา MockUp หน้าจอ (Frontend MockUp Development Phases)
-- **Phase 1: Customer Shopping Experience (รายการสินค้าและรายละเอียดชิ้นส่วนเดี่ยว)**
-  - [ ] Page 1.1: Home & Product Catalog (เปรียบเทียบ 3 อุปกรณ์, กรองประเภท)
-  - [ ] Page 1.2: Product Detail (รายละเอียดการระบายความร้อน, สเปคเทคนิค)
-- **Phase 2: PC Builder & Checkout (ตรรกะจัดสเปคและการชำระเงินแนบสลิป)**
-  - [ ] Page 1.3: Advanced PC Builder Workspace (เลือกอุปกรณ์ 7 ชิ้น, แถบ TDP Calculator, กฎ Compatibility)
-  - [ ] Page 1.4: Cart & Checkout (คูปอง, แนบสลิปโอนเงิน WebP, ตัวเลือกให้ร้านประกอบ)
-- **Phase 3: Order Tracking & Wishlist (ไทม์ไลน์ติดตาม UAT และรายการของโปรด)**
-  - [ ] Page 1.5: Order Tracking & UAT (ไทม์ไลน์ประกอบ 4 สเต็ป, เลขความร้อนช่าง CPU/GPU)
-  - [ ] Page 1.6: Wishlist & Alerts (ของโปรด, ปุ่มขอเปิดสัญญาณเตือนสต็อกเติมของ)
-- **Phase 4: Community Gallery (แกลเลอรี่บอร์ดแชร์และระบบโคลนสเปค)**
-  - [ ] Page 1.7: PC Build Gallery (บอร์ดอวดคอมฯ, โคลนสเปค, Badge สินค้าปิดขาย)
-- **Phase 5: Staff Control Center (การจัดการคิวประกอบและทดสอบของช่าง)**
-  - [ ] Page 2.1: Staff Assembly Queue (คิวเตรียมจัดประกอบเครื่องเฉพาะบิล Approved)
-  - [ ] Page 2.2: UAT & Shipping Logs Form (กรอกอุณหภูมิ CPU/GPU Temp, ผล Pass/Fail, เลข Tracking)
-- **Phase 6: Manager Back-office (แผงควบคุมสถิติ แนะนำสเปค และกรองข้อความ)**
-  - [ ] Page 3.1: Manager Business Dashboard (สรุปผลยอดขาย, สถิติสินค้าขายดี, สต็อกต่ำเตือนใกล้หมด <= 3)
-  - [ ] Page 3.2: Pre-built Templates CRUD Panel (สร้างเซ็ตแนะนำสำเร็จรูปตามงบ)
-  - [ ] Page 3.3: Moderation Board (คัดกรองรูปและรีวิวจากผู้ใช้ทั่วไป)
-- **Phase 7: Admin Systems & Controls (การจัดการสินค้า บัญชีพนักงาน และการโรลแบ็กสต็อก)**
-  - [ ] Page 4.1: Admin Products CRUD Panel (เพิ่มลบสินค้า, สเปคเทคนิค JSONB, สวิตช์ปิด/เปิดขาย Soft Delete)
-  - [ ] Page 4.2: Accounts Controls Panel (สร้างและคุมสิทธิ์ไอดี Staff/Manager)
-  - [ ] Page 4.3: Payment Review & Stock Controller (ตรวจสลิป Approved, Reject บิลปลอมพร้อมระบบคืนสต็อกอัตโนมัติ)
+
+### Phase 1: Customer Pages (หน้าระบบฝั่งลูกค้า - 7 หน้าย่อย)
+- [ ] **Page 1.1: Home & Product Catalog Page (หน้าแรกและหน้ารายการสินค้าแค็ตตาล็อก)**
+  - **วัตถุประสงค์:** หน้าแรกในการนำเสนอแบรนด์ ค้นหาข้อมูลชิ้นส่วนไอที และปูทางเข้าสู่ระบบ PC Builder
+  - **องค์ประกอบหลักบน UI:**
+    - แบนเนอร์โปรโมชั่น ป้ายสไลด์เซ็ตแนะนำเด่นของร้าน
+    - กล่องค้นหา (Search Box) และตัวเลือกสับประเภทสินค้า (CPU, GPU, RAM, Motherboard, Case, PSU, Storage)
+    - ปุ่มหยิบใส่ตะกร้าทันที (Add to Cart) และปุ่มรายการของโปรดรูปหัวใจ (Wishlist)
+    - แผงเปรียบเทียบคุณสมบัติ (Product Compare Panel) รองรับการดึงข้อมูล 3 อุปกรณ์มาเทียบกันด้านราคากลางและประสิทธิภาพ
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+    - [ ] จัดวางองค์ประกอบสอดคล้องตามกฎ Fitts's Law (ตีนขอบและจุดสนใจสำหรับ Add to Cart)
+- [ ] **Page 1.2: Product Detail Page (หน้ารายละเอียดสินค้าชิ้นเดี่ยว)**
+  - **วัตถุประสงค์:** แสดงข้อมูลเชิงเทคนิคเชิงลึกและเกณฑ์คะแนนความพึงพอใจของสินค้าชิ้นเดียว
+  - **องค์ประกอบหลักบน UI:**
+    - รูปภาพและข้อมูลราคา คีย์ Specifications (เช่น ชนิด RAM, ขั้วซ็อกเก็ต)
+    - กล่องแสดงรีวิว ความคิดเห็น และรูปถ่ายสินค้าจริงจากบ้าน
+    - ปุ่มกดแอดสินค้าเข้า Wishlist และเปิดธงขอสัญญาณเตือนเมื่อสต็อกสินค้ากลับมาใหม่
+    - การ์ดสรุปโครงสร้างความร้อนและทิศทางลมระบาย (Advanced Cooling Architecture)
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+    - [ ] แสดงรายละเอียดข้อมูลเทคนิคเป็น Grid ชัดเจนและอ่านง่าย
+- [x] **Page 1.3: Advanced PC Builder Workspace (หน้าจอจัดสเปคคอมพิวเตอร์อัจฉริยะ)**
+  - **วัตถุประสงค์:** เครื่องมือหลักในการจัดชุดคอมพิวเตอร์ด้วยการตรวจสเปคและกำลังไฟแบบกึ่งเรียลไทม์
+  - **องค์ประกอบหลักบน UI:**
+    - ตารางรายหมวดหมู่ทั้ง 7 อุปกรณ์หลัก พร้อมปุ่มกด "เลือกอุปกรณ์" ที่จะเปิดป๊อปอัปให้เลือกจากหมวดหมู่นั้นๆ
+    - ตัวคำนวณกำลังไฟสะสม (TDP Calculator Progress Bar) แสดงระดับวัตต์ที่กินไฟ และแนะนำเฉพาะ PSU ที่จ่ายไฟเพียงพอพร้อมตัวคูณความปลอดภัย 20%
+    - กล่องตรรกะ Compatibility Checker คอยเตือนสเปคที่เสียบใช้งานร่วมกันไม่ได้ (เช่น Socket ไม่ตรงกัน หรือแรมกับบอร์ดต่างประเภท)
+    - ปุ่ม "สั่งซื้อชุดนี้ (Checkout System)" หรือ "จัดเซ็ตแชร์สู่คอมมูนิตี้ (Share to Gallery)"
+    - กล่องวิเคราะห์ประสิทธิภาพ (Performance Badges) เช่น "4K GAMING: 144 FPS" และฉลาก "Gold" ประหยัดพลังงาน
+  - **เกณฑ์การตรวจสอบดีไซน์:** *(Code-first approach — implement แล้วใน [PCBuilder.jsx](../FrontEnd/src/pages/PCBuilder/PCBuilder.jsx))*
+    - [x] ออกแบบและ implement เสร็จสมบูรณ์ด้วย code (3-column hybrid layout ตาม commit `adac720`)
+    - [x] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [x] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [x] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+    - [x] จัดวางแบบซ้าย-ขวาอย่างชัดเจน (ซ้าย: รายการของ 7 ชิ้น, ขวา: แผง TDP และ Compatibility Analyzer)
+    - [x] ปฏิบัติตามกฎ Hick's Law ในการจัดเรียงประเภทชิ้นส่วนเพื่อให้ผู้ใช้เลือกง่ายที่สุด
+- [ ] **Page 1.4: Cart & Checkout Page (หน้าตะกร้าสินค้าและการดำเนินการสั่งซื้อ)**
+  - **วัตถุประสงค์:** หน้าตรวจสอบชิ้นส่วน ยอดราคารวม และแนบสลิปโอนเงินชำระสินค้า
+  - **องค์ประกอบหลักบน UI:**
+    - ตารางสรุปราคา ชิ้นส่วน ค่าจัดส่ง
+    - สวิตช์เลือก "ให้ร้านประกอบและเทสเครื่องให้ (+0 บาท)" หรือ "แยกชิ้นส่งธรรมดา"
+    - ช่องกรอกคูปองส่วนลดเพื่อคำนวณยอดเงินใหม่
+    - ภาพ QR Code บัญชีการโอน และช่องอัปโหลดรูปถ่ายหลักฐานสลิปเงินพร้อมระบบบีบอัดภาพเป็น WebP ทันที
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+    - [ ] แบบฟอร์มกรอกข้อมูลและการอัปโหลดไฟล์หลักฐานใช้งานง่ายและมี Visual Feedback ชัดเจน
+- [ ] **Page 1.5: Order Tracking & UAT Page (หน้าประวัติสั่งซื้อและติดตามสถานะประกอบ)**
+  - **วัตถุประสงค์:** แดชบอร์ดของลูกค้าในการเช็คความเคลื่อนไหวออเดอร์และการเทสอุณหภูมิเครื่องประกอบ
+  - **องค์ประกอบหลักบน UI:**
+    - แถบไทม์ไลน์ภาพ 4 ขั้นตอน: `[รับออเดอร์] -> [กำลังประกอบ] -> [กำลังเทสระบบ] -> [จัดส่งแล้ว]` ดึงวันเวลาบันทึกจริงมาจากล็อกประวัติ
+    - หน้าจอแสดงผล UAT: เมื่ออยู่ในขั้นเทสระบบ จะเปิดเผยเลขอุณหภูมิ CPU/GPU และโน้ตบันทึกสุขภาพเครื่องจากช่าง
+    - เลข Tracking นำส่งพัสดุ
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+    - [ ] แถบไทม์ไลน์ 4 ขั้นตอน แสดงการเปลี่ยนสถานะตามสีและไอคอนอย่างสวยงามชัดเจน
+- [ ] **Page 1.6: Wishlist & Alerts Page (หน้ารวมของโปรดและการตั้งเตือนของเติมสต็อก)**
+  - **วัตถุประสงค์:** จัดเก็บชิ้นส่วนที่กดใจไว้ และดูป๊อปอัปพุชแจ้งเตือนคลังสินค้า
+  - **องค์ประกอบหลักบน UI:**
+    - รายการของเล่นไอทีที่บันทึกไว้
+    - ป้าย Badges สัญญาเตือนสินค้าใกล้หมด/หมดชั่วคราว
+    - สวิตช์เปิดรับสัญญาณแจ้งเตือนสต็อก (Stock Alert) ซึ่งระบบจะยิงป๊อปอัปพุชบอร์ดแจ้งเตือนเมื่อสต็อกสินค้ากลับมามากกว่า 0
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+- [ ] **Page 1.7: PC Build Gallery Board (หน้าแกลเลอรี่คอมมูนิตี้)**
+  - **วัตถุประสงค์:** แหล่งรวมคอมพิวเตอร์ประกอบเสร็จของสมาชิกและระบบก๊อปปี้สเปค
+  - **องค์ประกอบหลักบน UI:**
+    - บอร์ดรวมโพสต์ แสดงชื่อคอม หัวเรื่อง และยอดจำนวนถูกใจ (Like)
+    - ปุ่มกด "โคลนสเปคไปจัดแต่งต่อ (Edit with this Build)" เพื่อนำชิ้นส่วนทั้งหมดเข้า PC Builder อัตโนมัติ
+    - มีระบบติดป้าย Badge สีส้ม `[เลิกจำหน่าย]` ข้างชื่อสินค้าที่ปิดการขายไปแล้ว เพื่อแจ้งให้เลือกตัวอื่นทดแทน
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+    - [ ] การ์ดรายการประกอบคอมพิวเตอร์มีความสวยงาม ดูน่าใช้งาน มีระบุป้าย Badge ครบถ้วน
+
+### Phase 2: Staff Pages (หน้าระบบฝั่งช่างประกอบ - 2 หน้าย่อย)
+- [ ] **Page 2.1: Staff Assembly Queue Page (หน้าจอคิวงานจัดประกอบคอมพิวเตอร์)**
+  - **วัตถุประสงค์:** คัดเลือกใบสั่งประกอบตามคิวออเดอร์ลูกค้าที่ชำระเงินเรียบร้อยแล้ว
+  - **องค์ประกอบหลักบน UI:**
+    - รายการคำสั่งซื้อเรียงลำดับเวลาที่ต้องการประกอบ (`is_assembled = true` และ `payment_status = 'Approved'`)
+    - ปุ่มกดยอมรับเพื่อเริ่มจัดทำ (เปลี่ยนสเตตัสเป็น Assembling และ Testing)
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+- [ ] **Page 2.2: UAT & Shipping Logs Form (หน้าฟอร์มบันทึกคุณภาพ UAT และเลขนำส่งพัสดุ)**
+  - **วัตถุประสงค์:** รายงานข้อมูลผลเทสอุณหภูมิความร้อนและเลขขนส่งพัสดุ
+  - **องค์ประกอบหลักบน UI:**
+    - ช่องกรอกตัวเลขค่าความร้อนสะสม CPU Temperature และ GPU Temperature
+    - วิทยุสเตตัสให้เลือกติ๊กผลประเมิน Burn-in Test: Pass หรือ Fail และกล่องข้อความโน้ตหมายเหตุ
+    - ช่องกรอกเลข Tracking ขนส่งเพื่อเปลี่ยนสถานะเสร็จสิ้นเป็น Shipped
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+    - [ ] รูปแบบฟอร์มบันทึกข้อมูลออกแบบปุ่มตัวเลือกและหน้ากากป้อนข้อมูลที่สะดวกสำหรับทำงานหน้างาน
+
+### Phase 3: Manager Pages (หน้าระบบฝั่งผู้จัดการ - 3 หน้าย่อย)
+- [ ] **Page 3.1: Manager Business Dashboard (หน้าสรุปสถิติวิเคราะห์ระบบภาพรวม)**
+  - **วัตถุประสงค์:** แผงควบคุมติดตามสถานะสินค้า ยอดขาย และจุดสต็อกเตือนภัย
+  - **องค์ประกอบหลักบน UI:**
+    - กราฟ/ตัวเลขสรุปผลยอดขายรวมสะสมดึงจากใบสั่งซื้อสำเร็จ
+    - รายการสินค้าไอทีที่มียอดความต้องการชิ้นส่วนสะสมยอดนิยมมากที่สุด
+    - รายการแจ้งเตือนคลังใกล้ขาดแคลนสินค้า (เตือนสินค้าที่คงเหลือ `stock_quantity <= 3` ชิ้น)
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+    - [ ] แสดงแผงควบคุมสถิติในแบบ Bento Grid มีการเปรียบเทียบข้อมูลที่อ่านง่าย
+- [ ] **Page 3.2: Pre-built Templates CRUD Panel (หน้าต่างควบคุมและสร้างสเปคคอมแนะนำของร้าน)**
+  - **วัตถุประสงค์:** เมนูสร้างโปรโมชั่นเซ็ตคอมพิวเตอร์ประกอบสำเร็จรูปตามงบเพื่อกระตุ้นยอดขาย
+  - **องค์ประกอบหลักบน UI:**
+    - ฟอร์มใส่ชื่อเซ็ตคอม คีย์กลุ่มแท็กงบประมาณ และป้อนคำอธิบายประสิทธิภาพ
+    - หน้าต่างค้นหาชิ้นส่วนฮาร์ดแวร์ไอทีในคลังสต็อกเพื่อจัดเซ็ตและผูกลงตารางสัมพันธ์
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+- [ ] **Page 3.3: Moderation Board (หน้าต่างคัดกรองรูปถ่ายรีวิวและแกลเลอรี่คอมมูนิตี้)**
+  - **วัตถุประสงค์:** กลั่นกรองความสุภาพของภาพถ่ายที่อัปโหลดโดยผู้ใช้ทั่วไป
+  - **องค์ประกอบหลักบน UI:**
+    - ตารางรวมสื่อภาพถ่ายรีวิวเดี่ยวและแกลเลอรี่คอมฯ ที่ลูกค้าแชร์ในสถานะ Pending
+    - ปุ่มกดเลือกระหว่าง "อนุมัติเผยแพร่ (Approve)" หรือ "ซ่อน/ปฏิเสธสื่อ (Reject)"
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+
+### Phase 4: Admin Pages (หน้าระบบฝั่งผู้ดูแลระบบ - 3 หน้าย่อย)
+- [ ] **Page 4.1: Admin Products CRUD Panel (หน้าต่างจัดการแค็ตตาล็อกและปิดตัวสินค้าไอที)**
+  - **วัตถุประสงค์:** บริหารจัดการรายการสินค้าหลักของร้านค้า
+  - **องค์ประกอบหลักบน UI:**
+    - ฟอร์มเพิ่ม/แก้ไข/ลบรายการสินค้า และระบุค่าข้อมูลเทคนิคเขียนลง specifications JSONB
+    - สวิตช์เปิด/ปิด การวางจำหน่ายสินค้าเดี่ยว (`is_active` Soft Delete)
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+- [ ] **Page 4.2: Accounts Controls Panel (หน้าต่างจัดการสิทธิ์ผู้ใช้งาน)**
+  - **วัตถุประสงค์:** สร้างไอดีและควบคุมสิทธิ์ใช้งานหลังบ้านของพนักงาน
+  - **องค์ประกอบหลักบน UI:** แบบฟอร์มกรอกชื่อ รหัสผ่าน และการเลือกกำหนดสิทธิ์พนักงานประกอบเครื่อง (Staff) หรือผู้จัดการ (Manager)
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+- [ ] **Page 4.3: Payment Review & Stock Controller (หน้าต่างอนุมัติยอดโอนเงินและการโรลแบ็กสินค้า)**
+  - **วัตถุประสงค์:** ตรวจทานความถูกต้องธุรกรรมทางการเงินของลูกค้า
+  - **องค์ประกอบหลักบน UI:**
+    - สไลด์เปิดภาพสลิปโอนเงินประกอบกับยอดรวมสั่งซื้อของลูกค้า
+    - ปุ่มกดตรวจสอบและยอมรับทางการเงินเพื่อส่งคิวต่อช่าง (`Approved`)
+    - ปุ่มกดสั่งยกเลิกสลิปการเงินปลอม (`Rejected`) *(Stock Rollback ยังไม่ implement อัตโนมัติ — gap feature, ดู prd.md §7)*
+  - **เกณฑ์การตรวจสอบดีไซน์:**
+    - [ ] ออกแบบ Wireframe/Mockup เสร็จสมบูรณ์
+    - [ ] ใช้ระบบสี Sleek Dark ตรงตาม [index.css](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/FrontEnd/src/index.css)
+    - [ ] ไม่ใช้สีม่วง/ไวโอเล็ต (Purple Ban)
+    - [ ] หน้าจอรองรับการแสดงผลแบบ Fullscreen Responsive (Desktop, Tablet, Mobile)
+
 
 ## Blocked by
 None - can start immediately

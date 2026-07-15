@@ -1,0 +1,82 @@
+{
+  "nav": {
+    "home": "Home & Catalog",
+    "builder": "PC Builder",
+    "support": "Support",
+    "community": "Community",
+    "signin": "Sign In",
+    "signup": "Sign Up",
+    "back_to_store": "Back to Store",
+    "logout": "Logout",
+    "logged_in_as": "Logged in as"
+  },
+  "landing": {
+    "welcome": "🚀 Welcome to ComHub csi 204 Project",
+    "title_main": "Smart PC Builder",
+    "title_highlight": "and Full IT Hardware Catalog",
+    "subtitle": "E-Commerce platform for PC hardware enthusiasts. Complete with automatic Compatibility Checker and real-time TDP Wattage Calculation to ensure your custom rig is stable and ready.",
+    "start_btn": "Start Customizing (PC Builder)",
+    "explore_btn": "Explore Hardware Parts",
+    "features": {
+      "compat_title": "Compatibility Check",
+      "compat_desc": "No more wrong orders. Automatically filters matching CPU sockets, motherboard form factors, and RAM types.",
+      "tdp_title": "TDP Power Analysis",
+      "tdp_desc": "Calculates cumulative thermal design power and filters reliable Power Supplies with a 20% safety headroom.",
+      "uat_title": "UAT Quality Control",
+      "uat_desc": "Track assembly progress in 4 real-time steps with thermal burn-in reports logged directly by technicians."
+    }
+  },
+  "builder": {
+    "title": "System Configuration",
+    "subtitle": "Build your dream computer with real-time specification matching and wattage tracking",
+    "reset_btn": "Reset All Parts",
+    "share_btn": "Share Build to Community",
+    "left_column_title": "📦 Component Selector",
+    "middle_column_title": "Chassis Blueprint Schematic",
+    "middle_column_tag": "TOWER VIEW",
+    "right_column_title": "Health & Power Analysis Board",
+    "tdp_bar_title": "Cumulative TDP Wattage",
+    "tdp_safety_warning": "⚠️ Safety limit exceeded! Choose a higher capacity PSU.",
+    "compat_box_title": "Compatibility Rules Verification",
+    "checkout_btn": "Checkout & Request Assembly",
+    "empty_selection": "No component selected",
+    "select_btn": "Select Part",
+    "change_btn": "Change Part",
+    "remove_btn": "Remove",
+    "alert_copied": "Build shared to community gallery successfully!",
+    "alert_checkout": "Checkout successful! Total cost is ${{totalCost}}",
+    "empty_space": "Empty",
+    "select_hardware_title": "Select {{category}}",
+    "select_hardware_desc": "Select the hardware item to install in your build",
+    "performance": {
+      "title": "Performance Analysis",
+      "fps_4k": "4K Gaming: ~120 FPS",
+      "efficiency": "Efficiency rating: Gold"
+    },
+    "categories": {
+      "cpu": "CPU (Processor)",
+      "motherboard": "Motherboard",
+      "gpu": "GPU (Graphics Card)",
+      "ram": "Memory (RAM)",
+      "storage": "Storage (SSD/HDD)",
+      "case": "PC Case (Computer Case)",
+      "psu": "Power Supply (PSU)"
+    },
+    "compat_rules": {
+      "socket_idle": "Please select CPU and Motherboard to analyze socket compatibility",
+      "power_idle": "Select components and Power Supply to verify wattage safety limits",
+      "clearance_idle": "Select Graphics Card and Case to verify physical size clearance",
+      "socket_match": "Compatible: Both CPU and Motherboard use matching {{cpuSocket}} socket",
+      "socket_mismatch": "Socket mismatch: CPU uses {{cpuSocket}} but Motherboard has {{mbSocket}} slot! Cannot assemble.",
+      "power_overload": "Wattage limit exceeded! Components require at least ~{{totalTdp}}W but PSU only supplies {{psuWattage}}W",
+      "power_warning": "Load percentage is high at {{loadPercentage}}% of PSU capacity. Recommend upgrading PSU for a 20% safety headroom.",
+      "power_match": "Power safe: Estimated cumulative TDP is ~{{totalTdp}}W from a {{psuWattage}}W PSU (only {{loadPercentage}}% load)",
+      "power_need_psu": "Selected components require at least ~{{totalTdp}}W. Recommend choosing a PSU with at least {{recommendedWattage}}W capacity",
+      "clearance_mismatch": "GPU length ({{gpuLength}}mm) exceeds maximum clearance limit supported by the chassis ({{caseLimit}}mm)!",
+      "clearance_match": "Clearance OK: GPU length ({{gpuLength}}mm) fits inside the case limit ({{caseLimit}}mm)"
+    }
+  },
+  "footer": {
+    "text": "© 2026 ComHub Digital Lab. Developed for CSI 204 Course (Systems Analysis and Design)"
+  }
+}

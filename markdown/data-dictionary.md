@@ -1,6 +1,6 @@
 # พจนานุกรมข้อมูลของโครงการ ComHub (Project Data Dictionary)
 
-เอกสารนี้แสดงรายละเอียดของพจนานุกรมข้อมูล (**Data Dictionary**) สำหรับระบบฐานข้อมูล **ComHub** (พัฒนาบนระบบ PostgreSQL / Supabase Cloud) ครอบคลุมโครงสร้างตารางข้อมูล ฟิลด์ คีย์ และข้อจำกัด (Constraints) ทั้ง 10 ตารางตามขอบเขตและหลัก SDLC ของวิชา **csi 204**
+เอกสารนี้แสดงรายละเอียดของพจนานุกรมข้อมูล (**Data Dictionary**) สำหรับระบบฐานข้อมูล **ComHub** (พัฒนาบนระบบ PostgreSQL / Supabase Cloud) ครอบคลุมโครงสร้างตารางข้อมูล ฟิลด์ คีย์ และข้อจำกัด (Constraints) ทั้ง 11 ตารางตามขอบเขตและหลัก SDLC ของวิชา **csi 204**
 
 ---
 
@@ -18,6 +18,7 @@
 | 8 | **`wishlist_items`** | Detail | จัดเก็บสินค้าโปรดของลูกค้า และตั้งธงแจ้งเตือนการเติมสต็อก |
 | 9 | **`assembly_records`** | Detail | บันทึกผลการทดสอบ Burn-in Test (อุณหภูมิความร้อน) หลังประกอบเครื่อง |
 | 10 | **`order_logs`** | Log (Audit Trail) | จัดเก็บประวัติบันทึกการเปลี่ยนสถานะการชำระเงิน/ประกอบเครื่องย้อนหลัง |
+| 11 | **`gallery_posts`** | Transaction | จัดเก็บโพสต์แกลเลอรี่คอมมูนิตี้ที่ลูกค้าแชร์สเปคประกอบเสร็จ พร้อมสถานะตรวจสอบโดย Manager |
 
 ---
 
@@ -33,7 +34,9 @@
 | :--- | :--- | :---: | :--- | :--- |
 | `id` | SERIAL / INT | PK | NOT NULL, Auto Increments | รหัสอ้างอิงผู้ใช้งาน (ระบบรันให้อัตโนมัติ) |
 | `email` | VARCHAR(255) | - | NOT NULL, UNIQUE | ที่อยู่อีเมลของผู้ใช้งาน (ใช้ในการล็อกอินเข้าสู่ระบบ) |
-| `password_hash` | VARCHAR(255) | - | NOT NULL | รหัสผ่านผู้ใช้ที่ได้รับการเข้ารหัสความปลอดภัยแบบ Hash (bcrypt) |
+| `password_hash` | VARCHAR(255) | - | NULL | รหัสผ่านที่เข้ารหัสด้วย bcrypt — `NULL` สำหรับ OAuth users ที่ login ด้วย Google |
+| `oauth_provider` | VARCHAR(50) | - | NULL, DEFAULT NULL | ผู้ให้บริการ OAuth (`'google'` หรือ `NULL` สำหรับ native users) |
+| `oauth_id` | VARCHAR(255) | - | NULL, UNIQUE when not null | รหัส unique ที่ได้รับจาก OAuth provider (เช่น Google User ID) |
 | `first_name` | VARCHAR(100) | - | NOT NULL | ชื่อจริงของผู้ใช้งาน |
 | `last_name` | VARCHAR(100) | - | NOT NULL | นามสกุลของผู้ใช้งาน |
 | `role` | VARCHAR(50) | - | NOT NULL, DEFAULT 'Customer' | บทบาทสิทธิ์การใช้ระบบ (`'Customer'`, `'Staff'`, `'Manager'`, `'Admin'`) |
@@ -194,3 +197,24 @@
 | `status` | VARCHAR(100) | - | NOT NULL | ข้อความสถานะใหม่ที่ถูกบันทึก (เช่น `'Payment Approved'`, `'Assembling'`) |
 | `changed_by_user_id` | INTEGER | FK | NOT NULL, ON DELETE RESTRICT | รหัสผู้ใช้งานของช่างหรือพนักงานที่เป็นคนกดอนุมัติ/สลับสถานะในขั้นตอนนี้ |
 | `created_at` | TIMESTAMP | - | NOT NULL, DEFAULT CURRENT_TIMESTAMP | วันและเวลาจริงที่มีการกดสับเปลี่ยนในระบบ |
+
+---
+
+### 11. ตาราง `gallery_posts` (ตารางโพสต์แกลเลอรี่คอมมูนิตี้)
+จัดเก็บโพสต์แชร์สเปคคอมพิวเตอร์ที่ลูกค้าแชร์หลังประกอบเสร็จ ต้องผ่านการอนุมัติโดย Manager ก่อนแสดงสาธารณะ
+
+* **คีย์หลัก (PK):** `id`
+* **คีย์นอก (FK):** `user_id` ชี้ `users(id)`, `order_id` ชี้ `orders(id)`
+
+| ชื่อฟิลด์ (Field) | ชนิดข้อมูล (Data Type) | คีย์ (Key) | ข้อจำกัด (Constraints) | คำอธิบายฟิลด์ (Description) |
+| :--- | :--- | :---: | :--- | :--- |
+| `id` | SERIAL / INT | PK | NOT NULL | รหัสโพสต์แกลเลอรี่ |
+| `user_id` | INTEGER | FK | NOT NULL, ON DELETE CASCADE | รหัสลูกค้าเจ้าของโพสต์ |
+| `order_id` | INTEGER | FK | NOT NULL, ON DELETE CASCADE | รหัสออเดอร์ที่ผูกกับโพสต์นี้ |
+| `title` | VARCHAR(255) | - | NOT NULL | หัวข้อชื่อโพสต์แกลเลอรี่ |
+| `description` | TEXT | - | NULL | คำอธิบายรายละเอียดเพิ่มเติมของโพสต์ |
+| `image_url` | VARCHAR(500) | - | NULL | URL รูปภาพเคสคอมพิวเตอร์ที่แนบมากับโพสต์ |
+| `status` | VARCHAR(50) | - | NOT NULL, DEFAULT 'Pending' | สถานะการตรวจสอบ (`'Pending'`, `'Approved'`, `'Rejected'`) |
+| `is_pinned` | BOOLEAN | - | NOT NULL, DEFAULT FALSE | ธงปักหมุดโพสต์ขึ้นหน้าแรกโดย Manager |
+| `likes_count` | INTEGER | - | NOT NULL, DEFAULT 0 | จำนวนยอดกดถูกใจโพสต์สะสม |
+| `created_at` | TIMESTAMP | - | NOT NULL, DEFAULT CURRENT_TIMESTAMP | วันและเวลาที่สร้างโพสต์ |

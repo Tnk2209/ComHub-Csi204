@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   Cpu as CpuIcon, 
   Layers as MbIcon, 
@@ -57,6 +58,8 @@ const COMPONENT_DATABASE = {
 };
 
 function PCBuilder({ onNavigate }) {
+  const { t } = useTranslation();
+
   // State for selected components
   const [selectedParts, setSelectedParts] = useState({
     cpu: null,
@@ -104,9 +107,9 @@ function PCBuilder({ onNavigate }) {
   // Compatibility Calculations
   const buildCompatibility = useMemo(() => {
     const checks = {
-      socket: { status: 'idle', message: 'กรุณาเลือก CPU และ Motherboard เพื่อวิเคราะห์ความเข้ากันได้' },
-      power: { status: 'idle', message: 'เลือกชิ้นส่วนและพาวเวอร์ซัพพลายเพื่อตรวจเช็คกระแสไฟ' },
-      clearance: { status: 'idle', message: 'เลือกการ์ดจอและเคสคอมพิวเตอร์เพื่อตรวจขนาดทางกายภาพ' }
+      socket: { status: 'idle', message: t('builder.compat_rules.socket_idle') },
+      power: { status: 'idle', message: t('builder.compat_rules.power_idle') },
+      clearance: { status: 'idle', message: t('builder.compat_rules.clearance_idle') }
     };
 
     const cpu = selectedParts.cpu;
@@ -120,12 +123,12 @@ function PCBuilder({ onNavigate }) {
       if (cpu.socket === mb.socket) {
         checks.socket = {
           status: 'success',
-          message: `เข้ากันได้: ทั้ง CPU และ เมนบอร์ด ใช้ซ็อกเก็ต ${cpu.socket} ตรงกัน`
+          message: t('builder.compat_rules.socket_match', { cpuSocket: cpu.socket })
         };
       } else {
         checks.socket = {
           status: 'error',
-          message: `ขั้วเชื่อมพอร์ตไม่ตรงกัน: CPU ใช้ ${cpu.socket} แต่เมนบอร์ดใช้ ${mb.socket}! ไม่สามารถประกอบร่วมกันได้`
+          message: t('builder.compat_rules.socket_mismatch', { cpuSocket: cpu.socket, mbSocket: mb.socket })
         };
       }
     }
@@ -144,24 +147,24 @@ function PCBuilder({ onNavigate }) {
       if (totalTdp > psu.wattage) {
         checks.power = {
           status: 'error',
-          message: `กระแสไฟโหลดเกินขีดจำกัด! อุปกรณ์ต้องการไฟอย่างน้อย ~${totalTdp}W แต่ PSU ให้ได้แค่ ${psu.wattage}W`
+          message: t('builder.compat_rules.power_overload', { totalTdp, psuWattage: psu.wattage })
         };
       } else if (loadPercentage > 80) {
         checks.power = {
           status: 'warning',
-          message: `กระแสไฟโหลดสูงระดับ ${Math.round(loadPercentage)}% ของพาวเวอร์ซัพพลาย แนะนำให้อัปเกรดเพื่อเผื่อความปลอดภัย 20% (Safety Buffer)`
+          message: t('builder.compat_rules.power_warning', { loadPercentage: Math.round(loadPercentage) })
         };
       } else {
         checks.power = {
           status: 'success',
-          message: `กำลังไฟปลอดภัย: ใช้กำลังไฟรวมประมาณ ~${totalTdp}W จากพาวเวอร์ซัพพลายขนาด ${psu.wattage}W (โหลดเพียง ${Math.round(loadPercentage)}%)`
+          message: t('builder.compat_rules.power_match', { totalTdp, psuWattage: psu.wattage, loadPercentage: Math.round(loadPercentage) })
         };
       }
     } else {
       if (totalTdp > 30) {
         checks.power = {
           status: 'warning',
-          message: `ชิ้นส่วนที่เลือกต้องการกำลังไฟอย่างน้อย ~${totalTdp}W แนะนำให้เลือกพาวเวอร์ซัพพลายขนาด ${Math.ceil((totalTdp * 1.25) / 50) * 50}W ขึ้นไป`
+          message: t('builder.compat_rules.power_need_psu', { totalTdp, recommendedWattage: Math.ceil((totalTdp * 1.25) / 50) * 50 })
         };
       }
     }
@@ -171,12 +174,12 @@ function PCBuilder({ onNavigate }) {
       if (gpu.length > computerCase.maxGpuLength) {
         checks.clearance = {
           status: 'error',
-          message: `การ์ดจอมีความยาว ${gpu.length}mm ซึ่งเกินขนาดการ์ดจอสูงสุดที่เคสรองรับได้ (${computerCase.maxGpuLength}mm)!`
+          message: t('builder.compat_rules.clearance_mismatch', { gpuLength: gpu.length, caseLimit: computerCase.maxGpuLength })
         };
       } else {
         checks.clearance = {
           status: 'success',
-          message: `ประกอบลงเคสได้แน่นอน: การ์ดจอ (${gpu.length}mm) สั้นกว่าขนาดสูงสุดของเคส (${computerCase.maxGpuLength}mm)`
+          message: t('builder.compat_rules.clearance_match', { gpuLength: gpu.length, caseLimit: computerCase.maxGpuLength })
         };
       }
     }
@@ -186,7 +189,7 @@ function PCBuilder({ onNavigate }) {
       totalTdp,
       totalCost: Object.values(selectedParts).reduce((sum, item) => sum + (item ? item.price : 0), 0)
     };
-  }, [selectedParts]);
+  }, [selectedParts, t]);
 
   // Performance Estimates
   const performanceInfo = useMemo(() => {
@@ -212,13 +215,13 @@ function PCBuilder({ onNavigate }) {
 
   // Component configuration
   const categories = {
-    cpu: { label: 'CPU (หน่วยประมวลผล)', icon: CpuIcon },
-    motherboard: { label: 'Motherboard (เมนบอร์ด)', icon: MbIcon },
-    gpu: { label: 'GPU (การ์ดจอ)', icon: GpuIcon },
-    ram: { label: 'Memory (แรม)', icon: RamIcon },
-    storage: { label: 'Storage (ไดรฟ์ข้อมูล)', icon: SsdIcon },
-    case: { label: 'PC Case (เคสคอมพิวเตอร์)', icon: CaseIcon },
-    psu: { label: 'Power Supply (พาวเวอร์ซัพพลาย)', icon: PsuIcon },
+    cpu: { label: t('builder.categories.cpu'), icon: CpuIcon },
+    motherboard: { label: t('builder.categories.motherboard'), icon: MbIcon },
+    gpu: { label: t('builder.categories.gpu'), icon: GpuIcon },
+    ram: { label: t('builder.categories.ram'), icon: RamIcon },
+    storage: { label: t('builder.categories.storage'), icon: SsdIcon },
+    case: { label: t('builder.categories.case'), icon: CaseIcon },
+    psu: { label: t('builder.categories.psu'), icon: PsuIcon },
   };
 
   const renderLeftColumnBentoCard = (key) => {
@@ -228,65 +231,65 @@ function PCBuilder({ onNavigate }) {
     return (
       <div 
         key={key}
-        className={`bg-[#161a1f]/70 backdrop-blur-md border rounded-xl p-4 transition-all flex flex-col justify-between min-h-[110px] hover:-translate-y-0.5 ${
+        className={`bg-app-surface/70 backdrop-blur-md border rounded-xl p-4 transition-all flex flex-col justify-between min-h-[110px] hover:-translate-y-0.5 ${
           selectedItem 
-            ? 'border-[#00c2ff]/30 shadow-[0_0_10px_rgba(0,194,255,0.03)] bg-[#161a1f]/90' 
-            : 'border-[#222a36] hover:border-gray-700'
+            ? 'border-brand-blue/30 shadow-[0_0_10px_rgba(0,194,255,0.03)] bg-app-surface/90' 
+            : 'border-app-border hover:border-gray-700'
         }`}
       >
         <div className="flex justify-between items-start gap-2">
           <div className="min-w-0 flex-grow">
-            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block mb-0.5">
+            <span className="text-[9px] font-bold text-app-text-muted uppercase tracking-wider block mb-0.5">
               {categories[key].label}
             </span>
             {selectedItem ? (
               <div className="min-w-0">
-                <h4 className="text-white font-bold text-xs sm:text-sm truncate">{selectedItem.name}</h4>
+                <h4 className="text-app-text font-bold text-xs sm:text-sm truncate">{selectedItem.name}</h4>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {selectedItem.socket && (
-                    <span className="text-[8px] font-bold bg-[#222a36] text-gray-400 px-1 py-0.2 rounded">
+                    <span className="text-[8px] font-bold bg-app-border text-app-text-muted px-1 py-0.2 rounded">
                       {selectedItem.socket}
                     </span>
                   )}
                   {selectedItem.tdp > 0 && (
-                    <span className="text-[8px] font-bold bg-[#222a36] text-gray-400 px-1 py-0.2 rounded">
+                    <span className="text-[8px] font-bold bg-app-border text-app-text-muted px-1 py-0.2 rounded">
                       {selectedItem.tdp}W
                     </span>
                   )}
                 </div>
               </div>
             ) : (
-              <span className="text-gray-500 text-xs block">ยังไม่ได้เลือกอุปกรณ์</span>
+              <span className="text-app-text-muted text-xs block">{t('builder.empty_selection')}</span>
             )}
           </div>
-          <div className={`p-1.5 rounded-lg flex-shrink-0 ${selectedItem ? 'bg-[#00c2ff]/10 text-[#00c2ff]' : 'bg-[#0d0f12] text-gray-600'}`}>
+          <div className={`p-1.5 rounded-lg flex-shrink-0 ${selectedItem ? 'bg-brand-blue/10 text-brand-blue' : 'bg-app-bg text-gray-600'}`}>
             <Icon className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-t border-[#222a36] pt-2 mt-2">
+        <div className="flex items-center justify-between border-t border-app-border pt-2 mt-2">
           {selectedItem ? (
             <>
-              <span className="text-white font-extrabold text-xs">
+              <span className="text-app-text font-extrabold text-xs">
                 ${selectedItem.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </span>
               <button 
                 onClick={() => removeComponent(key)}
-                className="p-1 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded transition-colors cursor-pointer"
-                title="ลบชิ้นส่วนออก"
+                className="p-1 text-app-text-muted hover:text-red-500 hover:bg-red-500/10 rounded transition-colors cursor-pointer"
+                title={t('builder.remove_btn')}
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
             </>
           ) : (
             <>
-              <span className="text-[10px] text-gray-600">ว่าง</span>
+              <span className="text-[10px] text-gray-600">{t('builder.empty_space')}</span>
               <button 
                 onClick={() => setActiveCategory(key)}
-                className="bg-[#222a36]/60 hover:bg-[#00c2ff] hover:text-slate-950 text-gray-300 text-[9px] font-bold px-2 py-1.5 rounded transition-all flex items-center gap-1 cursor-pointer"
+                className="bg-app-border/60 hover:bg-brand-blue hover:text-slate-950 text-app-text text-[9px] font-bold px-2 py-1.5 rounded transition-all flex items-center gap-1 cursor-pointer"
               >
                 <Plus className="w-3 h-3" />
-                เลือกชิ้นส่วน
+                {t('builder.select_btn')}
               </button>
             </>
           )}
@@ -299,29 +302,29 @@ function PCBuilder({ onNavigate }) {
     <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       
       {/* Title Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-[#222a36] pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-app-border pb-6">
         <div>
-          <div className="flex items-center gap-2 text-[#00c2ff] text-sm font-semibold mb-2">
+          <div className="flex items-center gap-2 text-brand-blue text-sm font-semibold mb-2">
             <Sparkles className="w-4 h-4" />
             Digital Lab v2.4.1 - 3-Column Bento Blueprint
           </div>
-          <h1 className="text-3xl font-extrabold text-white">System Configuration</h1>
-          <p className="text-gray-400 text-sm mt-1">จัดชุดคอมพิวเตอร์ด้วยการตรวจสเปคและกำลังไฟสะสมแบบเรียลไทม์</p>
+          <h1 className="text-3xl font-extrabold text-app-text">{t('builder.title')}</h1>
+          <p className="text-app-text-muted text-sm mt-1">{t('builder.subtitle')}</p>
         </div>
         <div className="flex gap-3">
           <button 
             onClick={handleReset}
-            className="flex items-center gap-2 border border-[#222a36] hover:border-gray-500 hover:bg-[#161a1f] text-gray-300 font-medium px-4 py-2.5 rounded transition-all text-sm cursor-pointer"
+            className="flex items-center gap-2 border border-app-border hover:border-gray-500 hover:bg-app-surface text-app-text font-medium px-4 py-2.5 rounded transition-all text-sm cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
-            ล้างสเปคทั้งหมด
+            {t('builder.reset_btn')}
           </button>
           <button 
-            onClick={() => alert('บันทึกสเปคลงบอร์ดคอมมูนิตี้เรียบร้อย!')}
-            className="flex items-center gap-2 border border-[#00c2ff]/30 text-[#00c2ff] hover:bg-[#00c2ff]/10 font-semibold px-4 py-2.5 rounded transition-all text-sm cursor-pointer"
+            onClick={() => alert(t('builder.alert_copied'))}
+            className="flex items-center gap-2 border border-brand-blue/30 text-brand-blue hover:bg-brand-blue/10 font-semibold px-4 py-2.5 rounded transition-all text-sm cursor-pointer"
           >
             <Share2 className="w-4 h-4" />
-            แชร์สเปคสู่คอมมูนิตี้
+            {t('builder.share_btn')}
           </button>
         </div>
       </div>
@@ -331,9 +334,9 @@ function PCBuilder({ onNavigate }) {
         
         {/* ================= COLUMN 1: LEFT - hardware menus (Span 3 = 25%) ================= */}
         <div className="lg:col-span-3 flex flex-col gap-4">
-          <div className="bg-[#161a1f]/30 border border-[#222a36] rounded-2xl p-4 flex flex-col gap-3 h-full">
-            <div className="flex items-center gap-2 mb-1 border-b border-[#222a36] pb-2">
-              <span className="text-xs font-bold text-white uppercase tracking-wider">📦 รายการเลือกชิ้นส่วน (Component Selector)</span>
+          <div className="bg-app-surface/30 border border-app-border rounded-2xl p-4 flex flex-col gap-3 h-full">
+            <div className="flex items-center gap-2 mb-1 border-b border-app-border pb-2">
+              <span className="text-xs font-bold text-app-text uppercase tracking-wider">{t('builder.left_column_title')}</span>
             </div>
             {Object.keys(categories).map((key) => renderLeftColumnBentoCard(key))}
           </div>
@@ -341,17 +344,17 @@ function PCBuilder({ onNavigate }) {
 
         {/* ================= COLUMN 2: MIDDLE - Case blueprint schematic (Span 6 = 50%) ================= */}
         <div className="lg:col-span-6 flex flex-col">
-          <div className="bg-[#161a1f]/40 border border-[#222a36] rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between items-center h-full min-h-[500px]">
+          <div className="bg-app-surface/40 border border-app-border rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between items-center h-full min-h-[500px]">
             
             {/* Background radial glow */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-10%,rgba(0,194,255,0.06),rgba(0,0,0,0))] pointer-events-none"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-10%,rgba(var(--brand-blue-rgb),0.06),rgba(0,0,0,0))] pointer-events-none"></div>
             
             <div className="flex justify-between items-center w-full z-10">
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#00c2ff] animate-pulse"></div>
-                <span className="text-xs font-bold text-white uppercase tracking-wider">Chassis Blueprint (ผังประกอบเคสแนวตั้ง)</span>
+                <div className="w-2.5 h-2.5 rounded-full bg-brand-blue animate-pulse"></div>
+                <span className="text-xs font-bold text-app-text uppercase tracking-wider">{t('builder.middle_column_title')}</span>
               </div>
-              <span className="text-[9px] bg-[#222a36] text-gray-400 px-2 py-0.5 rounded font-mono">TOWER VIEW</span>
+              <span className="text-[9px] bg-app-border text-app-text-muted px-2 py-0.5 rounded font-mono">{t('builder.middle_column_tag')}</span>
             </div>
 
             {/* Vertical PC Case Tower SVG Schematic */}
@@ -361,29 +364,29 @@ function PCBuilder({ onNavigate }) {
                 <rect 
                   x="15" y="15" width="270" height="370" rx="10" 
                   fill="none" 
-                  stroke={selectedParts.case ? '#00c2ff' : '#222a36'} 
+                  stroke={selectedParts.case ? 'var(--brand-blue)' : 'var(--app-border)'} 
                   strokeWidth="2.5" 
                   className="transition-colors duration-300"
-                  style={{ filter: selectedParts.case ? 'drop-shadow(0 0 6px rgba(0, 194, 255, 0.25))' : 'none' }}
+                  style={{ filter: selectedParts.case ? 'drop-shadow(0 0 6px rgba(0,194,255,0.25))' : 'none' }}
                 />
                 
                 {/* Rear Exhaust Fan (Top Left) */}
                 <circle 
                   cx="45" cy="85" r="18" fill="none" 
-                  stroke={selectedParts.case ? '#00c2ff' : '#222a36'} 
+                  stroke={selectedParts.case ? 'var(--brand-blue)' : 'var(--app-border)'} 
                   strokeWidth="1.5"
                   className={`transition-colors duration-300 ${selectedParts.case ? 'animate-[spin_4s_linear_infinite]' : ''}`} 
                   style={{ transformOrigin: '45px 85px' }}
                 />
-                <line x1="45" y1="67" x2="45" y2="103" stroke={selectedParts.case ? '#00c2ff' : '#222a36'} strokeWidth="1" />
-                <line x1="27" y1="85" x2="63" y2="85" stroke={selectedParts.case ? '#00c2ff' : '#222a36'} strokeWidth="1" />
+                <line x1="45" y1="67" x2="45" y2="103" stroke={selectedParts.case ? 'var(--brand-blue)' : 'var(--app-border)'} strokeWidth="1" />
+                <line x1="27" y1="85" x2="63" y2="85" stroke={selectedParts.case ? 'var(--brand-blue)' : 'var(--app-border)'} strokeWidth="1" />
 
                 {/* Front Intake Fans (Right side, 3 fans vertical) */}
                 {[90, 165, 240].map((cy, i) => (
                   <circle 
                     key={i}
                     cx="255" cy={cy} r="20" fill="none" 
-                    stroke={selectedParts.case ? '#00c2ff' : '#222a36'} 
+                    stroke={selectedParts.case ? 'var(--brand-blue)' : 'var(--app-border)'} 
                     strokeWidth="1.5"
                     className={`transition-colors duration-300 ${selectedParts.case ? 'animate-[spin_4s_linear_infinite]' : ''}`} 
                     style={{ transformOrigin: `255px ${cy}px` }}
@@ -394,27 +397,27 @@ function PCBuilder({ onNavigate }) {
                 <rect 
                   x="80" y="45" width="150" height="230" rx="4" 
                   fill="none" 
-                  stroke={selectedParts.motherboard ? '#00c2ff' : '#2d333f'} 
+                  stroke={selectedParts.motherboard ? 'var(--brand-blue)' : 'var(--app-border)'} 
                   strokeWidth="2" 
                   className="transition-colors duration-300"
                   style={{ filter: selectedParts.motherboard ? 'drop-shadow(0 0 5px rgba(0, 194, 255, 0.2))' : 'none' }}
                 />
                 
                 {/* Motherboard socket text */}
-                <text x="155" y="55" fill="#2d333f" fontSize="7" textAnchor="middle" fontWeight="bold">ATX FORM FACTOR</text>
+                <text x="155" y="55" fill="var(--app-border)" fontSize="7" textAnchor="middle" fontWeight="bold">ATX FORM FACTOR</text>
 
                 {/* 3. CPU Socket & Fan Cooler */}
                 <rect 
                   x="115" y="70" width="55" height="55" rx="2" 
-                  fill={selectedParts.cpu ? 'rgba(0,194,255,0.06)' : 'none'} 
-                  stroke={selectedParts.cpu ? '#00c2ff' : '#2d333f'} 
+                  fill={selectedParts.cpu ? 'rgba(var(--brand-blue-rgb),0.06)' : 'none'} 
+                  stroke={selectedParts.cpu ? 'var(--brand-blue)' : 'var(--app-border)'} 
                   strokeWidth="1.5" 
                   className="transition-colors duration-300"
                   style={{ filter: selectedParts.cpu ? 'drop-shadow(0 0 8px rgba(0, 194, 255, 0.35))' : 'none' }}
                 />
                 <text 
                   x="142" y="102" 
-                  fill={selectedParts.cpu ? '#00c2ff' : '#475569'} 
+                  fill={selectedParts.cpu ? 'var(--brand-blue)' : '#475569'} 
                   fontSize="9" fontWeight="bold" textAnchor="middle"
                   className="transition-colors duration-300 font-mono"
                 >
@@ -427,7 +430,7 @@ function PCBuilder({ onNavigate }) {
                     key={i}
                     x={185 + (i * 6)} y="65" width="3" height="65" rx="0.5" 
                     fill={selectedParts.ram ? 'rgba(0,194,255,0.2)' : 'none'} 
-                    stroke={selectedParts.ram ? '#00c2ff' : '#2d333f'} 
+                    stroke={selectedParts.ram ? 'var(--brand-blue)' : 'var(--app-border)'} 
                     strokeWidth="0.8" 
                     className="transition-all duration-300"
                     style={{ filter: selectedParts.ram ? 'drop-shadow(0 0 4px rgba(0, 194, 255, 0.3))' : 'none' }}
@@ -437,13 +440,13 @@ function PCBuilder({ onNavigate }) {
                 {/* 5. PCIe GPU Slot & Mounted GPU Card */}
                 <rect 
                   x="90" y="155" width="130" height="3" 
-                  fill="#2d333f" 
+                  fill="var(--app-border)" 
                 />
                 {selectedParts.gpu ? (
                   <rect 
                     x="85" y="145" width="165" height="32" rx="3" 
                     fill="rgba(0,194,255,0.1)" 
-                    stroke="#00c2ff" 
+                    stroke="var(--brand-blue)" 
                     strokeWidth="1.5" 
                     className="transition-all duration-300"
                     style={{ filter: 'drop-shadow(0 0 10px rgba(0, 194, 255, 0.4))' }}
@@ -451,7 +454,7 @@ function PCBuilder({ onNavigate }) {
                 ) : null}
                 <text 
                   x="155" y="163" 
-                  fill={selectedParts.gpu ? '#00c2ff' : '#475569'} 
+                  fill={selectedParts.gpu ? 'var(--brand-blue)' : '#475569'} 
                   fontSize="8" fontWeight="bold" textAnchor="middle"
                   className="transition-colors duration-300 font-mono"
                 >
@@ -462,24 +465,24 @@ function PCBuilder({ onNavigate }) {
                 <rect 
                   x="115" y="195" width="40" height="10" rx="1" 
                   fill={selectedParts.storage ? 'rgba(0,194,255,0.15)' : 'none'} 
-                  stroke={selectedParts.storage ? '#00c2ff' : '#2d333f'} 
+                  stroke={selectedParts.storage ? 'var(--brand-blue)' : 'var(--app-border)'} 
                   strokeWidth="1"
                   className="transition-colors duration-300"
                 />
-                <text x="135" y="202" fill={selectedParts.storage ? '#00c2ff' : '#475569'} fontSize="6" textAnchor="middle" fontWeight="bold">M.2 SSD</text>
+                <text x="135" y="202" fill={selectedParts.storage ? 'var(--brand-blue)' : '#475569'} fontSize="6" textAnchor="middle" fontWeight="bold">M.2 SSD</text>
 
                 {/* 7. PSU Power Shroud Cover (Bottom Compartment) */}
                 <rect 
                   x="25" y="315" width="250" height="55" rx="4" 
-                  fill={selectedParts.psu ? 'rgba(0,194,255,0.06)' : 'none'} 
-                  stroke={selectedParts.psu ? '#00c2ff' : '#2d333f'} 
+                  fill={selectedParts.psu ? 'rgba(var(--brand-blue-rgb),0.06)' : 'none'} 
+                  stroke={selectedParts.psu ? 'var(--brand-blue)' : 'var(--app-border)'} 
                   strokeWidth="1.5" 
                   className="transition-colors duration-300"
-                  style={{ filter: selectedParts.psu ? 'drop-shadow(0 0 6px rgba(0, 194, 255, 0.25))' : 'none' }}
+                  style={{ filter: selectedParts.psu ? 'drop-shadow(0 0 6px rgba(0,194,255,0.25))' : 'none' }}
                 />
                 <text 
                   x="150" y="347" 
-                  fill={selectedParts.psu ? '#00c2ff' : '#475569'} 
+                  fill={selectedParts.psu ? 'var(--brand-blue)' : '#475569'} 
                   fontSize="9" fontWeight="bold" textAnchor="middle"
                   className="transition-colors duration-300 font-mono"
                 >
@@ -489,33 +492,33 @@ function PCBuilder({ onNavigate }) {
             </div>
 
             {/* Micro-legends at the bottom */}
-            <div className="flex flex-wrap justify-center gap-3 text-[9px] text-gray-500 z-10 border-t border-[#222a36] pt-3 w-full">
+            <div className="flex flex-wrap justify-center gap-3 text-[9px] text-app-text-muted z-10 border-t border-app-border pt-3 w-full">
               <span className="flex items-center gap-1">
-                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.cpu ? 'bg-[#00c2ff]' : 'bg-gray-700'}`}></span>
+                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.cpu ? 'bg-brand-blue' : 'bg-gray-700'}`}></span>
                 CPU
               </span>
               <span className="flex items-center gap-1">
-                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.motherboard ? 'bg-[#00c2ff]' : 'bg-gray-700'}`}></span>
+                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.motherboard ? 'bg-brand-blue' : 'bg-gray-700'}`}></span>
                 Board
               </span>
               <span className="flex items-center gap-1">
-                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.gpu ? 'bg-[#00c2ff]' : 'bg-gray-700'}`}></span>
+                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.gpu ? 'bg-brand-blue' : 'bg-gray-700'}`}></span>
                 GPU
               </span>
               <span className="flex items-center gap-1">
-                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.ram ? 'bg-[#00c2ff]' : 'bg-gray-700'}`}></span>
+                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.ram ? 'bg-brand-blue' : 'bg-gray-700'}`}></span>
                 RAM
               </span>
               <span className="flex items-center gap-1">
-                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.storage ? 'bg-[#00c2ff]' : 'bg-gray-700'}`}></span>
+                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.storage ? 'bg-brand-blue' : 'bg-gray-700'}`}></span>
                 SSD
               </span>
               <span className="flex items-center gap-1">
-                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.case ? 'bg-[#00c2ff]' : 'bg-gray-700'}`}></span>
+                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.case ? 'bg-brand-blue' : 'bg-gray-700'}`}></span>
                 Case
               </span>
               <span className="flex items-center gap-1">
-                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.psu ? 'bg-[#00c2ff]' : 'bg-gray-700'}`}></span>
+                <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.psu ? 'bg-brand-blue' : 'bg-gray-700'}`}></span>
                 PSU
               </span>
             </div>
@@ -527,8 +530,8 @@ function PCBuilder({ onNavigate }) {
         <div className="lg:col-span-3 flex flex-col gap-6">
           
           {/* Health check card */}
-          <div className="bg-[#161a1f] border border-[#222a36] rounded-2xl p-6">
-            <h3 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
+          <div className="bg-app-surface border border-app-border rounded-2xl p-6">
+            <h3 className="text-lg font-bold text-app-text mb-5 flex items-center gap-2">
               <span className="text-emerald-400">🩺</span> Health Check
             </h3>
             <div className="flex flex-col gap-4">
@@ -541,17 +544,17 @@ function PCBuilder({ onNavigate }) {
                   ) : buildCompatibility.checks.socket.status === 'error' ? (
                     <AlertCircle className="w-5 h-5 text-rose-500" />
                   ) : (
-                    <Info className="w-5 h-5 text-gray-500" />
+                    <Info className="w-5 h-5 text-app-text-muted" />
                   )}
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wide">Socket Compatibility</h4>
-                  <p className="text-xs text-gray-400 mt-1 leading-relaxed">{buildCompatibility.checks.socket.message}</p>
+                  <h4 className="text-xs font-bold text-app-text uppercase tracking-wide">Socket Compatibility</h4>
+                  <p className="text-xs text-app-text-muted mt-1 leading-relaxed">{buildCompatibility.checks.socket.message}</p>
                 </div>
               </div>
 
               {/* Power level Warning */}
-              <div className="flex gap-3 border-t border-[#222a36] pt-4">
+              <div className="flex gap-3 border-t border-app-border pt-4">
                 <div className="flex-shrink-0 mt-0.5">
                   {buildCompatibility.checks.power.status === 'success' ? (
                     <CheckCircle2 className="w-5 h-5 text-emerald-500" />
@@ -560,29 +563,29 @@ function PCBuilder({ onNavigate }) {
                   ) : buildCompatibility.checks.power.status === 'error' ? (
                     <AlertCircle className="w-5 h-5 text-rose-500" />
                   ) : (
-                    <Info className="w-5 h-5 text-gray-500" />
+                    <Info className="w-5 h-5 text-app-text-muted" />
                   )}
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wide">TDP Power Warning</h4>
-                  <p className="text-xs text-gray-400 mt-1 leading-relaxed">{buildCompatibility.checks.power.message}</p>
+                  <h4 className="text-xs font-bold text-app-text uppercase tracking-wide">TDP Power Warning</h4>
+                  <p className="text-xs text-app-text-muted mt-1 leading-relaxed">{buildCompatibility.checks.power.message}</p>
                 </div>
               </div>
 
               {/* Physical clearance (GPU Size) */}
-              <div className="flex gap-3 border-t border-[#222a36] pt-4">
+              <div className="flex gap-3 border-t border-app-border pt-4">
                 <div className="flex-shrink-0 mt-0.5">
                   {buildCompatibility.checks.clearance.status === 'success' ? (
                     <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                   ) : buildCompatibility.checks.clearance.status === 'error' ? (
                     <AlertCircle className="w-5 h-5 text-rose-500" />
                   ) : (
-                    <Info className="w-5 h-5 text-gray-500" />
+                    <Info className="w-5 h-5 text-app-text-muted" />
                   )}
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wide">Physical Clearance</h4>
-                  <p className="text-xs text-gray-400 mt-1 leading-relaxed">{buildCompatibility.checks.clearance.message}</p>
+                  <h4 className="text-xs font-bold text-app-text uppercase tracking-wide">Physical Clearance</h4>
+                  <p className="text-xs text-app-text-muted mt-1 leading-relaxed">{buildCompatibility.checks.clearance.message}</p>
                 </div>
               </div>
 
@@ -590,25 +593,25 @@ function PCBuilder({ onNavigate }) {
           </div>
 
           {/* Power Analysis card */}
-          <div className="bg-[#161a1f] border border-[#222a36] rounded-2xl p-6">
-            <h3 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
-              <span className="text-[#00c2ff]">⚡</span> Power Analysis
+          <div className="bg-app-surface border border-app-border rounded-2xl p-6">
+            <h3 className="text-lg font-bold text-app-text mb-5 flex items-center gap-2">
+              <span className="text-brand-blue">⚡</span> Power Analysis
             </h3>
             
             {/* Wattage bar */}
             <div className="mb-4">
-              <div className="flex justify-between text-xs font-bold text-gray-400 mb-2">
+              <div className="flex justify-between text-xs font-bold text-app-text-muted mb-2">
                 <span>กำลังไฟโหลดรวม</span>
                 <span>
                   {buildCompatibility.totalTdp}W {selectedParts.psu ? `/ ${selectedParts.psu.wattage}W` : ''}
                 </span>
               </div>
-              <div className="w-full bg-[#0d0f12] rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-app-bg rounded-full h-3 overflow-hidden">
                 <div 
                   className={`h-full transition-all duration-300 ${
                     !selectedParts.psu ? 'bg-amber-500' :
                     (buildCompatibility.totalTdp / selectedParts.psu.wattage) > 1.0 ? 'bg-rose-500' :
-                    (buildCompatibility.totalTdp / selectedParts.psu.wattage) > 0.8 ? 'bg-amber-400' : 'bg-[#00c2ff]'
+                    (buildCompatibility.totalTdp / selectedParts.psu.wattage) > 0.8 ? 'bg-amber-400' : 'bg-brand-blue'
                   }`}
                   style={{ 
                     width: `${Math.min(
@@ -621,7 +624,7 @@ function PCBuilder({ onNavigate }) {
                 ></div>
               </div>
               {selectedParts.psu && (
-                <div className="flex justify-between text-[10px] text-gray-500 mt-1.5">
+                <div className="flex justify-between text-[10px] text-app-text-muted mt-1.5">
                   <span>Current Load</span>
                   <span>Safety Buffer (20%)</span>
                 </div>
@@ -629,39 +632,39 @@ function PCBuilder({ onNavigate }) {
             </div>
 
             {/* Estimated Total Price & Checkout */}
-            <div className="border-t border-[#222a36] pt-4 mt-6">
-              <span className="text-xs text-gray-500 block mb-1">Estimated Total</span>
-              <h2 className="text-3xl font-extrabold text-white mb-6 font-mono">
+            <div className="border-t border-app-border pt-4 mt-6">
+              <span className="text-xs text-app-text-muted block mb-1">Estimated Total</span>
+              <h2 className="text-3xl font-extrabold text-app-text mb-6 font-mono">
                 ${buildCompatibility.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </h2>
               <button 
-                onClick={() => alert(`ดำเนินการสั่งซื้อสำเร็จ! ยอดรวมคือ $${buildCompatibility.totalCost}`)}
+                onClick={() => alert(t('builder.alert_checkout', { totalCost: buildCompatibility.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 }) }))}
                 disabled={buildCompatibility.totalCost === 0}
                 className={`w-full text-slate-950 font-bold py-3.5 px-4 rounded-xl text-center transition-all flex items-center justify-center gap-2 cursor-pointer ${
                   buildCompatibility.totalCost > 0 
-                    ? 'bg-[#00c2ff] hover:bg-[#00c2ff]/90 hover:scale-[1.01] hover:shadow-[0_0_15px_rgba(0,194,255,0.2)]' 
-                    : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                    ? 'bg-brand-blue hover:bg-brand-blue/90 hover:scale-[1.01] hover:shadow-[0_0_15px_rgba(0,194,255,0.2)]' 
+                    : 'bg-gray-700 text-app-text-muted cursor-not-allowed'
                 }`}
               >
                 <ShoppingCart className="w-5 h-5" />
-                Checkout System
+                {t('builder.checkout_btn')}
               </button>
             </div>
           </div>
 
           {/* Benchmark Estimation card */}
-          <div className="bg-[#161a1f] border border-[#222a36] rounded-2xl p-6">
-            <h3 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
+          <div className="bg-app-surface border border-app-border rounded-2xl p-6">
+            <h3 className="text-lg font-bold text-app-text mb-5 flex items-center gap-2">
               <span className="text-amber-400">🎮</span> Benchmark Estimate
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-[#0d0f12]/50 p-4 rounded-xl border border-[#222a36]">
-                <span className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1">4K Gaming</span>
-                <span className="text-white font-extrabold text-xl font-mono">{performanceInfo.fps}</span>
+              <div className="bg-app-bg/50 p-4 rounded-xl border border-app-border">
+                <span className="text-[10px] text-app-text-muted uppercase tracking-wider block mb-1">4K Gaming</span>
+                <span className="text-app-text font-extrabold text-xl font-mono">{performanceInfo.fps}</span>
               </div>
-              <div className="bg-[#0d0f12]/50 p-4 rounded-xl border border-[#222a36]">
-                <span className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1">Efficiency</span>
-                <span className="text-[#00c2ff] font-extrabold text-sm block mt-1">{performanceInfo.rating}</span>
+              <div className="bg-app-bg/50 p-4 rounded-xl border border-app-border">
+                <span className="text-[10px] text-app-text-muted uppercase tracking-wider block mb-1">Efficiency</span>
+                <span className="text-brand-blue font-extrabold text-sm block mt-1">{performanceInfo.rating}</span>
               </div>
             </div>
           </div>
@@ -672,18 +675,18 @@ function PCBuilder({ onNavigate }) {
 
       {/* Component Selection Drawer / Modal */}
       {activeCategory && (
-        <div className="fixed inset-0 z-50 bg-[#0d0f12]/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#161a1f] border border-[#222a36] rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[80vh] animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 bg-app-bg/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-app-surface border border-app-border rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[80vh] animate-in fade-in zoom-in-95 duration-150">
             
             {/* Modal Header */}
-            <div className="p-5 border-b border-[#222a36] flex items-center justify-between">
+            <div className="p-5 border-b border-app-border flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-white capitalize">เลือก {categories[activeCategory].label}</h3>
-                <p className="text-xs text-gray-400 mt-1">เลือกฮาร์ดแวร์ไอทีที่ต้องการเพื่อติดตั้งลงสเปค</p>
+                <h3 className="text-lg font-bold text-app-text capitalize">{t('builder.select_hardware_title', { category: categories[activeCategory].label })}</h3>
+                <p className="text-xs text-app-text-muted mt-1">{t('builder.select_hardware_desc')}</p>
               </div>
               <button 
                 onClick={() => setActiveCategory(null)}
-                className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-[#222a36] transition-colors cursor-pointer"
+                className="text-app-text-muted hover:text-app-text p-1 rounded-lg hover:bg-app-border transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -694,38 +697,38 @@ function PCBuilder({ onNavigate }) {
               {COMPONENT_DATABASE[activeCategory]?.map((item) => (
                 <div 
                   key={item.id}
-                  className="bg-[#0d0f12]/60 border border-[#222a36] hover:border-[#00c2ff]/40 p-4 rounded-xl flex justify-between items-center gap-4 transition-all hover:shadow-[0_0_12px_rgba(0,194,255,0.02)]"
+                  className="bg-app-bg/60 border border-app-border hover:border-brand-blue/40 p-4 rounded-xl flex justify-between items-center gap-4 transition-all hover:shadow-[0_0_12px_rgba(0,194,255,0.02)]"
                 >
                   <div className="min-w-0">
-                    <h4 className="text-white font-bold text-base block">{item.name}</h4>
-                    <p className="text-xs text-gray-400 mt-1 leading-relaxed">{item.details}</p>
+                    <h4 className="text-app-text font-bold text-base block">{item.name}</h4>
+                    <p className="text-xs text-app-text-muted mt-1 leading-relaxed">{item.details}</p>
                     <div className="flex gap-2 mt-2">
                       {item.socket && (
-                        <span className="text-[10px] font-bold bg-[#161a1f] text-gray-400 border border-[#222a36] px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-bold bg-app-surface text-app-text-muted border border-app-border px-2 py-0.5 rounded">
                           Socket: {item.socket}
                         </span>
                       )}
                       {item.tdp > 0 && (
-                        <span className="text-[10px] font-bold bg-[#161a1f] text-gray-400 border border-[#222a36] px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-bold bg-app-surface text-app-text-muted border border-app-border px-2 py-0.5 rounded">
                           TDP: {item.tdp}W
                         </span>
                       )}
                       {item.length && (
-                        <span className="text-[10px] font-bold bg-[#161a1f] text-gray-400 border border-[#222a36] px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-bold bg-app-surface text-app-text-muted border border-app-border px-2 py-0.5 rounded">
                           Length: {item.length}mm
                         </span>
                       )}
                     </div>
                   </div>
                   <div className="flex items-center gap-4 flex-shrink-0">
-                    <span className="text-white font-extrabold text-lg font-mono">
+                    <span className="text-app-text font-extrabold text-lg font-mono">
                       ${item.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </span>
                     <button 
                       onClick={() => selectComponent(activeCategory, item)}
-                      className="bg-[#00c2ff] hover:bg-[#00c2ff]/90 text-slate-950 text-xs font-bold px-4 py-2.5 rounded-lg transition-all cursor-pointer"
+                      className="bg-brand-blue hover:bg-brand-blue/90 text-slate-950 text-xs font-bold px-4 py-2.5 rounded-lg transition-all cursor-pointer"
                     >
-                      เลือก
+                      {t('builder.select_btn')}
                     </button>
                   </div>
                 </div>

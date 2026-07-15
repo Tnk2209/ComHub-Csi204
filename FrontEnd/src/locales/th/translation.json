@@ -1,0 +1,82 @@
+{
+  "nav": {
+    "home": "หน้าแรก & แค็ตตาล็อก",
+    "builder": "จัดสเปคคอมฯ",
+    "support": "สนับสนุน",
+    "community": "คอมมูนิตี้",
+    "signin": "เข้าสู่ระบบ",
+    "signup": "สมัครสมาชิก",
+    "back_to_store": "กลับสู่หน้าหลัก",
+    "logout": "ออกจากระบบ",
+    "logged_in_as": "ลงชื่อเข้าใช้ด้วยบทบาท"
+  },
+  "landing": {
+    "welcome": "🚀 ยินดีต้อนรับสู่โปรเจกต์ ComHub csi 204",
+    "title_main": "จัดสเปคคอมพิวเตอร์อัจฉริยะ",
+    "title_highlight": "และจำหน่ายอุปกรณ์ไอทีครบวงจร",
+    "subtitle": "แพลตฟอร์ม E-Commerce สำหรับคนรักคอมพิวเตอร์ประกอบ มาพร้อมระบบตรวจสอบความเข้ากันได้ (Compatibility Checker) และระบบคำนวณกำลังไฟ (TDP Calculator) แบบเรียลไทม์เพื่อให้เครื่องของคุณเสถียรที่สุด",
+    "start_btn": "เริ่มต้นจัดสเปคคอมฯ (PC Builder)",
+    "explore_btn": "สำรวจชิ้นส่วนในร้าน",
+    "features": {
+      "compat_title": "Compatibility Check",
+      "compat_desc": "หมดห่วงเรื่องประกอบกันไม่ได้ ระบบตรวจสอบ Socket, Form Factor และพอร์ตเชื่อมให้อัตโนมัติ",
+      "tdp_title": "TDP Power Analysis",
+      "tdp_desc": "คำนวณปริมาณไฟฟ้าสะสมของชิ้นส่วน และแนะพาวเวอร์ซัพพลายที่ปลอดภัยเผื่อกระแสไฟ 20%",
+      "uat_title": "UAT Quality Control",
+      "uat_desc": "ติดตามสถานะการประกอบ 4 ขั้นตอน พร้อมรายงานทดสอบอุณหภูมิความร้อนจริงจากช่าง"
+    }
+  },
+  "builder": {
+    "title": "System Configuration",
+    "subtitle": "จัดชุดคอมพิวเตอร์ด้วยการตรวจสเปคและกำลังไฟสะสมแบบเรียลไทม์",
+    "reset_btn": "ล้างสเปคทั้งหมด",
+    "share_btn": "แชร์สเปคสู่คอมมูนิตี้",
+    "left_column_title": "📦 รายการเลือกชิ้นส่วน (Component Selector)",
+    "middle_column_title": "Chassis Blueprint (ผังประกอบเคสแนวตั้ง)",
+    "middle_column_tag": "TOWER VIEW",
+    "right_column_title": "Health & Power Analysis (บอร์ดวิเคราะห์)",
+    "tdp_bar_title": "กำลังไฟ TDP สะสม (Cumulative Wattage)",
+    "tdp_safety_warning": "⚠️ เกินขีดจำกัดความปลอดภัย! กรุณาเลือก PSU ที่มีวัตต์สูงขึ้น",
+    "compat_box_title": "ตรรกะตรวจเช็คความเข้ากันได้",
+    "checkout_btn": "สั่งซื้อและให้ร้านประกอบ (Checkout)",
+    "empty_selection": "ยังไม่ได้เลือกอุปกรณ์",
+    "select_btn": "เลือกชิ้นส่วน",
+    "change_btn": "เปลี่ยนชิ้นส่วน",
+    "remove_btn": "ถอดออก",
+    "alert_copied": "บันทึกสเปคลงบอร์ดคอมมูนิตี้เรียบร้อย!",
+    "alert_checkout": "ดำเนินการสั่งซื้อสำเร็จ! ยอดรวมคือ ${{totalCost}}",
+    "empty_space": "ว่าง",
+    "select_hardware_title": "เลือก {{category}}",
+    "select_hardware_desc": "เลือกฮาร์ดแวร์ไอทีที่ต้องการเพื่อติดตั้งลงสเปค",
+    "performance": {
+      "title": "Performance Analysis (คาดการณ์ประสิทธิภาพ)",
+      "fps_4k": "4K Gaming: ~120 FPS",
+      "efficiency": "ประหยัดพลังงาน: ระดับ Gold"
+    },
+    "categories": {
+      "cpu": "CPU (หน่วยประมวลผล)",
+      "motherboard": "Motherboard (เมนบอร์ด)",
+      "gpu": "GPU (การ์ดจอ)",
+      "ram": "Memory (แรม)",
+      "storage": "Storage (ไดรฟ์ข้อมูล)",
+      "case": "PC Case (เคสคอมพิวเตอร์)",
+      "psu": "Power Supply (พาวเวอร์ซัพพลาย)"
+    },
+    "compat_rules": {
+      "socket_idle": "กรุณาเลือก CPU และ Motherboard เพื่อวิเคราะห์ความเข้ากันได้",
+      "power_idle": "เลือกชิ้นส่วนและพาวเวอร์ซัพพลายเพื่อตรวจเช็คกระแสไฟ",
+      "clearance_idle": "เลือกการ์ดจอและเคสคอมพิวเตอร์เพื่อตรวจขนาดทางกายภาพ",
+      "socket_match": "เข้ากันได้: ทั้ง CPU และ เมนบอร์ด ใช้ซ็อกเก็ต {{cpuSocket}} ตรงกัน",
+      "socket_mismatch": "ขั้วเชื่อมพอร์ตไม่ตรงกัน: CPU ใช้ {{cpuSocket}} แต่เมนบอร์ดใช้ {{mbSocket}}! ไม่สามารถประกอบร่วมกันได้",
+      "power_overload": "กระแสไฟโหลดเกินขีดจำกัด! อุปกรณ์ต้องการไฟอย่างน้อย ~{{totalTdp}}W แต่ PSU ให้ได้แค่ {{psuWattage}}W",
+      "power_warning": "กระแสไฟโหลดสูงระดับ {{loadPercentage}}% ของพาวเวอร์ซัพพลาย แนะนำให้อัปเกรดเพื่อเผื่อความปลอดภัย 20% (Safety Buffer)",
+      "power_match": "กำลังไฟปลอดภัย: ใช้กำลังไฟรวมประมาณ ~{{totalTdp}}W จากพาวเวอร์ซัพพลายขนาด {{psuWattage}}W (โหลดเพียง {{loadPercentage}}%)",
+      "power_need_psu": "ชิ้นส่วนที่เลือกต้องการกำลังไฟอย่างน้อย ~{{totalTdp}}W แนะนำให้เลือกพาวเวอร์ซัพพลายขนาด {{recommendedWattage}}W ขึ้นไป",
+      "clearance_mismatch": "การ์ดจอมีความยาว {{gpuLength}}mm ซึ่งเกินขนาดการ์ดจอสูงสุดที่เคสรองรับได้ ({{caseLimit}}mm)!",
+      "clearance_match": "ประกอบลงเคสได้แน่นอน: การ์ดจอ ({{gpuLength}}mm) สั้นกว่าขนาดสูงสุดของเคส ({{caseLimit}}mm)"
+    }
+  },
+  "footer": {
+    "text": "© 2026 ComHub Digital Lab. พัฒนาขึ้นสำหรับวิชา csi 204 (Systems Analysis and Design)"
+  }
+}
