@@ -4,9 +4,11 @@
 
 ---
 
+> **📝 หมายเหตุ MVP Scope:** ตัด Issue 013 (Staff Assembly + Burn-in), 016 (Gallery), 017 (Manager Templates) ออกตาม `project-scope.md` และปรับ Issue 012, 015 ให้ตัด Coupon และ Stock Alert ตามลำดับ เพิ่ม Issue 022 (Admin Dashboard) และ 023 (Admin Account Management A-04)
+
 ## 📊 สถานะการดำเนินงานภาพรวม (Overall Status Dashboard)
-- **ทั้งหมด (Total Issues):** 21
-- **ยังไม่ได้เริ่ม (Todo):** 15
+- **ทั้งหมด (Total Issues):** 20 (MVP)
+- **ยังไม่ได้เริ่ม (Todo):** 14
 - **กำลังทำ (In Progress):** 1
 - **เสร็จสิ้น (Done):** 5
 
@@ -27,13 +29,12 @@
 | **009** | **4. Development** | [Supabase PostgreSQL DDL Setup & Seed Data](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-009-database-implementation.md) | `[ ] Todo` | - | - | นายหาญณรงค์ |
 | **010** | **4. Development** | [User Authentication & Role-Based Access Control (RBAC)](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-010-backend-auth-jwt.md) | `[ ] Todo` | - | - | นายหาญณรงค์ |
 | **011** | **4. Development** | [PC Builder Module & Compatibility Engine](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-011-pc-builder-logic.md) | `[ ] Todo` | - | - | นายธนกร |
-| **012** | **4. Development** | [E-Commerce Checkout with Coupon & Slip Upload](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-012-checkout-slip-storage.md) | `[ ] Todo` | - | - | นายธนกร |
-| **013** | **4. Development** | [Staff Assembly Queue & Burn-in UAT Recording](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-013-staff-order-assembly.md) | `[ ] Todo` | - | - | นายหาญณรงค์ |
-| **014** | **4. Development** | [Customer Order & Assembly Timeline Tracking](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-014-customer-order-tracking.md) | `[ ] Todo` | - | - | นายธนกร |
-| **015** | **4. Development** | [Wishlist & Back-in-Stock Alert](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-015-wishlist-stock-alert.md) | `[ ] Todo` | - | - | นายธนกร |
-| **016** | **4. Development** | [PC Build Gallery & Spec Cloning](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-016-pc-build-gallery.md) | `[ ] Todo` | - | - | นายธนกร |
-| **017** | **4. Development** | [Manager Pre-built Templates & Moderation Dashboard](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-017-manager-templates-dashboard.md) | `[ ] Todo` | - | - | นายหาญณรงค์ |
-| **018** | **4. Development** | [Admin Product Catalog CRUD & Accounts Controls](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-018-admin-product-crud.md) | `[ ] Todo` | - | - | นายหาญณรงค์ |
+| **012** | **4. Development** | [E-Commerce Checkout & Slip Upload (WebP+Base64)](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-012-checkout-slip-storage.md) | `[ ] Todo` | - | - | นายธนกร |
+| **014** | **4. Development** | [Customer Order Tracking (5 ขั้น MVP)](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-014-customer-order-tracking.md) | `[ ] Todo` | - | - | นายธนกร |
+| **015** | **4. Development** | [Wishlist (No Stock Alert - MVP)](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-015-wishlist-stock-alert.md) | `[ ] Todo` | - | - | นายธนกร |
+| **018** | **4. Development** | [Admin Product Catalog CRUD (A-01)](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-018-admin-product-crud.md) | `[ ] Todo` | - | - | นายหาญณรงค์ |
 | **019** | **5. Testing** | [Integrated Security Scans & Performance Profiling](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-019-security-performance-checks.md) | `[ ] Todo` | - | - | นายหาญณรงค์ |
 | **020** | **6. & 7. Deploy & Maint.** | [Production Deployment & Known Issues Document](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-020-production-deployment.md) | `[ ] Todo` | - | - | นายธนกร |
 | **021** | **4. Development** | [UI Theme (DarkMode/LightMode) & i18n](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-021-ui-theme-i18n.md) | `[ ] Todo` | - | - | นายหาญณรงค์ |
+| **022** | **4. Development** | Admin Payment Review + Order Management (A-02 / A-03) | `[ ] Todo` | - | - | นายหาญณรงค์ |
+| **023** | **4. Development** | Admin Account & Role Management + Dashboard (A-04 / A-05) | `[ ] Todo` | - | - | นายธนกร |

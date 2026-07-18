@@ -1,7 +1,10 @@
 %% ============================================================
-%% ComHub - Class Diagram
+%% ComHub - Class Diagram (MVP Version)
 %% แหล่งข้อมูล: markdown/project-scope.md
 %% CSI204 - Software Engineering
+%% MVP Scope: 2 Actors (Customer, Admin) / 7 Tables
+%% ตัด: Staff, Manager, PrebuiltTemplate, TemplateItem,
+%%      AssemblyRecord, GalleryPost, Stock Alert, Review Photos, Coupon
 %% ============================================================
 classDiagram
 
@@ -10,8 +13,8 @@ classDiagram
         +int id
         +string email
         +string password_hash
-        +string oauth_provider
-        +string oauth_id
+        +string auth_provider
+        +string google_id
         +string first_name
         +string last_name
         +string role
@@ -23,7 +26,7 @@ classDiagram
     }
 
     class Customer {
-        %% C-01 ~ C-09
+        %% C-01 ~ C-09 (MVP)
         +selectPart(productId, category) bool
         +swapPart(productId, category) bool
         +removePart(category) bool
@@ -35,59 +38,34 @@ classDiagram
         +removeFromComparison(productId) bool
         +addWishlist(productId) bool
         +removeWishlist(productId) bool
-        +toggleStockAlert(productId, enabled) bool
         +submitReview(orderId, productId, rating, comment) bool
-        +uploadReviewImage(reviewId, file) string
-        +shareBuildToGallery(orderId) bool
-        +cloneBuildFromGallery(postId) bool
-        +likeGalleryPost(postId) bool
         +addToCart(productId, quantity) bool
         +updateCartQuantity(productId, quantity) bool
         +removeFromCart(productId) bool
-        +applyCoupon(code) bool
-        +uploadPaymentSlip(orderId, file) string
+        +uploadPaymentSlip(orderId, base64Webp) string
         +checkout() Order
-        +viewAssemblyStatus(orderId) json
-    }
-
-    class Staff {
-        %% S-01 ~ S-03
-        +viewAssemblyQueue() list
-        +viewBOM(orderId) list
-        +updateAssemblyStatus(orderId, status) bool
-        +submitBurnInRecord(orderId, cpuTemp, gpuTemp, status, notes) bool
-        +printLogisticsBill(orderId) bool
-        +fillTrackingNumber(orderId, trackingNum) bool
-    }
-
-    class Manager {
-        %% M-01 ~ M-03
-        +createPrebuiltTemplate(name, priceTag) bool
-        +addTemplateItem(templateId, productId, qty) bool
-        +editPrebuiltTemplate(templateId) bool
-        +deletePrebuiltTemplate(templateId) bool
-        +reviewGalleryQueue() list
-        +approveGalleryPost(postId) bool
-        +rejectGalleryPost(postId) bool
-        +pinGalleryPost(postId) bool
-        +unpinGalleryPost(postId) bool
-        +viewSalesDashboard() json
-        +viewTopProducts() list
-        +viewLowStockAlert() list
+        +viewOrderStatus(orderId) json
     }
 
     class Admin {
-        %% A-01, A-04
+        %% A-01 ~ A-05 (MVP)
         +createProduct(data) bool
         +updateProduct(productId, data) bool
         +setProductActive(productId, isActive) bool
         +listAllProducts() list
-        +createStaffAccount(data) bool
+        +createAdminAccount(data) bool
         +updateUserRole(userId, role) bool
         +deleteAccount(userId) bool
         +reviewPaymentSlip(orderId) json
         +approvePayment(orderId) bool
         +rejectPayment(orderId) bool
+        +listAllOrders() list
+        +updateOrderStatus(orderId, status) bool
+        +fillTrackingNumber(orderId, trackingNum) bool
+        +cancelOrder(orderId) bool
+        +viewSalesDashboard() json
+        +viewTopProducts() list
+        +viewLowStockAlert() list
     }
 
     %% ---------------- Product & Catalog ----------------
@@ -102,34 +80,17 @@ classDiagram
         +bool is_active
     }
 
-    %% ---------------- Pre-built Templates (C-04 / M-01) ----------------
-    class PrebuiltTemplate {
-        +int id
-        +string template_name
-        +string price_range_tag
-        +string description
-        +datetime created_at
-    }
-
-    class TemplateItem {
-        +int id
-        +int template_id
-        +int product_id
-        +int quantity
-    }
-
-    %% ---------------- Wishlist (C-06) ----------------
+    %% ---------------- Wishlist (C-06 - No Stock Alert in MVP) ----------------
     class WishlistItem {
         +int id
         +int user_id
         +int product_id
-        +bool is_alert_enabled
         +datetime created_at
     }
 
-    %% ---------------- Cart & Checkout (SYS-02 / C-01) ----------------
+    %% ---------------- Cart & Checkout (SYS-03 / C-01) ----------------
     class CartItem {
-        %% Client-side, persisted in LocalStorage
+        %% Client-side only, persisted in LocalStorage (no DB table)
         +int product_id
         +int quantity
         +double price_per_unit
@@ -139,13 +100,10 @@ classDiagram
         +int id
         +int user_id
         +double total_price
-        +string coupon_code
-        +double discount_amount
-        +string payment_status
         +string order_status
         +string shipping_address
-        +string payment_slip_url
-        +bool is_assembled
+        +string payment_slip_mockup
+        +string payment_status
         +string tracking_number
         +datetime created_at
     }
@@ -159,7 +117,7 @@ classDiagram
     }
 
     class OrderLog {
-        %% C-09 Assembly Tracking timeline
+        %% C-09 Order Tracking timeline (5 ขั้น)
         +int id
         +int order_id
         +string status
@@ -167,48 +125,20 @@ classDiagram
         +datetime created_at
     }
 
-    %% ---------------- Assembly & Logistics (S-01 / S-02 / S-03) ----------------
-    class AssemblyRecord {
-        +int id
-        +int order_id
-        +int staff_id
-        +double cpu_temperature
-        +double gpu_temperature
-        +string burn_in_status
-        +string notes
-        +datetime tested_at
-    }
-
-    %% ---------------- Review & Gallery (C-07 / C-08 / M-02) ----------------
+    %% ---------------- Review (C-07 - No Photos in MVP) ----------------
     class Review {
         +int id
         +int order_id
         +int product_id
         +int rating
         +string comment
-        +string review_image_url
-        +string status
-    }
-
-    class GalleryPost {
-        +int id
-        +int user_id
-        +int order_id
-        +string title
-        +string description
-        +string image_url
-        +string status
-        +bool is_pinned
-        +int likes_count
         +datetime created_at
     }
 
     %% ================= Relationships =================
 
-    %% Generalization
+    %% Generalization (MVP: 2 subclasses)
     User <|-- Customer
-    User <|-- Staff
-    User <|-- Manager
     User <|-- Admin
 
     %% Customer domain
@@ -216,7 +146,6 @@ classDiagram
     Customer "1" --> "*" Order : places
     Customer "1" --> "*" WishlistItem : maintains
     Customer "1" --> "*" Review : writes
-    Customer "1" --> "*" GalleryPost : shares
     Product "1" --> "*" CartItem : referenced_by
     Product "1" --> "*" WishlistItem : added_to
     Product "1" --> "*" Review : reviewed_under
@@ -226,18 +155,7 @@ classDiagram
     Product "1" --> "*" OrderItem : ordered_in
     Order "1" *-- "*" OrderLog : logs
     User "1" --> "*" OrderLog : changes_status
-    Order "1" --> "0..1" AssemblyRecord : tested_by
-    Order "1" --> "0..1" GalleryPost : shared_as
     Order "1" --> "0..*" Review : has
-
-    %% Staff domain
-    Staff "1" --> "*" AssemblyRecord : records
-
-    %% Manager domain
-    Manager "1" --> "*" PrebuiltTemplate : manages
-    Manager "1" --> "*" GalleryPost : moderates
-    PrebuiltTemplate "1" *-- "*" TemplateItem : contains
-    Product "1" --> "*" TemplateItem : itemized_in
 
     %% Admin domain
     Admin "1" --> "*" Product : manages

@@ -1,12 +1,3 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/Domain-e--Commerce-blue?style=for-the-badge" alt="Domain: e-Commerce"/>
-  <img src="https://img.shields.io/badge/CSI204-Software_Engineering-green?style=for-the-badge" alt="CSI204"/>
-  <img src="https://img.shields.io/badge/SDLC-Waterfall_7_Phases-orange?style=for-the-badge" alt="SDLC"/>
-  <img src="https://img.shields.io/badge/Database-PostgreSQL_(Supabase)-336791?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
-</p>
-
----
-
 ## 📌 1. ข้อมูลกลุ่ม (Group Information)
 
 |                                  | รายละเอียด                                                |
@@ -45,149 +36,278 @@
 ในปัจจุบันความต้องการใช้งานคอมพิวเตอร์ประสิทธิภาพสูง ทั้งสำหรับกลุ่มเกมเมอร์ (Gaming) และคนทำงานเฉพาะทาง (Creators / Office) มีการเติบโตอย่างก้าวกระโดด อย่างไรก็ตาม ผู้ซื้อส่วนใหญ่ยังคงประสบปัญหาดังนี้:
 
 - **ปัญหาจากมุมมองลูกค้า:** ลูกค้าไม่ทราบความเข้ากันได้ทางเทคนิคของฮาร์ดแวร์ (เช่น Socket CPU ไม่ตรงกับ Mainboard, กำลังวัตต์ PSU ไม่เพียงพอ, การ์ดจอยาวเกินเคส) ส่งผลให้ซื้อของผิดพลาด ใช้งานร่วมกันไม่ได้ และไม่สามารถเปรียบเทียบสเปคเชิงลึกและราคาได้สะดวก
-- **ปัญหาจากมุมมองพนักงาน/ผู้จัดการ:** ไม่มีระบบจัดคิวงานประกอบ, ระบบทดสอบ Burn-in Test ขาดความเป็นระบบ ไม่มีบันทึกอุณหภูมิที่ชัดเจน และผู้จัดการร้านไม่สามารถวัดสถิติยอดขายหรือสร้างโปรโมชั่นเซ็ตคอมแนะนำได้สะดวก
+- **ปัญหาจากมุมมอง Admin:** ผู้ดูแลระบบต้องการเครื่องมือหลังบ้านที่จัดการสินค้า/สต็อก, ตรวจสอบสลิปโอนเงิน, อัปเดตสถานะออเดอร์ 5 ขั้น, และดูภาพรวมยอดขาย/สต็อกในหน้าเดียว โดยไม่ต้องแก้ SQL โดยตรง
 
-โครงการ **ComHub** จึงพัฒนาขึ้นเพื่อสร้างเว็บแอปพลิเคชันอีคอมเมิร์ซที่รวมอุปกรณ์คอมพิวเตอร์ครบวงจร พร้อมระบบจัดสเปคอัจฉริยะ (Advanced PC Builder) ที่ตรวจจับความเข้ากันได้ของชิ้นส่วนและคำนวณกำลังไฟอัตโนมัติ ระบบบริหารคิวงานประกอบหลังบ้าน และแกลเลอรี่คอมมูนิตี้สำหรับแชร์สเปคอ้างอิง
+โครงการ **ComHub (MVP)** จึงพัฒนาขึ้นเพื่อสร้างเว็บแอปพลิเคชันอีคอมเมิร์ซที่รวมอุปกรณ์คอมพิวเตอร์ครบวงจร พร้อมระบบจัดสเปคอัจฉริยะ (Advanced PC Builder) ที่ตรวจจับความเข้ากันได้ของชิ้นส่วนและคำนวณกำลังไฟอัตโนมัติ พร้อมระบบหลังบ้าน Admin สำหรับจัดการสินค้า อนุมัติสลิปโอนเงิน อัปเดตสถานะออเดอร์ และ Dashboard ภาพรวมธุรกิจ
 
 ---
 
 ## 📌 4. วัตถุประสงค์ของโครงงาน (Objectives)
 
-1. เพื่อพัฒนาระบบอีคอมเมิร์ซสำหรับซื้อขายและเปรียบเทียบสเปคอุปกรณ์คอมพิวเตอร์ที่ตอบโจทย์กลุ่มผู้ใช้ทั้ง 4 บทบาท (Customer, Staff, Manager, Admin)
+1. เพื่อพัฒนาระบบอีคอมเมิร์ซสำหรับซื้อขายและเปรียบเทียบสเปคอุปกรณ์คอมพิวเตอร์ที่ตอบโจทย์กลุ่มผู้ใช้ทั้ง **2 บทบาท** (Customer, Admin) ตามขอบเขต MVP
 2. เพื่อสร้างระบบจัดสเปคคอมพิวเตอร์ (PC Builder) ที่มี Compatibility Checker ตรวจสอบ Socket, ขนาดเคส/การ์ดจอ, ชนิด RAM และระบบ Wattage Calculator คำนวณกำลังไฟ TDP อัตโนมัติพร้อมเผื่อ 20%
-3. เพื่อพัฒนาระบบหลังบ้านครบวงจร ได้แก่ ระบบจัดคิวประกอบเครื่อง, บันทึกผลทดสอบ Burn-in Test, แดชบอร์ดวิเคราะห์ยอดขาย และระบบจัดการสิทธิ์ผู้ใช้ (RBAC)
+3. เพื่อพัฒนาระบบหลังบ้าน Admin ครบวงจร: จัดการสินค้า (CRUD + Soft Delete), อนุมัติสลิปโอนเงิน, อัปเดตสถานะออเดอร์ 5 ขั้น (Pending Payment → Delivered), Dashboard ภาพรวมยอดขาย + สต็อกต่ำ และระบบจัดการสิทธิ์ผู้ใช้ (RBAC 2 role)
 
 ---
 
-## 📌 5. ขอบเขตของระบบ (System Scope)
+## 📌 5. ขอบเขตของระบบ (System Scope) - MVP Version
+
+> **📝 หมายเหตุ MVP Scope:** ปรับให้เหลือ **2 บทบาท** (Customer, Admin) และตัดฟีเจอร์เหล่านี้ออก: Pre-built Templates, PC Build Gallery, Staff/Manager workflows, Assembly & Burn-in Testing, Coupon, Stock Alert, Review Photos — ดูรายละเอียดเต็มที่ [markdown/project-scope.md](./markdown/project-scope.md)
 
 ### 5.1 ผู้ใช้งานและสิทธิ์การเข้าถึง (Actors & Role-Based Access Control)
 
 #### 👤 ลูกค้า (Customer)
 
-- **สมัครสมาชิก (Register)**
-  - สร้างบัญชีใหม่ : ลงทะเบียนด้วยอีเมลและรหัสผ่านเพื่อเปิดใช้งานฟีเจอร์บันทึกประวัติ
-- **ล็อกอินเข้าสู่ระบบ (Login)**
-  - เข้าสู่ระบบ : ตรวจสอบสิทธิ์ด้วย JWT Token เพื่อดึงสเปคบันทึกส่วนตัวและประวัติการสั่งซื้อ
+- **สมัครสมาชิก (Register) & ล็อกอิน (Login)**
+  - สร้างบัญชีใหม่แบบ Native (email + password) หรือใช้ **Google OAuth 2.0** ("Sign in / Sign up with Google")
+  - ตรวจสอบสิทธิ์ด้วย JWT Token
 - **จัดสเปคคอมพิวเตอร์ (PC Builder)**
-  - เลือกชิ้นส่วน : เลือกอุปกรณ์ทีละชิ้นจาก 7 หมวดหมู่หลัก (CPU, Mainboard, GPU, RAM, SSD, Case, PSU) ผ่านกล่อง Bento Grid
-  - เปลี่ยนชิ้นส่วน : สลับเปลี่ยนอุปกรณ์ที่เลือกไว้ในแต่ละหมวดหมู่ได้ตลอดเวลา
-  - ลบชิ้นส่วน : ถอดอุปกรณ์ที่ไม่ต้องการออกจากสเปคปัจจุบัน
-  - ดูสรุปสเปค : แสดงรายการชิ้นส่วนทั้งหมดที่เลือกพร้อมราคารวม
+  - เลือก/เปลี่ยน/ลบชิ้นส่วนจาก **7 หมวดหมู่หลัก** (CPU, Mainboard, GPU, RAM, SSD, Case, PSU) ผ่าน Bento Grid
+  - ดูสรุปสเปคทั้งหมดพร้อมราคารวม
 - **ตรวจสอบความเข้ากันได้ (Compatibility Checker)**
-  - ตรวจสอบ Socket : ระบบแจ้งเตือนทันทีหาก CPU และ Mainboard มี Socket ไม่ตรงกัน
-  - ตรวจสอบขนาดเคส : ระบบเตือนหากขนาด Mainboard ใหญ่เกินเคส
-  - ตรวจสอบขนาดการ์ดจอ : ระบบเตือนหากความยาว GPU เกินขีดจำกัดที่เคสรองรับ
-  - ตรวจสอบชนิด RAM : ระบบบล็อกการเลือก RAM ที่ชนิดไม่ตรงกับ Mainboard (เช่น DDR4 กับ DDR5)
+  - ตรวจ Socket CPU ↔ Mainboard, ขนาด Mainboard ↔ เคส, ความยาว GPU ↔ เคส
+  - บล็อกการเลือก RAM ที่ชนิดไม่ตรงกับ Mainboard (DDR4/DDR5)
 - **คำนวณกำลังไฟ (Wattage Calculator)**
-  - ดูผลคำนวณ TDP : แสดงกำลังไฟรวม (Watts) ของอุปกรณ์ที่เลือกทั้งหมด
-  - แนะนำ PSU : กรองและแนะนำเฉพาะ PSU ที่มีกำลังวัตต์มากกว่าผลรวม TDP × 1.2 (เผื่อ 20%)
-- **เซ็ตสเปคแนะนำ (Pre-built Templates)**
-  - ดูเซ็ตแนะนำ : เรียกดูรายชื่อเซ็ตคอมสำเร็จรูปของร้านแยกตามช่วงงบประมาณ
-  - สั่งซื้อเซ็ตทันที : กดหยิบสเปคทั้งชุดใส่ตะกร้าเพื่อสั่งซื้อ
-  - ดึงเซ็ตไปปรับแต่ง : โหลดสเปคเข้า PC Builder เพื่อสลับเปลี่ยนชิ้นส่วนที่ต้องการ
+  - แสดงกำลังไฟรวม TDP และแนะนำเฉพาะ PSU ที่จ่ายไฟ ≥ TDP × 1.2 (เผื่อ 20%)
 - **เปรียบเทียบสินค้า (Product Comparison)**
-  - เพิ่มสินค้าเข้าเปรียบเทียบ : เลือกสินค้าประเภทเดียวกันได้สูงสุด 3 ชิ้น
-  - ดูตารางเปรียบเทียบ : แสดงสเปคเชิงเทคนิคและราคาเทียบกันแบบตาราง
-  - ลบสินค้าจากการเปรียบเทียบ : ถอดสินค้าที่ไม่ต้องการออกจากรายการเปรียบเทียบ
-- **บันทึกสินค้าโปรด (Wishlist & Stock Alert)**
-  - เพิ่มสินค้าเข้า Wishlist : กดหัวใจเพื่อบันทึกชิ้นส่วนที่สนใจไว้ในรายการโปรด
-  - ลบสินค้าจาก Wishlist : ยกเลิกการบันทึกสินค้าที่ไม่สนใจแล้ว
-  - เปิดแจ้งเตือนสต็อก : ตั้งค่ารับการแจ้งเตือนเมื่อสินค้าที่หมดกลับเข้าสต็อก
-  - ปิดแจ้งเตือนสต็อก : ยกเลิกการรับแจ้งเตือนสินค้านั้นๆ
-- **เขียนรีวิว (Review with Photos)**
-  - เขียนรีวิวใหม่ : ให้คะแนน 1-5 ดาว พร้อมเขียนข้อความวิจารณ์สินค้า
-  - แนบรูปภาพ : อัปโหลดรูปถ่ายสินค้าจริงประกอบรีวิว (บีบอัดเป็น WebP อัตโนมัติ)
-  - ดูรีวิวสินค้า : อ่านรีวิวและดูรูปถ่ายจากลูกค้าท่านอื่น
-- **แกลเลอรี่คอมมูนิตี้ (PC Build Gallery)**
-  - แชร์สเปคสู่แกลเลอรี่ : โพสต์สเปคคอมประกอบเสร็จของตนเองพร้อมรูปถ่ายเคส
-  - ดูโพสต์คนอื่น : ส่องดูเคสจัดสเปคและงบประมาณของลูกค้าท่านอื่น
-  - โคลนสเปค : กดคัดลอกสเปคจากโพสต์คนอื่นเข้า PC Builder เพื่อสั่งซื้อหรือปรับแต่งต่อ
-  - กดถูกใจ : กด Like โพสต์ที่ชื่นชอบ
+  - เพิ่ม/ลบสินค้าประเภทเดียวกันได้สูงสุด 3 ชิ้น (จัดเก็บฝั่ง Client)
+- **บันทึกสินค้าโปรด (Wishlist)** — MVP: **ไม่มี Stock Alert**
+  - เพิ่ม/ลบชิ้นส่วนที่สนใจไว้ในรายการโปรด
+- **เขียนรีวิว (Review)** — MVP: **ไม่มีการอัปโหลดรูป**
+  - ให้คะแนน 1-5 ดาว พร้อมข้อความ (ผูก `order_id` เพื่อยืนยันว่าซื้อจริง)
 - **ตะกร้าสินค้าและสั่งซื้อ (Cart & Checkout)**
-  - เพิ่มสินค้าลงตะกร้า : หยิบชิ้นส่วนเข้าตะกร้า (บันทึกลง LocalStorage)
-  - แก้ไขจำนวน : ปรับจำนวนสินค้าในตะกร้า
-  - ลบสินค้าจากตะกร้า : ถอดสินค้าที่ไม่ต้องการออก
-  - กรอกที่อยู่จัดส่ง : ระบุที่อยู่สำหรับจัดส่งสินค้า
-  - เลือกบริการประกอบ : สลับเปิด/ปิดตัวเลือก "ให้ร้านประกอบและเทสเครื่องให้"
-  - ใส่คูปองส่วนลด : กรอกรหัสคูปองเพื่อรับส่วนลด
-  - อัปโหลดสลิปโอนเงิน : แนบภาพสลิปหลักฐาน (ระบบบีบอัดเป็น WebP อัตโนมัติก่อนส่งขึ้น Supabase)
-- **ติดตามสถานะประกอบ (Assembly Tracking)**
-  - ดูสถานะออเดอร์ : ติดตาม 4 ขั้นตอน [รับออเดอร์] → [กำลังประกอบ] → [เทสระบบ] → [จัดส่งแล้ว]
-  - ดูประวัติล็อก : เปิดดูไทม์ไลน์วันเวลาเปลี่ยนสถานะแต่ละขั้นตอน
-  - ดูผลทดสอบ Burn-in : ดูอุณหภูมิ CPU/GPU และโน้ตจากช่างที่บันทึกผลทดสอบ
-  - ดูเลข Tracking : ดูหมายเลขพัสดุเพื่อติดตามกับบริษัทขนส่ง
-
-#### 👷 พนักงาน (Staff)
-
-- **ล็อกอินเข้าสู่ระบบพนักงาน (Login)**
-  - เข้าสู่ระบบ : ตรวจสอบสิทธิ์เข้าใช้ระบบหลังบ้านด้วย JWT Token
-- **จัดการคิวงานประกอบ (Build Management)**
-  - ดูรายการคิวประกอบ : แสดงออเดอร์ที่ลูกค้าชำระเงินแล้วและเลือกบริการประกอบ เรียงตามลำดับเวลา
-  - ดูรายการอุปกรณ์ (BOM) : แสดงใบรายการชิ้นส่วนทั้งหมดที่ต้องหยิบมาประกอบ
-  - อัปเดตสถานะเป็น "กำลังประกอบ" : เปลี่ยนสถานะออเดอร์เมื่อเริ่มงาน
-  - อัปเดตสถานะเป็น "กำลังเทสระบบ" : เปลี่ยนสถานะเมื่อเริ่มทำ Burn-in Test
-- **บันทึกผล Burn-in Test**
-  - กรอกอุณหภูมิ CPU : บันทึกค่าความร้อนขณะเทสความเสถียร (°C)
-  - กรอกอุณหภูมิ GPU : บันทึกค่าความร้อนการ์ดจอขณะเทส (°C)
-  - ประเมินผล Pass/Fail : เลือกสถานะผ่าน/ไม่ผ่านการทดสอบ
-  - เขียนโน้ตหมายเหตุ : บันทึกรายละเอียดเพิ่มเติม เช่น พัดลมมีเสียงรบกวน
-  - 
-- **ออกใบจัดส่ง (Logistics)**
-  - พิมพ์ใบนำส่งพัสดุ : จัดพิมพ์เอกสารปะหน้ากล่องพัสดุ
-  - กรอก Tracking Number : บันทึกหมายเลขพัสดุเข้าประวัติเพื่อแจ้งลูกค้า
-  - อัปเดตสถานะเป็น "จัดส่งแล้ว" : เปลี่ยนสถานะออเดอร์เมื่อส่งของเรียบร้อย
-
-#### 📊 ผู้จัดการ (Manager)
-
-- **ล็อกอินเข้าสู่ระบบผู้จัดการ (Login)**
-  - เข้าสู่ระบบ : ตรวจสอบสิทธิ์เข้าหน้ารายงานทางธุรกิจและจัดการโปรโมชั่น
-- **จัดการเทมเพลตแนะนำ (Pre-built Management)**
-  - สร้างเทมเพลตใหม่ : สร้างชุดสเปคคอมแนะนำพร้อมตั้งชื่อและแท็กช่วงงบประมาณ
-  - เพิ่มชิ้นส่วนเข้าเทมเพลต : ค้นหาและเลือกอุปกรณ์จากคลังสต็อกเพื่อผูกลงเซ็ต
-  - แก้ไขเทมเพลต : เปลี่ยนชื่อ คำอธิบาย หรือสลับชิ้นส่วนในเซ็ตที่มีอยู่
-  - ลบเทมเพลต : ลบเซ็ตแนะนำที่ไม่ต้องการออกจากระบบ
-- **ตรวจสอบแกลเลอรี่ (Gallery Moderation)**
-  - ดูรายการรอตรวจ : แสดงรูปถ่ายรีวิว/แกลเลอรี่ที่อยู่ในสถานะ Pending
-  - อนุมัติเผยแพร่ (Approve) : กดอนุมัติให้รูปภาพแสดงบนเว็บสาธารณะ
-  - ปฏิเสธ (Reject) : กดซ่อนรูปภาพที่ไม่เหมาะสม
-  - ปักหมุดโพสต์ : ตั้งค่าปักหมุดโพสต์จัดสเปคที่น่าสนใจขึ้นหน้าแรก
-  - ยกเลิกปักหมุด : ถอดโพสต์ที่ปักหมุดไว้ออก
-- **แดชบอร์ดยอดขาย (Sales Dashboard)**
-  - ดูกราฟยอดขาย : แสดงสถิติยอดขายรวมสะสมจากออเดอร์สำเร็จ
-  - ดูสินค้ายอดนิยม : แสดงรายการฮาร์ดแวร์ที่มียอดสั่งซื้อสูงสุด
-  - ดูเตือนสต็อกต่ำ : แสดงรายการสินค้าที่มีจำนวนคงเหลือ ≤ 3 ชิ้น
+  - เพิ่ม/แก้จำนวน/ลบสินค้าในตะกร้า (LocalStorage), กรอกที่อยู่จัดส่ง
+  - อัปโหลดสลิปโอนเงิน **Mockup** (บีบอัดเป็น WebP 80% แปลงเป็น Base64 ที่ฝั่ง Client)
+- **ติดตามสถานะออเดอร์ (Order Tracking)** — **5 ขั้นตอน MVP**
+  - `[Pending Payment] → [Paid] → [Processing] → [Shipped] → [Delivered]`
+  - ดูประวัติล็อกไทม์ไลน์ และหมายเลข Tracking Number
 
 #### 🔐 ผู้ดูแลระบบ (Admin)
 
-- **ล็อกอินเข้าสู่ระบบแอดมิน (Login)**
-  - เข้าสู่ระบบ : ตรวจสอบสิทธิ์เพื่อเข้าถึงเมนูตั้งค่าระดับลึกสุดของระบบ
-- **จัดการคลังสินค้า (Database CRUD)**
-  - เพิ่มสินค้า : สร้างรายการสินค้าใหม่พร้อมกรอกข้อมูลราคา สต็อก และสเปคเทคนิค (JSONB)
-  - แก้ไขสินค้า : อัปเดตชื่อ ราคา จำนวนสต็อก หรือคุณสมบัติเทคนิคของสินค้า
-  - ปิดขายสินค้า (Soft Delete) : สลับสถานะ is_active เป็น false เพื่อซ่อนจากหน้าร้านแต่ยังเก็บประวัติ
-  - เปิดขายสินค้าอีกครั้ง : สลับ is_active กลับเป็น true เพื่อนำกลับมาขายใหม่
-  - ดูรายการสินค้าทั้งหมด : แสดงรายการสินค้าพร้อมสถานะ Active/Inactive
-- **จัดการสิทธิ์ผู้ใช้ (Role & Access Control)**
-  - สร้างบัญชี Staff/Manager : เพิ่มบัญชีพนักงานหรือผู้จัดการใหม่เข้าระบบ
-  - แก้ไขสิทธิ์ : เปลี่ยนบทบาท (Role) ของผู้ใช้ระหว่าง Staff/Manager
-  - ลบบัญชี : ยกเลิกบัญชีพนักงานที่ไม่ใช้งานแล้ว
-- **อนุมัติสลิปโอนเงิน (Payment Review)**
-  - ดูสลิปรอตรวจ : แสดงรายการออเดอร์ที่อัปโหลดสลิปแล้วรอการตรวจสอบ
-  - อนุมัติการชำระเงิน (Approved) : ยืนยันสลิปถูกต้อง ส่งคิวต่อให้ช่างประกอบ
-  - ปฏิเสธการชำระเงิน (Rejected) : ปฏิเสธสลิปปลอม *(Stock Rollback ยังไม่ implement อัตโนมัติ — gap feature, ดู [prd.md §7](./markdown/prd.md))*
+- **ล็อกอินเข้าสู่ระบบแอดมิน**
+- **จัดการคลังสินค้า (Product CRUD — A-01)**
+  - เพิ่ม/แก้ไข/ปิดขาย (Soft Delete `is_active`)/เปิดขายใหม่/ดูรายการสินค้าทั้งหมด
+  - อัปโหลดรูปสินค้าเป็น WebP
+- **อนุมัติสลิปโอนเงิน (Payment Review — A-02)**
+  - ดูสลิปรอตรวจ → กดอนุมัติ (`payment_status = 'approved'`, `order_status = 'paid'`) หรือปฏิเสธ (`rejected`)
+  - *Stock Rollback ยังไม่ implement อัตโนมัติ — gap feature ดู [prd.md](./markdown/prd.md) §7*
+- **จัดการออเดอร์ (Order Management — A-03)**
+  - ดูรายการออเดอร์ทั้งหมด, อัปเดตสถานะ (Paid → Processing → Shipped → Delivered), กรอก Tracking Number, ยกเลิกออเดอร์
+- **จัดการสิทธิ์ผู้ใช้ (Role & Access Control — A-04)**
+  - สร้างบัญชี Admin เพิ่มเติม, แก้ไขสิทธิ์ระหว่าง `Customer` ↔ `Admin`, ลบบัญชี
+- **Dashboard & Reports (A-05)**
+  - ดูยอดขายรวม, สินค้ายอดนิยม, เตือนสต็อกต่ำ (≤ 3 ชิ้น)
 
 ### 5.2 ตารางฟังก์ชันระบบทั้งหมด (Functional Requirements Matrix)
 
-> ดู [FR/NFR Matrix ฉบับสมบูรณ์](./markdown/project-scope.md) สำหรับตารางฟังก์ชัน (SYS-XX, C-XX, S-XX, M-XX, A-XX) ครบทุก role — **project-scope.md** คือแหล่งข้อมูลหลัก
+|     รหัส     | ฟังก์ชันระบบ     | รายละเอียด                                                                                    | สิทธิ์ผู้ใช้ |
+| :--------------: | :--------------------------- | :------------------------------------------------------------------------------------------------------ | :----------------------: |
+| **SYS-01** | Authentication & OAuth        | สมัครสมาชิก/ล็อกอิน Native + Google OAuth 2.0 (Passport.js), JWT Token Verification  |     ทุกบทบาท     |
+| **SYS-02** | RBAC (Role-Based Access Control) | แยกสิทธิ์ 2 บทบาท: Customer และ Admin ด้วย JWT + Middleware |     ทุกบทบาท     |
+| **SYS-03** | Cart & Checkout Flow         | จัดการตะกร้า (LocalStorage), กรอกที่อยู่, อัปโหลดสลิป (Mockup)                 |     Customer, Admin     |
+| **SYS-04** | Client-side WebP Compression | บีบอัดรูปภาพสลิปเป็น WebP 80% ผ่าน Canvas API, แปลงเป็น Base64        | Customer, Admin |
+|  **C-01**  | PC Builder Page              | เลือกชิ้นส่วน 7 หมวดหมู่ พร้อม Bento Grid UI                                  |         Customer         |
+|  **C-02**  | Compatibility Checker        | กรอง Socket, ขนาดเคส/GPU, ชนิด RAM (DDR4/DDR5)                                           |     Customer, Admin     |
+|  **C-03**  | Wattage Calculator           | คำนวณ TDP รวม, แนะนำ PSU ที่จ่ายไฟ ≥ 1.2x                                        |         Customer         |
+|  **C-05**  | Product Comparison           | เปรียบเทียบสเปคเชิงเทคนิค สูงสุด 3 ชิ้น                              |         Customer         |
+|  **C-06**  | Wishlist                     | บันทึกของโปรด (ตัด Stock Alert ออก)                          |         Customer         |
+|  **C-07**  | Review (No Photos)           | รีวิว 1-5 ดาว พร้อมข้อความ (ไม่มีการอัปโหลดรูป)                             |         Customer         |
+|  **C-09**  | Order Tracking UI            | ติดตาม 5 ขั้นตอน: Pending Payment → Paid → Processing → Shipped → Delivered                                        |     Customer, Admin     |
+|  **C-10**  | Google OAuth Authentication  | ล็อกอิน/สมัครสมาชิกด้วย Google Account ผ่าน Passport.js + passport-google-oauth20 |       Customer       |
+|  **A-01**  | Product Management CRUD      | เพิ่ม/ลบ/แก้ไข/Soft Delete (is_active) สินค้า พร้อมอัปโหลดรูป WebP                                         |          Admin          |
+|  **A-02**  | Payment Review               | อนุมัติ/ปฏิเสธสลิปโอนเงิน (Mockup Base64)                                        |          Admin          |
+|  **A-03**  | Order Management             | ดู/อัปเดตสถานะออเดอร์, กรอก Tracking Number                                        |          Admin          |
+|  **A-04**  | Role & Access Control        | สร้างบัญชี Admin, กำหนดสิทธิ์ RBAC                                         |          Admin          |
+|  **A-05**  | Dashboard & Reports          | ยอดขาย, สินค้ายอดนิยม, เตือนสต็อกต่ำ                                         |          Admin          |
 
 ### 5.3 ความต้องการที่ไม่ใช่ฟังก์ชัน (Non-Functional Requirements)
 
-> ดู [project-scope.md §2 NFR](./markdown/project-scope.md) สรุปสั้น: Performance < 500ms, bcrypt + JWT RBAC, LocalStorage Reliability, Dark Mode + IBM Plex/Inter, WebP 80% Cloud
+- **ประสิทธิภาพการทำงาน (Performance):** การประมวลผลของเงื่อนไข Compatibility Checker และระบบ Wattage Calculator ในหน้าจอจัดสเปคต้องตอบสนองภายในเวลาไม่เกิน **500 มิลลิวินาที (Sub-second response)** หลังลูกค้ากดเลือกสินค้า
+- **ความปลอดภัยและการแยกสิทธิ์ (Security & Access Control):** มีระบบ Role-Based Access Control (RBAC) ควบคุมที่ Backend API, มีการเข้ารหัสพาสเวิร์ด (Password Hashing) ด้วย bcrypt และใช้ JWT Verification
+- **ความน่าเชื่อถือและการรักษาข้อมูล (Reliability & State Preservation):** ข้อมูลการจัดสเปคที่ยังจัดค้างและสินค้าในตะกร้าชั่วคราวต้องบันทึกลงใน **LocalStorage** ป้องกันข้อมูลหาย และมีระบบตรวจสอบจำนวนสต็อกแม่นยำ (Overselling Prevention)
+- **มาตรฐานอินเตอร์เฟสและฟอนต์ (UI/UX & Design Standards):** แสดงผลแบบ Fullscreen Responsive รองรับ Desktop และ Mobile ใช้ฟอนต์คู่ `'IBM Plex Sans Thai'` (ภาษาไทย) และ `'Inter'` (ตัวเลข/ภาษาอังกฤษ) ภายใต้ธีม Dark Mode ที่ห้ามใช้สีม่วง (Purple Ban)
+- **การใช้พื้นที่คลาวด์อย่างคุ้มค่า (Cloud Optimization):** บีบอัดและแปลงรูปภาพสลิป/รีวิวเป็นไฟล์ **WebP คุณภาพ 80%** ที่ฝั่ง Client ก่อนทำการอัปโหลดขึ้นสู่ Supabase Storage
 
-### 5.4 แผนภาพสิทธิ์การเข้าใช้งานฟังก์ชัน (Use Case Diagram)
+### 5.4 แผนภาพสิทธิ์การเข้าใช้งานฟังก์ชัน (Use Case Diagram - MVP)
 
-See [usecasediagram.mermaid](markdown/usecasediagram.mermaid) for the full use case diagram.
+```mermaid
+%% ComHub - Use Case Diagram (MVP Version)
+%% MVP Scope: 2 Actors (Customer, Admin)
+graph LR
+    classDef actor fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff;
+    classDef baseUC fill:#0369a1,stroke:#bae6fd,stroke-width:1.5px,color:#fff;
+    classDef subUC fill:#0f172a,stroke:#10b981,stroke-width:1.2px,color:#fff;
+    classDef adminUC fill:#b91c1c,stroke:#fecaca,stroke-width:1.5px,color:#fff;
+
+    Customer["ลูกค้า<br>(Customer)"]:::actor
+    Admin["ผู้ดูแลระบบ<br>(Admin)"]:::actor
+
+    subgraph ComHub_System ["ระบบ ComHub (System Boundary)"]
+
+        subgraph Customer_Flow ["1. ลูกค้า (Customer)"]
+            C_Register("สมัครสมาชิก<br>(Register)"):::baseUC
+            C_Login("ล็อกอินเข้าสู่ระบบ<br>(Login)"):::baseUC
+            C_RegisterGoogle("สมัครด้วย Google<br>(Google OAuth Register)"):::subUC
+            C_LoginGoogle("ล็อกอินด้วย Google<br>(Google OAuth Login)"):::subUC
+            C_Builder("จัดสเปคคอมพิวเตอร์<br>(PC Builder)"):::baseUC
+            C_Compat("ตรวจสอบความเข้ากันได้<br>(Compatibility Checker)"):::baseUC
+            C_Wattage("คำนวณกำลังไฟ<br>(Wattage Calculator)"):::baseUC
+            C_Compare("เปรียบเทียบสินค้า<br>(Product Comparison)"):::baseUC
+            C_Wishlist("บันทึกสินค้าโปรด<br>(Wishlist)"):::baseUC
+            C_Review("เขียนรีวิว<br>(Review 1-5 ดาว)"):::baseUC
+            C_Cart("ตะกร้าสินค้าและสั่งซื้อ<br>(Cart & Checkout)"):::baseUC
+            C_Track("ติดตามสถานะออเดอร์<br>(Order Tracking)"):::baseUC
+
+            C_SelectPart("เลือกชิ้นส่วน (7 หมวด)"):::subUC
+            C_SwapPart("เปลี่ยนชิ้นส่วน"):::subUC
+            C_RemovePart("ลบชิ้นส่วน"):::subUC
+            C_ViewSummary("ดูสรุปสเปค"):::subUC
+
+            C_CheckSocket("ตรวจสอบ Socket"):::subUC
+            C_CheckCaseSize("ตรวจสอบขนาดเคส"):::subUC
+            C_CheckGpuSize("ตรวจสอบขนาดการ์ดจอ"):::subUC
+            C_CheckRamType("ตรวจสอบชนิด RAM (DDR4/DDR5)"):::subUC
+
+            C_ViewTDP("ดูผลคำนวณ TDP"):::subUC
+            C_RecommendPSU("แนะนำ PSU (TDP × 1.2)"):::subUC
+
+            C_AddCompare("เพิ่มสินค้าเข้าเปรียบเทียบ"):::subUC
+            C_ViewCompareTable("ดูตารางเปรียบเทียบ"):::subUC
+            C_RemoveCompare("ลบสินค้าจากการเปรียบเทียบ"):::subUC
+
+            C_AddWishlist("เพิ่มสินค้าเข้า Wishlist"):::subUC
+            C_RemoveWishlist("ลบสินค้าจาก Wishlist"):::subUC
+
+            C_WriteReview("เขียนรีวิวใหม่ (1-5 ดาว + ข้อความ)"):::subUC
+            C_ViewReview("ดูรีวิวสินค้า"):::subUC
+
+            C_AddCart("เพิ่มสินค้าลงตะกร้า (LocalStorage)"):::subUC
+            C_EditQty("แก้ไขจำนวน"):::subUC
+            C_RemoveCart("ลบสินค้าจากตะกร้า"):::subUC
+            C_FillAddress("กรอกที่อยู่จัดส่ง"):::subUC
+            C_UploadSlip("อัปโหลดสลิปโอนเงิน (WebP + Base64)"):::subUC
+
+            C_ViewStatus("ดูสถานะ 5 ขั้น"):::subUC
+            C_ViewLogHistory("ดูประวัติล็อก"):::subUC
+            C_ViewTrackingNo("ดูเลข Tracking"):::subUC
+
+            C_Builder -.->|"«include»"| C_SelectPart
+            C_SwapPart -.->|"«extend»"| C_Builder
+            C_RemovePart -.->|"«extend»"| C_Builder
+            C_Builder -.->|"«include»"| C_ViewSummary
+
+            C_Compat -.->|"«include»"| C_CheckSocket
+            C_Compat -.->|"«include»"| C_CheckCaseSize
+            C_Compat -.->|"«include»"| C_CheckGpuSize
+            C_Compat -.->|"«include»"| C_CheckRamType
+            C_Builder -.->|"«include»"| C_Compat
+
+            C_Wattage -.->|"«include»"| C_ViewTDP
+            C_Wattage -.->|"«include»"| C_RecommendPSU
+            C_Builder -.->|"«include»"| C_Wattage
+
+            C_Compare -.->|"«include»"| C_AddCompare
+            C_Compare -.->|"«include»"| C_ViewCompareTable
+            C_Compare -.->|"«extend»"| C_RemoveCompare
+
+            C_Wishlist -.->|"«include»"| C_AddWishlist
+            C_Wishlist -.->|"«extend»"| C_RemoveWishlist
+
+            C_Review -.->|"«include»"| C_WriteReview
+            C_Review -.->|"«include»"| C_ViewReview
+
+            C_Cart -.->|"«include»"| C_AddCart
+            C_EditQty -.->|"«extend»"| C_Cart
+            C_RemoveCart -.->|"«extend»"| C_Cart
+            C_Cart -.->|"«include»"| C_FillAddress
+            C_Cart -.->|"«include»"| C_UploadSlip
+
+            C_Track -.->|"«include»"| C_ViewStatus
+            C_Track -.->|"«extend»"| C_ViewLogHistory
+            C_Track -.->|"«extend»"| C_ViewTrackingNo
+        end
+
+        subgraph Admin_Flow ["2. ผู้ดูแลระบบ (Admin)"]
+            A_Login("ล็อกอินเข้าสู่ระบบแอดมิน<br>(Login)"):::baseUC
+            A_Database("จัดการคลังสินค้า<br>(Product CRUD)"):::adminUC
+            A_Access("จัดการสิทธิ์ผู้ใช้<br>(Role & Access Control)"):::adminUC
+            A_Payment("อนุมัติสลิปโอนเงิน<br>(Payment Review)"):::adminUC
+            A_Order("จัดการออเดอร์<br>(Order Management)"):::adminUC
+            A_Dashboard("แดชบอร์ดยอดขาย<br>(Dashboard & Reports)"):::adminUC
+
+            A_AddProduct("เพิ่มสินค้า"):::subUC
+            A_EditProduct("แก้ไขสินค้า"):::subUC
+            A_SoftDelete("ปิดขายสินค้า (Soft Delete)"):::subUC
+            A_ReEnable("เปิดขายสินค้าอีกครั้ง"):::subUC
+            A_ViewAll("ดูรายการสินค้าทั้งหมด"):::subUC
+            A_UploadImg("อัปโหลดรูป WebP"):::subUC
+
+            A_ManageAccounts("สร้างบัญชี Admin"):::subUC
+            A_EditPermission("แก้ไขสิทธิ์ (Customer ↔ Admin)"):::subUC
+            A_DeleteAccount("ลบบัญชี"):::subUC
+
+            A_ViewPending("ดูสลิปรอตรวจ"):::subUC
+            A_ApprovePay("อนุมัติการชำระเงิน (Approved)"):::subUC
+            A_RejectPay("ปฏิเสธการชำระเงิน (Rejected)"):::subUC
+
+            A_ViewOrders("ดูรายการออเดอร์ทั้งหมด"):::subUC
+            A_UpdateStatus("อัปเดตสถานะ (Paid → Shipped)"):::subUC
+            A_FillTracking("กรอก Tracking Number"):::subUC
+            A_CancelOrder("ยกเลิกออเดอร์"):::subUC
+
+            A_SalesChart("ดูยอดขายรวม"):::subUC
+            A_TopProduct("ดูสินค้ายอดนิยม"):::subUC
+            A_LowStock("ดูเตือนสต็อกต่ำ (≤ 3)"):::subUC
+
+            A_Database -.->|"«include»"| A_ViewAll
+            A_Database -.->|"«extend»"| A_AddProduct
+            A_Database -.->|"«extend»"| A_EditProduct
+            A_Database -.->|"«extend»"| A_SoftDelete
+            A_Database -.->|"«extend»"| A_ReEnable
+            A_AddProduct -.->|"«include»"| A_UploadImg
+            A_EditProduct -.->|"«extend»"| A_UploadImg
+
+            A_Access -.->|"«include»"| A_ManageAccounts
+            A_Access -.->|"«extend»"| A_EditPermission
+            A_Access -.->|"«extend»"| A_DeleteAccount
+
+            A_Payment -.->|"«include»"| A_ViewPending
+            A_Payment -.->|"«extend»"| A_ApprovePay
+            A_Payment -.->|"«extend»"| A_RejectPay
+
+            A_Order -.->|"«include»"| A_ViewOrders
+            A_Order -.->|"«extend»"| A_UpdateStatus
+            A_Order -.->|"«extend»"| A_FillTracking
+            A_Order -.->|"«extend»"| A_CancelOrder
+
+            A_Dashboard -.->|"«include»"| A_SalesChart
+            A_Dashboard -.->|"«include»"| A_TopProduct
+            A_Dashboard -.->|"«include»"| A_LowStock
+        end
+    end
+
+    Customer ~~~ Admin
+
+    Customer ---> C_Register
+    Customer ---> C_Login
+    C_LoginGoogle -.->|"«extend»"| C_Login
+    C_RegisterGoogle -.->|"«extend»"| C_Register
+    Customer ---> C_Builder
+    Customer ---> C_Compat
+    Customer ---> C_Wattage
+    Customer ---> C_Compare
+    Customer ---> C_Wishlist
+    Customer ---> C_Review
+    Customer ---> C_Cart
+    Customer ---> C_Track
+
+    Admin ---> A_Login
+    Admin ---> A_Database
+    Admin ---> A_Access
+    Admin ---> A_Payment
+    Admin ---> A_Order
+    Admin ---> A_Dashboard
+```
 
 ---
 
@@ -200,7 +320,7 @@ See [usecasediagram.mermaid](markdown/usecasediagram.mermaid) for the full use c
 |     1     | **Planning**     | กำหนดขอบเขตโครงการ เป้าหมายทางธุรกิจ แผนบริหารความเสี่ยง                | เอกสารแผนงานโครงการ, แผนความเสี่ยง                             |     3 วัน     |
 |     2     | **Analysis**     | วิเคราะห์ FR/NFR, จัดทำ Data Dictionary, เขียน UML Use Case & Class Diagram                                | เอกสาร SRS, แผนภาพ UML                                                             |     4 วัน     |
 |     3     | **Design**       | ออกแบบ UI/UX (Figma Wireframe), API JSON Schema, UML Sequence & Activity Diagram                                        | Wireframe, API Specs, UML                                                                      |     4 วัน     |
-|     4     | **Development**  | ติดตั้ง PostgreSQL (Supabase), พัฒนา Backend (Node.js/Express + JWT), พัฒนา Frontend (React/Vite + Tailwind) | เผยแพร่ฌแรเจ็คสู่สาธารณะ และ สามารถใช้งานได้จริง |    10 วัน    |
+|     4     | **Development**  | ติดตั้ง PostgreSQL (Supabase), พัฒนา Backend (Node.js/Express + JWT), พัฒนา Frontend (React/Vite + Tailwind) | เผยแพร่โปรเจกต์สู่สาธารณะ และ สามารถใช้งานได้จริง |    10 วัน    |
 |     5     | **Testing**      | Functional Testing ตาม UAT Flow ทุก Actor, Security Testing (RBAC + JWT), Performance Testing (< 500ms)                 | เอกสารผลทดสอบ, Bug List                                                           |     3 วัน     |
 |     6     | **Deployment**   | Deploy Frontend/Backend ขึ้น Vercel, ตั้งค่า Environment Variables                                                 | URL เว็บจริงพร้อมนำเสนอ                                                     |     2 วัน     |
 |     7     | **Maintenance**  | บันทึก Known Bugs/Issues, วางแผน Future Roadmap, แก้ไขโค้ดที่ผิดพลาด                           | เอกสารบำรุงรักษา                                                               |     2 วัน     |
@@ -209,7 +329,7 @@ See [usecasediagram.mermaid](markdown/usecasediagram.mermaid) for the full use c
 
 | งาน                         | รายละเอียด                                                                           |
 | :----------------------------- | :--------------------------------------------------------------------------------------------- |
-| **Database Setup**       | ติดตั้ง PostgreSQL บน Supabase Cloud, รัน SQL DDL สร้าง 10 ตาราง         |
+| **Database Setup**       | ติดตั้ง PostgreSQL บน Supabase Cloud, รัน SQL DDL สร้าง **7 ตาราง** (MVP)         |
 | **Backend Development**  | เขียน API Server ด้วย Node.js + Express (TypeScript), ระบบ JWT Auth/Authorization |
 | **Frontend Development** | พัฒนาหน้าจอด้วย React (Vite) + Tailwind CSS, Fullscreen Responsive              |
 
@@ -239,9 +359,9 @@ See [usecasediagram.mermaid](markdown/usecasediagram.mermaid) for the full use c
 
 | เทคโนโลยี          | หน้าที่                                                                                                                                                             |
 | :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| PostgreSQL (Supabase Cloud) | ฐานข้อมูลหลัก 10 ตาราง (users, products, orders, order_items, reviews, prebuilt_templates, template_items, wishlist_items, assembly_records, order_logs) |
-| Supabase Storage            | จัดเก็บไฟล์รูปภาพสลิปและรีวิวบนคลาวด์                                                                                                 |
+| PostgreSQL (Supabase Cloud) | ฐานข้อมูลหลัก **7 ตาราง MVP** (users, products, orders, order_items, reviews, wishlist_items, order_logs) |
 | JSONB Column                | เก็บสเปคเทคนิคของสินค้าแบบยืดหยุ่น (socket, form_factor, tdp, supported_ram)                                                             |
+| Base64 (in TEXT column)     | เก็บสลิปโอนเงินแบบ Mockup (บีบอัด WebP 80% ที่ฝั่ง Client) โดยตรงในคอลัมน์ `orders.payment_slip_mockup` — ไม่ใช้ Cloud Storage ใน MVP     |
 
 ### 🎨 Design Tool
 
@@ -277,22 +397,26 @@ See [usecasediagram.mermaid](markdown/usecasediagram.mermaid) for the full use c
 | :-------------------------------------------------------- | :----------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **UAT-01: Compatibility Checker**                   | Manual Testing           | ตรวจสอบการบล็อกและแจ้งเตือนอุปกรณ์ที่ไม่เข้ากัน (Socket CPU, ขนาดเคส/การ์ดจอ, ชนิด RAM)              |
 | **UAT-02: Wattage Calculator & PSU Recommendation** | Manual Testing           | ตรวจสอบการคำนวณกำลังไฟรวมสะสมของสเปค และระบบแนะนำ PSU ที่มีกำลังวัตต์เหมาะสม (TDP × 1.2)       |
-| **UAT-03: Role-Based Access Control (RBAC)**        | Manual Testing           | ทดสอบสิทธิ์การเข้าถึงข้อมูลและการเข้าใช้ API ในแต่ละ Role (Customer, Staff, Manager, Admin)                            |
-| **UAT-04: End-to-End Cart & Checkout Flow**         | Manual Testing           | ทดสอบการทำงานครบวงจรตั้งแต่ ลูกค้าจัดสเปค → สั่งซื้อ → อัปโหลดสลิป → แอดมินตรวจสอบสลิป |
-| **UAT-05: Assembly & Burn-in Queue Flow**           | Manual Testing           | ทดสอบการเปลี่ยนสถานะคิวประกอบและการบันทึกอุณหภูมิ CPU/GPU ของช่างประกอบ (Staff)                         |
-| **UAT-06: Shop Management & Sales Analytics**       | Manual Testing           | ทดสอบการสร้างสเปคแนะนำของ Manager และแดชบอร์ดสรุปยอดขายหลังบ้าน                                                 |
+| **UAT-03: Role-Based Access Control (RBAC)**        | Manual Testing           | ทดสอบสิทธิ์การเข้าถึงข้อมูลและการเข้าใช้ API ในแต่ละ Role (Customer, Admin)                            |
+| **UAT-04: End-to-End Cart & Checkout Flow**         | Manual Testing           | ทดสอบการทำงานครบวงจรตั้งแต่ ลูกค้าจัดสเปค → สั่งซื้อ → อัปโหลดสลิป → Admin ตรวจสอบสลิป |
+| **UAT-05: Order Management Flow (Admin)**           | Manual Testing           | ทดสอบการอัปเดตสถานะออเดอร์ 5 ขั้น (Paid → Processing → Shipped → Delivered) พร้อมกรอก Tracking Number                         |
+| **UAT-06: Admin Dashboard & Reports**               | Manual Testing           | ทดสอบ Dashboard สรุปยอดขาย, สินค้ายอดนิยม, และเตือนสต็อกต่ำ (≤ 3 ชิ้น)                                                 |
 
 ### 8.2 รายละเอียดขอบเขตการทดสอบ (Testing Details)
 
-การทดสอบจะเน้นการตรวจสอบความสอดคล้องระหว่างผลลัพธ์การทำงานจริงบนเว็บเบราว์เซอร์เปรียบเทียบกับข้อกำหนดความต้องการของระบบ โดยมีเช็กลิสต์แบบละเอียดแยกตามบทบาทผู้ใช้ในเอกสาร [Testing (UAT)](./markdown/testing-uat.md)
+การทดสอบจะเน้นการตรวจสอบความสอดคล้องระหว่างผลลัพธ์การทำงานจริงบนเว็บเบราว์เซอร์เปรียบเทียบกับข้อกำหนดความต้องการของระบบ โดยมีเช็กลิสต์แบบละเอียดแยกตามบทบาทผู้ใช้ดังนี้:
+
+
+> 🧪 **เช็กลิสต์ UAT ระดับ Use Case แบบเต็ม (MVP)** — ครอบคลุมทุก Functional ID (SYS-01..04, C-01..C-10, A-01..A-05) พร้อม Negative Test Cases ดูได้ที่ **[markdown/testing-uat.md](./markdown/testing-uat.md)**
+
 
 ---
 
 ## 📌 9. ผลลัพธ์ที่คาดว่าจะได้รับ (Expected Outcomes)
 
-- ได้เว็บแอปพลิเคชันอีคอมเมิร์ซ **ComHub** ที่สามารถใช้จัดสเปคคอมพิวเตอร์ได้อย่างสมบูรณ์ พร้อมระบบตรวจสอบความเข้ากันได้ของอุปกรณ์แบบเรียลไทม์
+- ได้เว็บแอปพลิเคชันอีคอมเมิร์ซ **ComHub (MVP)** ที่สามารถใช้จัดสเปคคอมพิวเตอร์ได้อย่างสมบูรณ์ พร้อมระบบตรวจสอบความเข้ากันได้ของอุปกรณ์แบบเรียลไทม์
 - ลดปัญหาการสั่งซื้อชิ้นส่วนที่เข้ากันไม่ได้ ลดอัตราการคืนสินค้า ด้วย Compatibility Checker และ Wattage Calculator อัตโนมัติ
-- มีระบบหลังบ้านครบวงจร ตั้งแต่คิวประกอบเครื่อง บันทึกผลทดสอบ Burn-in Test แดชบอร์ดยอดขาย จนถึงระบบจัดการสิทธิ์ RBAC
+- มีระบบหลังบ้าน Admin ครบวงจร: จัดการสินค้า (CRUD + Soft Delete), อนุมัติสลิปโอนเงิน, อัปเดตสถานะออเดอร์ 5 ขั้น, Dashboard ภาพรวมยอดขาย/สต็อกต่ำ และระบบจัดการสิทธิ์ RBAC (Customer/Admin)
 - สามารถเรียนรู้และพัฒนาทักษะการใช้เทคโนโลยี Full-stack ได้ (React + Node.js + PostgreSQL) ตามกระบวนการ SDLC
 - มีระบบ Hybrid Storage (LocalStorage + PostgreSQL Cloud) ที่ประหยัดทรัพยากรฝั่งเซิร์ฟเวอร์และรักษาประสบการณ์ผู้ใช้
 
@@ -302,9 +426,9 @@ See [usecasediagram.mermaid](markdown/usecasediagram.mermaid) for the full use c
 
 | สัปดาห์ | ขั้นตอน SDLC                | กิจกรรม (Activities)                             | รายละเอียดโดยย่อ (Brief Description)                                                                                                                                                                                                       | ระยะเวลา |
 | :------------: | :--------------------------------- | :------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------: |
-|  **1**  | Planning + Analysis                | วิเคราะห์และออกแบบระบบ            | สรุป Requirement (FR/NFR), จัดทำ UI Mockup บน Figma, ออกแบบโครงสร้างข้อมูล Data Dictionary 10 ตาราง, เขียน UML Use Case & Class Diagram, วิเคราะห์ User Persona, แผนบริหารความเสี่ยง |     7 วัน     |
-|  **2**  | Design + Development               | พัฒนาส่วนหน้าบ้าน (Frontend)           | ออกแบบ API JSON Schema, สร้าง Component ต่างๆ ด้วย React SPA, จัดโครงร่างหน้าเว็บด้วย Tailwind CSS, พัฒนาหน้า Home/Builder/Cart/Checkout/Tracking/Gallery/Community                                    |     7 วัน     |
-|  **3**  | Development                        | พัฒนาส่วนหลังบ้าน (Backend & Database) | ติดตั้ง PostgreSQL (Supabase), สร้าง REST API Server ด้วย Node.js/Express + TypeScript, ระบบ JWT Auth + RBAC Middleware, เชื่อมต่อ Compatibility Logic & TDP Calculator, ระบบอัปโหลดรูปภาพ Supabase Storage  |     7 วัน     |
+|  **1**  | Planning + Analysis                | วิเคราะห์และออกแบบระบบ            | สรุป Requirement (FR/NFR), จัดทำ UI Mockup บน Figma, ออกแบบโครงสร้างข้อมูล Data Dictionary **7 ตาราง MVP**, เขียน UML Use Case & Class Diagram, วิเคราะห์ User Persona (2 บทบาท), แผนบริหารความเสี่ยง |     7 วัน     |
+|  **2**  | Design + Development               | พัฒนาส่วนหน้าบ้าน (Frontend)           | ออกแบบ API JSON Schema, สร้าง Component ต่างๆ ด้วย React SPA, จัดโครงร่างหน้าเว็บด้วย Tailwind CSS, พัฒนาหน้า Home/Builder/Cart/Checkout/OrderTracking/Wishlist/Compare/Login/Register                                    |     7 วัน     |
+|  **3**  | Development                        | พัฒนาส่วนหลังบ้าน (Backend & Database) | ติดตั้ง PostgreSQL (Supabase), สร้าง REST API Server ด้วย Node.js/Express + TypeScript, ระบบ JWT Auth + RBAC Middleware (2 role), เชื่อมต่อ Compatibility Logic & TDP Calculator, ระบบบีบอัด WebP + Base64 ที่ฝั่ง Client  |     7 วัน     |
 |  **4**  | Testing + Deployment + Maintenance | ทดสอบและนำเสนอ                            | ทำการทดสอบ UAT ตาม Flow จริงทุก Actor, ทดสอบ Security (RBAC/JWT), ทดสอบ Performance (< 500ms), แก้บั๊ก, Deploy ขึ้น Vercel, เตรียมสไลด์นำเสนอผลงาน                                          |     7 วัน     |
 
 ---
@@ -313,68 +437,278 @@ See [usecasediagram.mermaid](markdown/usecasediagram.mermaid) for the full use c
 
 ```text
 ComHub-Csi204/
-├── markdown/                        # เอกสารวิเคราะห์โครงงานวิชา CSI204
+├── markdown/                        # เอกสารวิเคราะห์โครงงานวิชา CSI204 (MVP)
+│   ├── project-scope.md             # ✅ Source of truth: ขอบเขต MVP
 │   ├── sdlc-planning.md             # แผนดำเนินงาน SDLC 7 ขั้นตอน
 │   ├── features-summary.md          # สรุปฟังก์ชัน FR/NFR ทั้งหมด
-│   ├── data-dictionary.md           # พจนานุกรมข้อมูล 10 ตาราง
+│   ├── data-dictionary.md           # พจนานุกรมข้อมูล 7 ตาราง MVP
+│   ├── database-schema.md           # SQL DDL Schema
 │   ├── project-structure.md         # โครงสร้างโฟลเดอร์ Monorepo
-│   ├── frontend-pages.md            # สรุปหน้าจอ Frontend ทุกบทบาท
-│   ├── user-persona.md              # วิเคราะห์กลุ่มผู้ใช้จำลอง 3 Personas
+│   ├── frontend-pages.md            # สรุปหน้าจอ Frontend (Customer + Admin)
+│   ├── user-persona.md              # วิเคราะห์กลุ่มผู้ใช้จำลอง 4 Personas (3 Customer + 1 Admin)
 │   ├── prd.md                       # Product Requirement Document
-│   ├── UML-Diagrams.md              # แผนภาพ UML
+│   ├── UML-Diagrams.md              # แผนภาพ UML (Use Case + Class)
+│   ├── usecasediagram.mermaid       # Source: Use Case Diagram
+│   ├── classdiagram.mermaid         # Source: Class Diagram
 │   ├── testing-uat.md               # แผนและเช็กลิสต์การทดสอบระบบด้วยมือ (UAT Checklist)
 │   └── CODEBASE.md                  # สรุปโครงสร้างโค้ด
 │
-├── frontend/                        # 💻 React + Vite + Tailwind CSS
+├── FrontEnd/                        # 💻 React + Vite + Tailwind CSS (JavaScript)
 │   └── src/
-│       ├── components/              # Reusable UI Components (common, builder, dashboard)
-│       ├── contexts/                # AuthContext, CartContext (State Management)
-│       ├── hooks/                   # useAuth, usePCBuilder (Custom Hooks)
-│       ├── layouts/                 # MainLayout, DashboardLayout
-│       ├── pages/                   # Home, Builder, Cart, Checkout, Tracking, Community, Dashboard/
-│       ├── services/                # apiClient, authService, productService
-│       └── utils/                   # imageCompressor (WebP Conversion)
+│       ├── components/              # Reusable UI Components
+│       ├── pages/                   # Landing, PCBuilder, Cart, Checkout, OrderTracking, Wishlist, Compare, Login/Register + Admin/*
+│       └── locales/                 # i18n TH/EN
 │
-├── backend/                         # ⚙️ Node.js + Express + TypeScript
+├── backend/                         # ⚙️ Node.js + Express + TypeScript (Target — ยังไม่ได้ implement)
 │   └── src/
-│       ├── config/                  # db.ts (Supabase PG), supabase.ts (Storage)
-│       ├── controllers/             # auth, product, order, record, review Controllers
-│       ├── middlewares/             # JWT Auth Middleware, Role-based Middleware
-│       ├── models/                  # TypeScript Interfaces (User, Product, Order)
-│       ├── routes/                  # API Routes (/api/auth, /api/products, /api/orders, /api/reviews)
+│       ├── controllers/             # auth, product, order, review, wishlist, dashboard
+│       ├── middlewares/             # JWT Auth + Role-based (Customer, Admin)
+│       ├── routes/                  # /api/auth, /api/products, /api/orders, /api/reviews, /api/wishlist, /api/dashboard
 │       ├── services/                # Compatibility Logic & TDP Calculator
-│       └── sql/                     # schema.sql (DDL), seed.sql (Sample Data)
+│       └── sql/                     # schema.sql (7 tables), seed.sql
 │
 ├── README.md                        # ไฟล์นี้
-├── SRS.md                           # เอกสาร System Requirement Specification ฉบับเต็ม
-├── architecture.mermaid             # Mermaid Diagram โครงสร้างระบบ 3-Tier
-└── roles_flow.mermaid               # Mermaid Diagram Role-Based Access Flow
+└── SRS.md                           # เอกสาร System Requirement Specification ฉบับเต็ม
 ```
 
 ---
 
-## 🗄️ โครงสร้างฐานข้อมูล (Database Schema Overview)
+## 🗄️ โครงสร้างฐานข้อมูล (Database Schema Overview) - MVP
 
-ระบบ ComHub ใช้ PostgreSQL (Supabase Cloud) จำนวน **10 ตาราง** ดังนี้:
+ระบบ ComHub (MVP) ใช้ PostgreSQL (Supabase Cloud) จำนวน **7 ตาราง** ดังนี้:
 
 | ลำดับ | ชื่อตาราง     | ประเภท | คำอธิบาย                                                                  |
 | :--------: | :--------------------- | :----------: | :-------------------------------------------------------------------------------- |
-|     1     | `users`              |    Master    | ข้อมูลผู้ใช้ + สิทธิ์ RBAC (Customer/Staff/Manager/Admin)       |
-|     2     | `products`           |    Master    | แค็ตตาล็อกสินค้า + สเปคเทคนิค JSONB                     |
-|     3     | `orders`             | Transaction | คำสั่งซื้อ, payment_status, order_status, สลิป, คูปอง          |
-|     4     | `order_items`        |    Detail    | รายการสินค้าในแต่ละออเดอร์ + ราคา ณ ขณะสั่ง |
-|     5     | `reviews`            | Transaction | รีวิว 1-5 ดาว, ข้อความ, รูปภาพ, สถานะอนุมัติ     |
-|     6     | `prebuilt_templates` |    Master    | ชุดสเปคแนะนำ + แท็กงบประมาณ                               |
-|     7     | `template_items`     |   Junction   | เชื่อม Many-to-Many เทมเพลต ↔ สินค้า                          |
-|     8     | `wishlist_items`     |    Detail    | ของโปรด + ธงแจ้งเตือนสต็อก                                 |
-|     9     | `assembly_records`   |    Detail    | บันทึก Burn-in Test (อุณหภูมิ CPU/GPU, Pass/Fail)                   |
-|     10     | `order_logs`         | Audit Trail | ล็อกการเปลี่ยนสถานะ + ผู้กระทำ + เวลา              |
+|     1     | `users`              |    Master    | ข้อมูลผู้ใช้ + สิทธิ์ RBAC 2 role (`Customer`/`Admin`) + Google OAuth  |
+|     2     | `products`           |    Master    | แค็ตตาล็อกสินค้า 7 หมวด (CPU/Mainboard/GPU/RAM/SSD/Case/PSU) + สเปคเทคนิค JSONB + `is_active` Soft Delete |
+|     3     | `orders`             | Transaction | คำสั่งซื้อ, `payment_status`, `order_status` 5 ขั้น, สลิป Base64 WebP, tracking |
+|     4     | `order_items`        |    Detail    | รายการสินค้าในแต่ละออเดอร์ + ราคา ณ ขณะสั่ง (snapshot) |
+|     5     | `reviews`            | Transaction | รีวิว 1-5 ดาว + ข้อความ (ไม่มีรูปภาพใน MVP)                     |
+|     6     | `wishlist_items`     |    Detail    | ของโปรด (ไม่มี Stock Alert ใน MVP)                                 |
+|     7     | `order_logs`         | Audit Trail | ล็อกการเปลี่ยนสถานะออเดอร์ + ผู้กระทำ (Admin) + เวลา              |
 
-> 📄 รายละเอียดฟิลด์ทั้งหมดดูได้ที่ [data-dictionary.md](./markdown/data-dictionary.md)
+> **Client-side only (ไม่มีตารางใน DB):** Cart Items, Product Comparison list ทั้งคู่จัดเก็บใน LocalStorage / Session ใช้ JWT stateless
+>
+> 📄 รายละเอียดฟิลด์ทั้งหมดดูได้ที่ [markdown/data-dictionary.md](./markdown/data-dictionary.md) และ SQL DDL ที่ [markdown/database-schema.md](./markdown/database-schema.md)
 
-### โครงสร้างความสัมพันธ์ของข้อมูล (Class Diagram / ERD)
+<details>
+<summary>🔍 คลิกเพื่อแสดงรายละเอียดโครงสร้างฐานข้อมูล MVP (Data Dictionary Table Schemas - 7 Tables)</summary>
 
-See [classdiagram.mermaid](markdown/classdiagram.mermaid) for the full class diagram.
+## 🗺️ รายชื่อตารางในระบบฐานข้อมูล (Database Tables List)
+
+| ลำดับที่ | ชื่อตาราง (Table Name)  | ประเภทตาราง (Table Type) | คำอธิบายสั้น (Description)                                                                                                                                  |
+| :--------------: | :------------------------------- | :---------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|        1        | **`users`**              |               Master               | จัดเก็บข้อมูลผู้ใช้งาน (Customer/Admin) และรหัสผ่าน รองรับ Google OAuth                                                     |
+|        2        | **`products`**           |               Master               | จัดเก็บข้อมูลแค็ตตาล็อกสินค้า 7 หมวด + สเปคเทคนิคแบบ JSONB                                                                 |
+|        3        | **`orders`**             |             Transaction             | จัดเก็บรายละเอียดคำสั่งซื้อ + สถานะการชำระเงิน + สลิป Base64 WebP                                          |
+|        4        | **`order_items`**        |               Detail               | จัดเก็บรายการชิ้นส่วนสินค้าในแต่ละออเดอร์ + ราคาต่อชิ้น ณ เวลาสั่ง                                    |
+|        5        | **`reviews`**            |             Transaction             | จัดเก็บการประเมิน 1-5 ดาว + ข้อความ (ไม่มีรูปภาพ MVP)                                                              |
+|        6        | **`wishlist_items`**     |               Detail               | จัดเก็บสินค้าโปรดของลูกค้า (ไม่มี Stock Alert MVP)                                                                     |
+|        7        | **`order_logs`**         |          Log (Audit Trail)          | จัดเก็บประวัติการเปลี่ยนสถานะออเดอร์ + `changed_by_user_id` (Admin)                                                    |
+
+> **📝 หมายเหตุ MVP:** ตัด `prebuilt_templates`, `template_items`, `assembly_records`, `gallery_posts` ออก / Cart & Comparison เก็บฝั่ง Client (LocalStorage) / Session ใช้ JWT stateless
+
+---
+
+> 🔎 **สำหรับ SQL DDL, Constraint, Index ทั้งหมด ดูที่:**
+> - [markdown/data-dictionary.md](./markdown/data-dictionary.md) — พจนานุกรมข้อมูล 7 ตาราง MVP พร้อมคำอธิบายฟิลด์
+> - [markdown/database-schema.md](./markdown/database-schema.md) — SQL DDL Schema + Sample Queries
+>
+> ตัวอย่างโครงสร้างฟิลด์หลักของแต่ละตาราง:
+
+---
+
+## 🗃️ ตัวอย่างโครงสร้างตารางฐานข้อมูล (Data Dictionary Table Schemas - Preview)
+
+### 1. ตาราง `users` (ตารางข้อมูลผู้ใช้งานและสิทธิ์)
+
+เก็บข้อมูลส่วนตัวของบัญชี 2 บทบาท (Customer/Admin) และรองรับทั้ง Native + Google OAuth
+
+* **คีย์หลัก (PK):** `id` / **Unique:** `email`
+* ฟิลด์หลัก: `email`, `password_hash` (bcrypt — NULL สำหรับ OAuth), `first_name`, `last_name`, `role` (`'Customer'`/`'Admin'`), `auth_provider` (`'native'`/`'google'`), `google_id`, `created_at`
+
+### 2. ตาราง `products` (สินค้า)
+
+* **คีย์หลัก:** `id` / **หมวดหมู่:** `'CPU'`, `'Mainboard'`, `'GPU'`, `'RAM'`, `'SSD'`, `'Case'`, `'PSU'` (7 หมวด MVP)
+* ฟิลด์หลัก: `name`, `category`, `price`, `stock_quantity`, `image_url`, `specifications` (JSONB — socket, form_factor, tdp, wattage, supported_ram), `is_active` (Soft Delete)
+
+### 3. ตาราง `orders` (คำสั่งซื้อ)
+
+* **คีย์หลัก:** `id` / **FK:** `user_id` → `users(id)`
+* ฟิลด์หลัก: `total_price`, `order_status` (5 ขั้น MVP: `pending_payment` → `paid` → `processing` → `shipped` → `delivered` / เพิ่ม `cancelled`), `shipping_address`, `payment_slip_mockup` (Base64 WebP), `payment_status` (`pending`/`approved`/`rejected`), `tracking_number`, `created_at`
+
+### 4. ตาราง `order_items` (รายละเอียดสินค้าในออเดอร์)
+
+* **คีย์หลัก:** `id` / **FK:** `order_id`, `product_id`
+* ฟิลด์หลัก: `quantity`, `price_per_unit` (snapshot ราคา ณ ตอนสั่งซื้อ)
+
+### 5. ตาราง `reviews` (รีวิว - No Photos MVP)
+
+* **คีย์หลัก:** `id` / **FK:** `order_id`, `product_id`
+* ฟิลด์หลัก: `rating` (1-5), `comment`, `created_at` — ผูก `order_id` เพื่อบังคับว่ารีวิวได้เฉพาะสินค้าที่ซื้อจริง
+
+### 6. ตาราง `wishlist_items` (สินค้าโปรด - No Stock Alert MVP)
+
+* **คีย์หลัก:** `id` / **FK:** `user_id`, `product_id` / **UNIQUE:** (`user_id`, `product_id`)
+* ฟิลด์หลัก: `created_at`
+
+### 7. ตาราง `order_logs` (Audit Trail)
+
+* **คีย์หลัก:** `id` / **FK:** `order_id`, `changed_by_user_id` → Admin ที่กด
+* ฟิลด์หลัก: `status` (เช่น `'Payment Approved'`, `'Processing'`, `'Shipped'`), `created_at`
+
+> 📄 **รายละเอียดฟิลด์ครบทุกตาราง (Data Type, Constraint, FK behavior) อยู่ที่ [markdown/data-dictionary.md](./markdown/data-dictionary.md)**
+
+
+</details>
+
+### โครงสร้างความสัมพันธ์ของข้อมูล (Class Diagram / ERD - MVP)
+
+```mermaid
+%% ComHub - Class Diagram (MVP Version)
+%% MVP Scope: 2 Actors (Customer, Admin) / 7 Tables
+classDiagram
+
+    class User {
+        +int id
+        +string email
+        +string password_hash
+        +string auth_provider
+        +string google_id
+        +string first_name
+        +string last_name
+        +string role
+        +datetime created_at
+        +register() bool
+        +login() string
+        +loginWithGoogle() string
+        +logout() bool
+    }
+
+    class Customer {
+        +selectPart(productId, category) bool
+        +swapPart(productId, category) bool
+        +removePart(category) bool
+        +viewBuildSummary() json
+        +checkCompatibility() list
+        +calculateWattage() double
+        +recommendPSU() list
+        +addToComparison(productId) bool
+        +removeFromComparison(productId) bool
+        +addWishlist(productId) bool
+        +removeWishlist(productId) bool
+        +submitReview(orderId, productId, rating, comment) bool
+        +addToCart(productId, quantity) bool
+        +updateCartQuantity(productId, quantity) bool
+        +removeFromCart(productId) bool
+        +uploadPaymentSlip(orderId, base64Webp) string
+        +checkout() Order
+        +viewOrderStatus(orderId) json
+    }
+
+    class Admin {
+        +createProduct(data) bool
+        +updateProduct(productId, data) bool
+        +setProductActive(productId, isActive) bool
+        +listAllProducts() list
+        +createAdminAccount(data) bool
+        +updateUserRole(userId, role) bool
+        +deleteAccount(userId) bool
+        +reviewPaymentSlip(orderId) json
+        +approvePayment(orderId) bool
+        +rejectPayment(orderId) bool
+        +listAllOrders() list
+        +updateOrderStatus(orderId, status) bool
+        +fillTrackingNumber(orderId, trackingNum) bool
+        +cancelOrder(orderId) bool
+        +viewSalesDashboard() json
+        +viewTopProducts() list
+        +viewLowStockAlert() list
+    }
+
+    class Product {
+        +int id
+        +string name
+        +string category
+        +double price
+        +int stock_quantity
+        +string image_url
+        +json specifications
+        +bool is_active
+    }
+
+    class WishlistItem {
+        +int id
+        +int user_id
+        +int product_id
+        +datetime created_at
+    }
+
+    class CartItem {
+        +int product_id
+        +int quantity
+        +double price_per_unit
+    }
+
+    class Order {
+        +int id
+        +int user_id
+        +double total_price
+        +string order_status
+        +string shipping_address
+        +string payment_slip_mockup
+        +string payment_status
+        +string tracking_number
+        +datetime created_at
+    }
+
+    class OrderItem {
+        +int id
+        +int order_id
+        +int product_id
+        +int quantity
+        +double price_per_unit
+    }
+
+    class OrderLog {
+        +int id
+        +int order_id
+        +string status
+        +int changed_by_user_id
+        +datetime created_at
+    }
+
+    class Review {
+        +int id
+        +int order_id
+        +int product_id
+        +int rating
+        +string comment
+        +datetime created_at
+    }
+
+    User <|-- Customer
+    User <|-- Admin
+
+    Customer "1" --> "*" CartItem : holds
+    Customer "1" --> "*" Order : places
+    Customer "1" --> "*" WishlistItem : maintains
+    Customer "1" --> "*" Review : writes
+    Product "1" --> "*" CartItem : referenced_by
+    Product "1" --> "*" WishlistItem : added_to
+    Product "1" --> "*" Review : reviewed_under
+
+    Order "1" *-- "*" OrderItem : contains
+    Product "1" --> "*" OrderItem : ordered_in
+    Order "1" *-- "*" OrderLog : logs
+    User "1" --> "*" OrderLog : changes_status
+    Order "1" --> "0..*" Review : has
+
+    Admin "1" --> "*" Product : manages
+    Admin "1" --> "*" Order : reviews_payment
+    Admin "1" --> "*" User : manages_rbac
+```
+
 
 ---
 
@@ -385,15 +719,15 @@ See [classdiagram.mermaid](markdown/classdiagram.mermaid) for the full class dia
 | System Requirement Specification | ข้อกำหนดความต้องการระบบฉบับเต็ม                                  | [SRS.md](./SRS.md)                                      |
 | SDLC Planning                    | แผนดำเนินงาน 7 ขั้นตอน SDLC                                                  | [sdlc-planning.md](./markdown/sdlc-planning.md)         |
 | Features Summary                 | สรุปฟังก์ชันระบบ FR/NFR + Role Access Matrix                                    | [features-summary.md](./markdown/features-summary.md)   |
-| Data Dictionary                  | พจนานุกรมข้อมูล 10 ตารางฐานข้อมูล                                  | [data-dictionary.md](./markdown/data-dictionary.md)     |
+| Project Scope (MVP)              | ✅ Source of truth: ขอบเขต MVP (Actors, FR, NFR)                                | [project-scope.md](./markdown/project-scope.md)         |
+| Data Dictionary                  | พจนานุกรมข้อมูล **7 ตาราง MVP**                                              | [data-dictionary.md](./markdown/data-dictionary.md)     |
+| Database Schema (SQL DDL)        | SQL DDL Schema + Sample Queries                                                                   | [database-schema.md](./markdown/database-schema.md)     |
 | Project Structure                | โครงสร้างโฟลเดอร์ Monorepo (Frontend + Backend)                                | [project-structure.md](./markdown/project-structure.md) |
-| Frontend Pages                   | สรุปหน้าจอ Frontend แยกตามบทบาท                                            | [frontend-pages.md](./markdown/frontend-pages.md)       |
-| User Persona                     | วิเคราะห์กลุ่มผู้ใช้จำลอง 3 Personas                                   | [user-persona.md](./markdown/user-persona.md)           |
-| Project Scope                    | ขอบเขตระบบเชิงลึก (Actors CRUD, FR, NFR)                                       | [project-scope.md](./markdown/project-scope.md)         |
-| UML Diagrams                     | แผนภาพ UML (Use Case, Class, Sequence, Activity)                                          | [UML-Diagrams.md](./markdown/UML-Diagrams.md)           |
+| Frontend Pages                   | สรุปหน้าจอ Frontend (Customer + Admin)                                            | [frontend-pages.md](./markdown/frontend-pages.md)       |
+| User Persona                     | วิเคราะห์กลุ่มผู้ใช้จำลอง 4 Personas (3 Customer + 1 Admin)                    | [user-persona.md](./markdown/user-persona.md)           |
+| UML Diagrams                     | แผนภาพ UML (Use Case + Class) — แสดง inline พร้อม Source `.mermaid`             | [UML-Diagrams.md](./markdown/UML-Diagrams.md)           |
 | Testing (UAT)                    | แผนและเช็กลิสต์การทดสอบระบบด้วยมือ (Manual Testing Checklist) | [testing-uat.md](./markdown/testing-uat.md)             |
-| Summary & Issue Tracker          | สรุปสถานะงานแบบ Kanban พร้อมลิงก์ Issue ทั้งหมด                 | [summary-issue.md](./markdown/summary-issue.md)         |
-| Tracker Issue                    | ตารางติดตามสถานะ Issue รายข้อ                                             | [tracker-issue.md](./markdown/tracker-issue.md)         |
+| PRD                              | Product Requirement Document (User Stories, Missing Features, NFR)                 | [prd.md](./markdown/prd.md)                             |
 
 ---
 

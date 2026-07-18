@@ -44,7 +44,7 @@
   - วิเคราะห์และระบุข้อกำหนดความต้องการด้านฟังก์ชันการทำงาน (Functional Requirements - FR)
   - วิเคราะห์และระบุข้อกำหนดความต้องการที่ไม่ใช่ฟังก์ชัน (Non-Functional Requirements - NFR)
   - ออกแบบโครงสร้างข้อมูลหลัก (Data Dictionary) เช่น สินค้า (Products), ลูกค้า (Users/Customers), คำสั่งซื้อ (Orders)
-  - เขียน UML Use Case Diagram เพื่อแสดงบทบาทและความสัมพันธ์ของผู้ใช้งานทั้ง 4 บทบาท
+  - เขียน UML Use Case Diagram เพื่อแสดงบทบาทและความสัมพันธ์ของผู้ใช้งานทั้ง 2 บทบาท (Customer, Admin) ตาม MVP Scope
   - เขียน UML Class Diagram แสดงความสัมพันธ์โครงสร้างข้อมูล
 - **ผลลัพธ์ (Deliverables):** เอกสาร SRS (System Requirement Specification) และรูปภาพแผนภาพ UML
 - **ระยะเวลา:** 4 วัน (สัปดาห์ที่ 1)
@@ -55,7 +55,7 @@
   - ออกแบบส่วนติดต่อผู้ใช้งาน (UI/UX) ด้วย Wireframe หรือ Figma ให้สอดคล้องกับ UX Laws (Hick's Law, Fitts's Law)
   - ออกแบบโครงสร้างข้อมูล API JSON Schema สำหรับการติดต่อระหว่าง Frontend และ Backend
   - เขียน UML Sequence Diagram แสดงขั้นตอนการจัดสเปคคอมฯ และการสั่งซื้อสินค้า
-  - เขียน UML Activity Diagram แสดงกระบวนการอัปเดตสถานะจัดส่งสินค้าและการบันทึกผล Burn-in Test
+  - เขียน UML Activity Diagram แสดงกระบวนการอัปเดตสถานะออเดอร์ 5 ขั้น (Pending Payment → Paid → Processing → Shipped → Delivered) และการอนุมัติสลิปโอนเงิน
 - **ผลลัพธ์ (Deliverables):** ลิงก์หรือรูปภาพ Wireframe UI, API Specifications และ UML Diagrams
 - **ระยะเวลา:** 4 วัน (สัปดาห์ที่ 2)
 

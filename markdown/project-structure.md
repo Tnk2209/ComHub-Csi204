@@ -3,6 +3,8 @@
 เอกสารนี้แสดงการออกแบบโครงสร้างโฟลเดอร์และไฟล์ของระบบ **ComHub** ในรูปแบบ Monorepo ซึ่งแยกออกเป็นสองส่วนหลักคือ `frontend/` (React + Vite + Tailwind) และ `backend/` (Node.js + Express + TypeScript) เพื่อความง่ายในการพัฒนาและสอดคล้องกับข้อกำหนดการ Deploy ขึ้น Vercel
 
 > **⚠️ Target Architecture — ยังไม่ได้ implement ทั้งหมด:** โครงสร้างโฟลเดอร์ด้านล่างคือสถาปัตยกรรมเป้าหมาย (Target Architecture) ที่วางแผนไว้ ยังไม่ได้ implement จริงทั้งหมด สถานะปัจจุบัน: repo มีเฉพาะโฟลเดอร์ `FrontEnd/` (ชื่อต่างจาก `frontend/` ตรงนี้) ที่เขียนด้วย JavaScript (`.jsx`) — ยังไม่มี TypeScript (`.tsx`), ไม่มี `backend/` directory, ไม่มี `tailwind.config.js` (ใช้ Tailwind v4 CSS-first แทน), และไม่มี `vercel.json`
+>
+> **📝 หมายเหตุ MVP Scope:** เอกสารนี้ปรับให้ตรงกับ 2 บทบาท (Customer + Admin) แล้ว โฟลเดอร์จริงใน `FrontEnd/src/pages/` (เช่น ManagerDashboard/, ManagerModeration/, ManagerTemplates/, StaffQueue/, StaffUAT/, Gallery/) ยังอยู่จากเวอร์ชันก่อน — ต้อง refactor code แยกตามลำดับ ไม่รวมใน scope การอัปเดตเอกสารนี้
 
 ---
 
@@ -27,7 +29,7 @@ ComHub-Csi204/
 │   │   ├── components/             # ส่วนประกอบของเว็บที่นำกลับมาใช้ใหม่ได้ (Reusable Components)
 │   │   │   ├── common/             # UI พื้นฐาน (Navbar.tsx, Footer.tsx, Button.tsx, Input.tsx)
 │   │   │   ├── builder/            # ส่วนประกอบระบบจัดสเปค (PartSelector.tsx, CompatibilityAlert.tsx, WattageBar.tsx)
-│   │   │   └── dashboard/          # ส่วนแสดงผลเฉพาะบทบาท (StatCard.tsx, StockAlertTable.tsx)
+│   │   │   └── admin/              # ส่วนแสดงผลหลังบ้าน Admin (StatCard.tsx, StockAlertTable.tsx, OrderQueueTable.tsx)
 │   │   ├── contexts/               # ระบบบริหารสถานะส่วนกลาง (State Management Contexts)
 │   │   │   ├── AuthContext.tsx     # จัดการการล็อกอิน และเก็บข้อมูล Role ปัจจุบัน
 │   │   │   └── CartContext.tsx     # จัดการสินค้าในตะกร้าชั่วคราว (Sync ลง LocalStorage)
@@ -36,21 +38,24 @@ ComHub-Csi204/
 │   │   │   └── usePCBuilder.ts     # คำนวณความเข้ากันได้/TDP ฝั่ง Client ขณะลูกค้าเลือกชิ้นส่วน
 │   │   ├── layouts/                # หน้ากากเลย์เอาต์หลักของแต่ละสิทธิ์
 │   │   │   ├── MainLayout.tsx      # เลย์เอาต์สำหรับลูกค้าทั่วไป (มี Navbar + Footer)
-│   │   │   └── DashboardLayout.tsx # เลย์เอาต์สำหรับหลังบ้านพนักงาน/ผู้จัดการ (มี Sidebar + Admin Panel)
+│   │   │   └── AdminLayout.tsx     # เลย์เอาต์สำหรับหลังบ้าน Admin (มี Sidebar + Admin Panel)
 │   │   ├── pages/                  # หน้าจอหลักของระบบ (Pages)
-│   │   │   ├── Home.tsx            # หน้าแรกของเว็บ (แสดงรายการสินค้ายอดนิยม & แนะนำสเปคสำเร็จรูป)
-│   │   │   ├── Builder.tsx         # หน้าจอจัดสเปคคอมพิวเตอร์ (PC Builder Page)
+│   │   │   ├── Home.tsx            # หน้าแรกของเว็บ (แสดงรายการสินค้ายอดนิยม)
+│   │   │   ├── Builder.tsx         # หน้าจอจัดสเปคคอมพิวเตอร์ (PC Builder Page - 7 หมวด)
 │   │   │   ├── ProductDetail.tsx   # หน้าดูรายละเอียดสินค้าเป้าหมาย
-│   │   │   ├── Cart.tsx            # หน้าตะกร้าสินค้าและการคำนวณราคารวม
-│   │   │   ├── Checkout.tsx        # หน้าตรวจสอบสินค้า, กรอกที่อยู่ และอัปโหลดสลิปชำระเงิน
-│   │   │   ├── OrderTracking.tsx   # หน้าติดตามสถานะออเดอร์และการจัดประกอบคอมพิวเตอร์
-│   │   │   ├── Community.tsx       # แกลเลอรี่คอมมูนิตี้ (แสดงเคสประกอบและรีวิวจากผู้ใช้อื่น)
-│   │   │   ├── Login.tsx           # หน้าจอเข้าสู่ระบบ
+│   │   │   ├── Compare.tsx         # หน้าเปรียบเทียบสินค้าสูงสุด 3 ชิ้น (C-05)
+│   │   │   ├── Wishlist.tsx        # หน้ารายการสินค้าโปรด (C-06 - ไม่มี Stock Alert)
+│   │   │   ├── Cart.tsx            # หน้าตะกร้าสินค้า (LocalStorage) และการคำนวณราคารวม
+│   │   │   ├── Checkout.tsx        # หน้าตรวจสอบสินค้า, กรอกที่อยู่ และอัปโหลดสลิป WebP+Base64
+│   │   │   ├── OrderTracking.tsx   # หน้าติดตามสถานะออเดอร์ 5 ขั้น (Pending Payment → Delivered)
+│   │   │   ├── Login.tsx           # หน้าจอเข้าสู่ระบบ (Native + Google OAuth)
 │   │   │   ├── Register.tsx        # หน้าจอลงทะเบียนสมาชิกใหม่
-│   │   │   └── Dashboard/          # โฟลเดอร์หน้าจอควบคุมหลังบ้าน (แยกสิทธิ์ชัดเจน)
-│   │   │       ├── StaffDashboard.tsx   # หลังบ้านพนักงานประกอบ (อัปเดตขั้นตอน 4 สเต็ป + บันทึกผล Burn-in)
-│   │   │       ├── ManagerDashboard.tsx # หลังบ้านผู้จัดการ (อนุมัติรูปภาพแกลเลอรี่ + แดชบอร์ดยอดขาย)
-│   │   │       └── AdminDashboard.tsx   # หลังบ้านผู้ดูแลระบบ (จัดการสต็อกสินค้า + กำหนดเงื่อนไขสเปค)
+│   │   │   └── Admin/              # โฟลเดอร์หน้าจอควบคุมหลังบ้าน (Admin เท่านั้น)
+│   │   │       ├── AdminDashboard.tsx  # A-05: Dashboard (ยอดขาย/สินค้ายอดนิยม/สต็อกต่ำ)
+│   │   │       ├── AdminProducts.tsx   # A-01: Product CRUD + Soft Delete
+│   │   │       ├── AdminPayment.tsx    # A-02: Payment Review (Approve/Reject สลิป)
+│   │   │       ├── AdminOrders.tsx     # A-03: Order Management + Tracking Number
+│   │   │       └── AdminAccounts.tsx   # A-04: Role & Access Control (Customer/Admin)
 │   │   ├── services/               # ส่วนการเชื่อมต่อคุยกับ Backend API
 │   │   │   ├── apiClient.ts        # Axios client ตั้งค่า Base URL และแทรก JWT Token อัตโนมัติ
 │   │   │   ├── authService.ts      # API ล็อกอิน/ลงทะเบียน
@@ -71,14 +76,15 @@ ComHub-Csi204/
     │   │   ├── db.ts               # เชื่อมต่อกับ Supabase PostgreSQL
     │   │   └── supabase.ts         # เชื่อมต่อกับ Supabase Storage (สำหรับบันทึกอัปโหลดรูปภาพ)
     │   ├── controllers/            # ตัวควบคุมการรับ-ส่งข้อมูล API (Controllers แยกตามโดเมน)
-    │   │   ├── authController.ts   # ประมวลผลรหัสผ่านแบบ Hash และสร้าง JWT Token ให้ผู้ใช้
-    │   │   ├── productController.ts # จัดการการเพิ่ม/ดึงข้อมูลสินค้า, เงื่อนไขสเปค
-    │   │   ├── orderController.ts   # ประมวลผลคำสั่งซื้อ, การสร้างออเดอร์, และการเปลี่ยนสถานะ
-    │   │   ├── recordController.ts  # บันทึกข้อมูลการประกอบคอมฯ และผลทดสอบ Burn-in
-    │   │   └── reviewController.ts  # บันทึกคะแนนรีวิว, ข้อความ และสถานะอนุมัติรูปแกลเลอรี่
+    │   │   ├── authController.ts   # ประมวลผลรหัสผ่าน bcrypt, สร้าง JWT Token, Google OAuth callback
+    │   │   ├── productController.ts # A-01: จัดการ CRUD สินค้าและสเปค JSONB
+    │   │   ├── orderController.ts   # SYS-03 / C-09 / A-02 / A-03: สร้างออเดอร์, อนุมัติสลิป, อัปเดตสถานะ 5 ขั้น
+    │   │   ├── reviewController.ts  # C-07: บันทึกคะแนนรีวิว 1-5 ดาว + ข้อความ (ไม่มีรูป)
+    │   │   ├── wishlistController.ts # C-06: เพิ่ม/ลบสินค้าจาก wishlist_items
+    │   │   └── dashboardController.ts # A-05: aggregate ยอดขาย/สินค้ายอดนิยม/สต็อกต่ำ
     │   ├── middlewares/            # ส่วนขัดขวางและประเมินสิทธิ์คำขอ (Middlewares)
     │   │   ├── authMiddleware.ts   # ตรวจและถอดรหัสความปลอดภัย JWT Token ใน Header คำขอ
-    │   │   └── roleMiddleware.ts   # ตรวจบทบาทผู้ใช้ (Admin, Staff, Manager) ก่อนยอมให้เรียก API
+    │   │   └── roleMiddleware.ts   # A-04: ตรวจบทบาทผู้ใช้ 2 role (Customer, Admin) ก่อนยอมให้เรียก API
     │   ├── models/                 # ตัวกำหนดโมเดลข้อมูลหรือ Types ความสอดคล้องข้อมูล (TypeScript Interfaces)
     │   │   └── types.ts            # กำหนด Type โครงสร้างตาราง User, Product, Order ฯลฯ
     │   ├── routes/                 # เส้นทาง API Endpoint

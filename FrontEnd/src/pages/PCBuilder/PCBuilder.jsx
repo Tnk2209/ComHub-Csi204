@@ -1,24 +1,22 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { 
-  Cpu as CpuIcon, 
-  Layers as MbIcon, 
-  Server as RamIcon, 
-  HardDrive as SsdIcon, 
-  Monitor as GpuIcon, 
-  Box as CaseIcon, 
-  Zap as PsuIcon, 
-  Trash2, 
-  CheckCircle2, 
-  AlertTriangle, 
-  AlertCircle, 
-  Plus, 
-  Share2, 
-  ShoppingCart, 
-  Info, 
-  RotateCcw, 
+import {
+  Cpu as CpuIcon,
+  Layers as MbIcon,
+  Server as RamIcon,
+  HardDrive as SsdIcon,
+  Monitor as GpuIcon,
+  Box as CaseIcon,
+  Zap as PsuIcon,
+  Trash2,
+  CheckCircle2,
+  AlertTriangle,
+  AlertCircle,
+  Plus,
+  ShoppingCart,
+  Info,
+  RotateCcw,
   X,
-  Sparkles
 } from 'lucide-react';
 
 // Mock database of PC Components
@@ -191,28 +189,6 @@ function PCBuilder({ onNavigate }) {
     };
   }, [selectedParts, t]);
 
-  // Performance Estimates
-  const performanceInfo = useMemo(() => {
-    const gpu = selectedParts.gpu;
-    if (!gpu) return { fps: 'N/A', rating: 'N/A' };
-    
-    let fps = '60 FPS';
-    let rating = 'Standard';
-
-    if (gpu.id === 'gpu-1') {
-      fps = '144 FPS';
-      rating = 'Extreme Gold';
-    } else if (gpu.id === 'gpu-2') {
-      fps = '110 FPS';
-      rating = 'Ultra Silver';
-    } else if (gpu.id === 'gpu-3') {
-      fps = '90 FPS';
-      rating = 'High Bronze';
-    }
-
-    return { fps, rating };
-  }, [selectedParts.gpu]);
-
   // Component configuration
   const categories = {
     cpu: { label: t('builder.categories.cpu'), icon: CpuIcon },
@@ -229,51 +205,38 @@ function PCBuilder({ onNavigate }) {
     const Icon = categories[key].icon;
     
     return (
-      <div 
+      <div
         key={key}
-        className={`bg-app-surface/70 backdrop-blur-md border rounded-xl p-4 transition-all flex flex-col justify-between min-h-[110px] hover:-translate-y-0.5 ${
-          selectedItem 
-            ? 'border-brand-blue/30 shadow-[0_0_10px_rgba(0,194,255,0.03)] bg-app-surface/90' 
-            : 'border-app-border hover:border-gray-700'
+        className={`bg-app-bg/40 border border-app-border/60 rounded-lg p-2.5 transition-all flex items-center gap-2.5 ${
+          selectedItem
+            ? 'border-blue/50 shadow-[0_0_8px_rgba(10,132,255,0.12)]'
+            : 'hover:border-app-border hover:bg-app-bg/70'
         }`}
       >
-        <div className="flex justify-between items-start gap-2">
-          <div className="min-w-0 flex-grow">
-            <span className="text-[9px] font-bold text-app-text-muted uppercase tracking-wider block mb-0.5">
-              {categories[key].label}
-            </span>
-            {selectedItem ? (
-              <div className="min-w-0">
-                <h4 className="text-app-text font-bold text-xs sm:text-sm truncate">{selectedItem.name}</h4>
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {selectedItem.socket && (
-                    <span className="text-[8px] font-bold bg-app-border text-app-text-muted px-1 py-0.2 rounded">
-                      {selectedItem.socket}
-                    </span>
-                  )}
-                  {selectedItem.tdp > 0 && (
-                    <span className="text-[8px] font-bold bg-app-border text-app-text-muted px-1 py-0.2 rounded">
-                      {selectedItem.tdp}W
-                    </span>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <span className="text-app-text-muted text-xs block">{t('builder.empty_selection')}</span>
-            )}
-          </div>
-          <div className={`p-1.5 rounded-lg flex-shrink-0 ${selectedItem ? 'bg-brand-blue/10 text-brand-blue' : 'bg-app-bg text-gray-600'}`}>
-            <Icon className="w-4 h-4" />
-          </div>
+        <div className={`p-1.5 rounded-lg flex-shrink-0 ${selectedItem ? 'bg-blue/10 text-blue' : 'bg-app-bg text-app-text-muted'}`}>
+          <Icon className="w-4 h-4" />
         </div>
 
-        <div className="flex items-center justify-between border-t border-app-border pt-2 mt-2">
+        <div className="min-w-0 flex-grow">
+          <span className="text-[9px] font-bold text-app-text-muted uppercase tracking-wider block leading-tight">
+            {categories[key].label}
+          </span>
+          {selectedItem ? (
+            <h4 className="text-app-text font-semibold text-xs truncate leading-tight" title={selectedItem.name}>
+              {selectedItem.name}
+            </h4>
+          ) : (
+            <span className="text-app-text-muted text-[11px] italic leading-tight block">{t('builder.empty_selection')}</span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-1 flex-shrink-0">
           {selectedItem ? (
             <>
-              <span className="text-app-text font-extrabold text-xs">
-                ${selectedItem.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+              <span className="text-app-text font-bold text-xs font-mono">
+                ${selectedItem.price.toFixed(0)}
               </span>
-              <button 
+              <button
                 onClick={() => removeComponent(key)}
                 className="p-1 text-app-text-muted hover:text-red-500 hover:bg-red-500/10 rounded transition-colors cursor-pointer"
                 title={t('builder.remove_btn')}
@@ -282,16 +245,13 @@ function PCBuilder({ onNavigate }) {
               </button>
             </>
           ) : (
-            <>
-              <span className="text-[10px] text-gray-600">{t('builder.empty_space')}</span>
-              <button 
-                onClick={() => setActiveCategory(key)}
-                className="bg-app-border/60 hover:bg-brand-blue hover:text-slate-950 text-app-text text-[9px] font-bold px-2 py-1.5 rounded transition-all flex items-center gap-1 cursor-pointer"
-              >
-                <Plus className="w-3 h-3" />
-                {t('builder.select_btn')}
-              </button>
-            </>
+            <button
+              onClick={() => setActiveCategory(key)}
+              className="bg-blue hover:bg-blue/90 text-white text-[10px] font-semibold px-2 py-1.5 rounded-md transition-all flex items-center gap-1 cursor-pointer"
+            >
+              <Plus className="w-3 h-3" />
+              {t('builder.select_btn')}
+            </button>
           )}
         </div>
       </div>
@@ -299,67 +259,56 @@ function PCBuilder({ onNavigate }) {
   };
 
   return (
-    <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      
-      {/* Title Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-app-border pb-6">
-        <div>
-          <div className="flex items-center gap-2 text-brand-blue text-sm font-semibold mb-2">
-            <Sparkles className="w-4 h-4" />
-            Digital Lab v2.4.1 - 3-Column Bento Blueprint
-          </div>
-          <h1 className="text-3xl font-extrabold text-app-text">{t('builder.title')}</h1>
-          <p className="text-app-text-muted text-sm mt-1">{t('builder.subtitle')}</p>
+    <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:h-[calc(100vh-4rem)] lg:overflow-hidden flex flex-col">
+
+      {/* Title Header — compact single row */}
+      <div className="flex items-center justify-between gap-4 mb-4 border-b border-[rgba(60,60,67,0.12)] dark:border-[rgba(84,84,88,0.65)] pb-3 flex-shrink-0">
+        <div className="min-w-0">
+          <h1 className="text-xl font-bold text-app-text truncate">{t('builder.title')}</h1>
+          <p className="text-app-text-muted text-xs mt-0.5 hidden sm:block truncate">{t('builder.subtitle')}</p>
         </div>
-        <div className="flex gap-3">
-          <button 
-            onClick={handleReset}
-            className="flex items-center gap-2 border border-app-border hover:border-gray-500 hover:bg-app-surface text-app-text font-medium px-4 py-2.5 rounded transition-all text-sm cursor-pointer"
-          >
-            <RotateCcw className="w-4 h-4" />
-            {t('builder.reset_btn')}
-          </button>
-          <button 
-            onClick={() => alert(t('builder.alert_copied'))}
-            className="flex items-center gap-2 border border-brand-blue/30 text-brand-blue hover:bg-brand-blue/10 font-semibold px-4 py-2.5 rounded transition-all text-sm cursor-pointer"
-          >
-            <Share2 className="w-4 h-4" />
-            {t('builder.share_btn')}
-          </button>
-        </div>
+        <button
+          onClick={handleReset}
+          className="flex items-center gap-2 bg-app-surface hover:shadow-[0_2px_6px_rgba(0,0,0,0.12)] text-app-text font-medium px-3 py-2 rounded-lg transition-all text-sm cursor-pointer shadow-[0_1px_3px_rgba(0,0,0,0.08)] flex-shrink-0"
+        >
+          <RotateCcw className="w-4 h-4" />
+          <span className="hidden sm:inline">{t('builder.reset_btn')}</span>
+        </button>
       </div>
 
-      {/* 3-Column Layout: Left (Menu Selection) | Middle (PC Case Blueprint) | Right (Health Checks & Checkout) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+      {/* 3-Column Layout — fills remaining viewport height on desktop */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch flex-grow min-h-0">
         
-        {/* ================= COLUMN 1: LEFT - hardware menus (Span 3 = 25%) ================= */}
-        <div className="lg:col-span-3 flex flex-col gap-4">
-          <div className="bg-app-surface/30 border border-app-border rounded-2xl p-4 flex flex-col gap-3 h-full">
-            <div className="flex items-center gap-2 mb-1 border-b border-app-border pb-2">
-              <span className="text-xs font-bold text-app-text uppercase tracking-wider">{t('builder.left_column_title')}</span>
+        {/* ================= COLUMN 1: LEFT - Component Selector (scrollable) ================= */}
+        <div className="lg:col-span-3 flex flex-col min-h-0">
+          <div className="bg-app-surface rounded-2xl flex flex-col h-full shadow-[0_1px_3px_rgba(0,0,0,0.08)] overflow-hidden">
+            <div className="flex items-center gap-2 px-4 pt-4 pb-2 border-b border-[rgba(60,60,67,0.12)] dark:border-[rgba(84,84,88,0.65)] flex-shrink-0">
+              <span className="text-xs font-semibold text-app-text uppercase tracking-wider">{t('builder.left_column_title')}</span>
             </div>
-            {Object.keys(categories).map((key) => renderLeftColumnBentoCard(key))}
+            <div className="flex flex-col gap-2.5 p-3 overflow-y-auto flex-grow scroll-smooth">
+              {Object.keys(categories).map((key) => renderLeftColumnBentoCard(key))}
+            </div>
           </div>
         </div>
 
-        {/* ================= COLUMN 2: MIDDLE - Case blueprint schematic (Span 6 = 50%) ================= */}
-        <div className="lg:col-span-6 flex flex-col">
-          <div className="bg-app-surface/40 border border-app-border rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between items-center h-full min-h-[500px]">
+        {/* ================= COLUMN 2: MIDDLE - Case blueprint schematic ================= */}
+        <div className="lg:col-span-6 flex flex-col min-h-0">
+          <div className="bg-app-surface rounded-2xl p-4 relative overflow-hidden flex flex-col justify-between items-center h-full shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
             
             {/* Background radial glow */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-10%,rgba(var(--brand-blue-rgb),0.06),rgba(0,0,0,0))] pointer-events-none"></div>
             
             <div className="flex justify-between items-center w-full z-10">
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-brand-blue animate-pulse"></div>
-                <span className="text-xs font-bold text-app-text uppercase tracking-wider">{t('builder.middle_column_title')}</span>
+                <div className="w-2.5 h-2.5 rounded-full bg-blue animate-pulse"></div>
+                <span className="text-xs font-semibold text-app-text uppercase tracking-wider">{t('builder.middle_column_title')}</span>
               </div>
               <span className="text-[9px] bg-app-border text-app-text-muted px-2 py-0.5 rounded font-mono">{t('builder.middle_column_tag')}</span>
             </div>
 
             {/* Vertical PC Case Tower SVG Schematic */}
-            <div className="w-full max-w-[280px] flex-grow flex items-center justify-center relative z-10 py-6">
-              <svg viewBox="0 0 300 400" className="w-full h-full max-h-[380px] text-gray-700">
+            <div className="w-full max-w-[260px] flex-grow flex items-center justify-center relative z-10 py-2 min-h-0">
+              <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid meet" className="w-full h-full text-gray-700">
                 {/* 1. PC Case Outer Frame (Vertical Mid-Tower shape) */}
                 <rect 
                   x="15" y="15" width="270" height="370" rx="10" 
@@ -492,7 +441,7 @@ function PCBuilder({ onNavigate }) {
             </div>
 
             {/* Micro-legends at the bottom */}
-            <div className="flex flex-wrap justify-center gap-3 text-[9px] text-app-text-muted z-10 border-t border-app-border pt-3 w-full">
+            <div className="flex flex-wrap justify-center gap-3 text-[9px] text-app-text-muted z-10 border-t border-[rgba(60,60,67,0.12)] dark:border-[rgba(84,84,88,0.65)] pt-2 w-full flex-shrink-0">
               <span className="flex items-center gap-1">
                 <span className={`w-1.5 h-1.5 rounded-full ${selectedParts.cpu ? 'bg-brand-blue' : 'bg-gray-700'}`}></span>
                 CPU
@@ -526,162 +475,111 @@ function PCBuilder({ onNavigate }) {
           </div>
         </div>
 
-        {/* ================= COLUMN 3: RIGHT - health analyses & checkout (Span 3 = 25%) ================= */}
-        <div className="lg:col-span-3 flex flex-col gap-6">
-          
-          {/* Health check card */}
-          <div className="bg-app-surface border border-app-border rounded-2xl p-6">
-            <h3 className="text-lg font-bold text-app-text mb-5 flex items-center gap-2">
-              <span className="text-emerald-400">🩺</span> Health Check
+        {/* ================= COLUMN 3: RIGHT - Health + Power + Checkout ================= */}
+        <div className="lg:col-span-3 flex flex-col gap-3 min-h-0">
+          {/* Health Check card — compact 3-row list */}
+          <div className="bg-app-surface rounded-2xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08)] flex-shrink-0">
+            <h3 className="text-xs font-semibold text-app-text uppercase tracking-wider mb-3 border-b border-[rgba(60,60,67,0.12)] dark:border-[rgba(84,84,88,0.65)] pb-2">
+              {t('builder.compat_box_title')}
             </h3>
-            <div className="flex flex-col gap-4">
-              
-              {/* Socket Validation */}
-              <div className="flex gap-3">
-                <div className="flex-shrink-0 mt-0.5">
-                  {buildCompatibility.checks.socket.status === 'success' ? (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                  ) : buildCompatibility.checks.socket.status === 'error' ? (
-                    <AlertCircle className="w-5 h-5 text-rose-500" />
-                  ) : (
-                    <Info className="w-5 h-5 text-app-text-muted" />
-                  )}
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-app-text uppercase tracking-wide">Socket Compatibility</h4>
-                  <p className="text-xs text-app-text-muted mt-1 leading-relaxed">{buildCompatibility.checks.socket.message}</p>
-                </div>
-              </div>
-
-              {/* Power level Warning */}
-              <div className="flex gap-3 border-t border-app-border pt-4">
-                <div className="flex-shrink-0 mt-0.5">
-                  {buildCompatibility.checks.power.status === 'success' ? (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                  ) : buildCompatibility.checks.power.status === 'warning' ? (
-                    <AlertTriangle className="w-5 h-5 text-amber-500" />
-                  ) : buildCompatibility.checks.power.status === 'error' ? (
-                    <AlertCircle className="w-5 h-5 text-rose-500" />
-                  ) : (
-                    <Info className="w-5 h-5 text-app-text-muted" />
-                  )}
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-app-text uppercase tracking-wide">TDP Power Warning</h4>
-                  <p className="text-xs text-app-text-muted mt-1 leading-relaxed">{buildCompatibility.checks.power.message}</p>
-                </div>
-              </div>
-
-              {/* Physical clearance (GPU Size) */}
-              <div className="flex gap-3 border-t border-app-border pt-4">
-                <div className="flex-shrink-0 mt-0.5">
-                  {buildCompatibility.checks.clearance.status === 'success' ? (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                  ) : buildCompatibility.checks.clearance.status === 'error' ? (
-                    <AlertCircle className="w-5 h-5 text-rose-500" />
-                  ) : (
-                    <Info className="w-5 h-5 text-app-text-muted" />
-                  )}
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-app-text uppercase tracking-wide">Physical Clearance</h4>
-                  <p className="text-xs text-app-text-muted mt-1 leading-relaxed">{buildCompatibility.checks.clearance.message}</p>
-                </div>
-              </div>
-
+            <div className="flex flex-col gap-2.5">
+              {[
+                { key: 'socket', label: 'Socket' },
+                { key: 'power', label: 'TDP Power' },
+                { key: 'clearance', label: 'GPU Clearance' },
+              ].map(({ key, label }) => {
+                const status = buildCompatibility.checks[key].status;
+                const Icon = status === 'success' ? CheckCircle2
+                  : status === 'warning' ? AlertTriangle
+                  : status === 'error' ? AlertCircle
+                  : Info;
+                const iconColor = status === 'success' ? 'text-emerald-500'
+                  : status === 'warning' ? 'text-amber-500'
+                  : status === 'error' ? 'text-rose-500'
+                  : 'text-app-text-muted';
+                return (
+                  <div key={key} className="flex gap-2.5 items-start">
+                    <Icon className={`w-4 h-4 mt-0.5 flex-shrink-0 ${iconColor}`} />
+                    <div className="min-w-0 flex-grow">
+                      <h4 className="text-[10px] font-bold text-app-text uppercase tracking-wide">{label}</h4>
+                      <p className="text-[11px] text-app-text-muted leading-snug line-clamp-2" title={buildCompatibility.checks[key].message}>
+                        {buildCompatibility.checks[key].message}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          {/* Power Analysis card */}
-          <div className="bg-app-surface border border-app-border rounded-2xl p-6">
-            <h3 className="text-lg font-bold text-app-text mb-5 flex items-center gap-2">
-              <span className="text-brand-blue">⚡</span> Power Analysis
+          {/* Power + Total + Checkout — main action card */}
+          <div className="bg-app-surface rounded-2xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08)] flex flex-col flex-grow min-h-0">
+            <h3 className="text-xs font-semibold text-app-text uppercase tracking-wider mb-3 border-b border-[rgba(60,60,67,0.12)] dark:border-[rgba(84,84,88,0.65)] pb-2 flex-shrink-0">
+              {t('builder.tdp_bar_title')}
             </h3>
-            
+
             {/* Wattage bar */}
-            <div className="mb-4">
-              <div className="flex justify-between text-xs font-bold text-app-text-muted mb-2">
-                <span>กำลังไฟโหลดรวม</span>
-                <span>
-                  {buildCompatibility.totalTdp}W {selectedParts.psu ? `/ ${selectedParts.psu.wattage}W` : ''}
+            <div className="mb-4 flex-shrink-0">
+              <div className="flex justify-between text-[11px] font-semibold text-app-text-muted mb-1.5">
+                <span>Load</span>
+                <span className="font-mono text-app-text">
+                  {buildCompatibility.totalTdp}W{selectedParts.psu ? ` / ${selectedParts.psu.wattage}W` : ''}
                 </span>
               </div>
-              <div className="w-full bg-app-bg rounded-full h-3 overflow-hidden">
-                <div 
+              <div className="w-full bg-app-bg rounded-full h-2 overflow-hidden">
+                <div
                   className={`h-full transition-all duration-300 ${
                     !selectedParts.psu ? 'bg-amber-500' :
                     (buildCompatibility.totalTdp / selectedParts.psu.wattage) > 1.0 ? 'bg-rose-500' :
-                    (buildCompatibility.totalTdp / selectedParts.psu.wattage) > 0.8 ? 'bg-amber-400' : 'bg-brand-blue'
+                    (buildCompatibility.totalTdp / selectedParts.psu.wattage) > 0.8 ? 'bg-amber-400' : 'bg-blue'
                   }`}
-                  style={{ 
+                  style={{
                     width: `${Math.min(
-                      selectedParts.psu 
-                        ? (buildCompatibility.totalTdp / selectedParts.psu.wattage) * 100 
-                        : (buildCompatibility.totalTdp / 1000) * 100, 
+                      selectedParts.psu
+                        ? (buildCompatibility.totalTdp / selectedParts.psu.wattage) * 100
+                        : (buildCompatibility.totalTdp / 1000) * 100,
                       100
-                    )}%` 
+                    )}%`
                   }}
-                ></div>
+                />
               </div>
-              {selectedParts.psu && (
-                <div className="flex justify-between text-[10px] text-app-text-muted mt-1.5">
-                  <span>Current Load</span>
-                  <span>Safety Buffer (20%)</span>
-                </div>
-              )}
             </div>
 
-            {/* Estimated Total Price & Checkout */}
-            <div className="border-t border-app-border pt-4 mt-6">
-              <span className="text-xs text-app-text-muted block mb-1">Estimated Total</span>
-              <h2 className="text-3xl font-extrabold text-app-text mb-6 font-mono">
-                ${buildCompatibility.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-              </h2>
-              <button 
-                onClick={() => alert(t('builder.alert_checkout', { totalCost: buildCompatibility.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 }) }))}
+            {/* Total + Checkout pinned to bottom */}
+            <div className="mt-auto border-t border-[rgba(60,60,67,0.12)] dark:border-[rgba(84,84,88,0.65)] pt-3 flex-shrink-0">
+              <div className="flex items-baseline justify-between mb-3">
+                <span className="text-[11px] text-app-text-muted uppercase tracking-wider">Total</span>
+                <h2 className="text-2xl font-extrabold text-app-text font-mono">
+                  ${buildCompatibility.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                </h2>
+              </div>
+              <button
+                onClick={() => onNavigate && onNavigate('cart')}
                 disabled={buildCompatibility.totalCost === 0}
-                className={`w-full text-slate-950 font-bold py-3.5 px-4 rounded-xl text-center transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                  buildCompatibility.totalCost > 0 
-                    ? 'bg-brand-blue hover:bg-brand-blue/90 hover:scale-[1.01] hover:shadow-[0_0_15px_rgba(0,194,255,0.2)]' 
-                    : 'bg-gray-700 text-app-text-muted cursor-not-allowed'
+                className={`w-full text-white font-semibold py-3 px-4 rounded-xl text-sm text-center transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                  buildCompatibility.totalCost > 0
+                    ? 'bg-blue hover:bg-blue/90 hover:shadow-[0_0_15px_rgba(10,132,255,0.2)]'
+                    : 'bg-gray-700/40 text-app-text-muted cursor-not-allowed'
                 }`}
               >
-                <ShoppingCart className="w-5 h-5" />
+                <ShoppingCart className="w-4 h-4" />
                 {t('builder.checkout_btn')}
               </button>
             </div>
           </div>
-
-          {/* Benchmark Estimation card */}
-          <div className="bg-app-surface border border-app-border rounded-2xl p-6">
-            <h3 className="text-lg font-bold text-app-text mb-5 flex items-center gap-2">
-              <span className="text-amber-400">🎮</span> Benchmark Estimate
-            </h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-app-bg/50 p-4 rounded-xl border border-app-border">
-                <span className="text-[10px] text-app-text-muted uppercase tracking-wider block mb-1">4K Gaming</span>
-                <span className="text-app-text font-extrabold text-xl font-mono">{performanceInfo.fps}</span>
-              </div>
-              <div className="bg-app-bg/50 p-4 rounded-xl border border-app-border">
-                <span className="text-[10px] text-app-text-muted uppercase tracking-wider block mb-1">Efficiency</span>
-                <span className="text-brand-blue font-extrabold text-sm block mt-1">{performanceInfo.rating}</span>
-              </div>
-            </div>
-          </div>
-
         </div>
 
       </div>
 
       {/* Component Selection Drawer / Modal */}
       {activeCategory && (
-        <div className="fixed inset-0 z-50 bg-app-bg/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-app-surface border border-app-border rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[80vh] animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-app-surface rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[80vh] animate-in fade-in zoom-in-95 duration-150">
             
             {/* Modal Header */}
-            <div className="p-5 border-b border-app-border flex items-center justify-between">
+            <div className="p-5 border-b border-[rgba(60,60,67,0.12)] dark:border-[rgba(84,84,88,0.65)] flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-app-text capitalize">{t('builder.select_hardware_title', { category: categories[activeCategory].label })}</h3>
+                <h3 className="text-lg font-semibold text-app-text capitalize">{t('builder.select_hardware_title', { category: categories[activeCategory].label })}</h3>
                 <p className="text-xs text-app-text-muted mt-1">{t('builder.select_hardware_desc')}</p>
               </div>
               <button 
@@ -695,9 +593,9 @@ function PCBuilder({ onNavigate }) {
             {/* Modal Body: Items list */}
             <div className="p-5 overflow-y-auto flex-grow flex flex-col gap-3">
               {COMPONENT_DATABASE[activeCategory]?.map((item) => (
-                <div 
+                <div
                   key={item.id}
-                  className="bg-app-bg/60 border border-app-border hover:border-brand-blue/40 p-4 rounded-xl flex justify-between items-center gap-4 transition-all hover:shadow-[0_0_12px_rgba(0,194,255,0.02)]"
+                  className="bg-app-bg/60 hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] p-4 rounded-xl flex justify-between items-center gap-4 transition-all shadow-[0_1px_3px_rgba(0,0,0,0.08)]"
                 >
                   <div className="min-w-0">
                     <h4 className="text-app-text font-bold text-base block">{item.name}</h4>
@@ -724,9 +622,9 @@ function PCBuilder({ onNavigate }) {
                     <span className="text-app-text font-extrabold text-lg font-mono">
                       ${item.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </span>
-                    <button 
+                    <button
                       onClick={() => selectComponent(activeCategory, item)}
-                      className="bg-brand-blue hover:bg-brand-blue/90 text-slate-950 text-xs font-bold px-4 py-2.5 rounded-lg transition-all cursor-pointer"
+                      className="bg-blue hover:bg-blue/90 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition-all cursor-pointer"
                     >
                       {t('builder.select_btn')}
                     </button>

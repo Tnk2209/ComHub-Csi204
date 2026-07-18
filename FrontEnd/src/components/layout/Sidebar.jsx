@@ -1,16 +1,10 @@
 import React from 'react';
-import { 
-  Database, 
-  Users, 
-  CreditCard, 
-  ClipboardList, 
-  Thermometer, 
-  Truck, 
-  BarChart3, 
-  Sliders, 
-  Eye, 
-  LogOut, 
-  Home 
+import {
+  Database,
+  Users,
+  CreditCard,
+  LogOut,
+  Home
 } from 'lucide-react';
 
 function Sidebar({ role, activeMenu, onSelectMenu, onLogout }) {
@@ -21,18 +15,6 @@ function Sidebar({ role, activeMenu, onSelectMenu, onLogout }) {
           { id: 'products', name: 'Products CRUD', icon: Database },
           { id: 'accounts', name: 'Account Controls', icon: Users },
           { id: 'payments', name: 'Payment Review', icon: CreditCard },
-        ];
-      case 'Staff':
-        return [
-          { id: 'queue', name: 'Assembly Queue', icon: ClipboardList },
-          { id: 'burnin', name: 'Burn-in Record', icon: Thermometer },
-          { id: 'logistics', name: 'Logistics / Shipped', icon: Truck },
-        ];
-      case 'Manager':
-        return [
-          { id: 'dashboard', name: 'Sales Dashboard', icon: BarChart3 },
-          { id: 'templates', name: 'Prebuilt Templates', icon: Sliders },
-          { id: 'moderation', name: 'Gallery Moderation', icon: Eye },
         ];
       default:
         return [];
@@ -59,8 +41,8 @@ function Sidebar({ role, activeMenu, onSelectMenu, onLogout }) {
               key={item.id}
               onClick={() => onSelectMenu(item.id)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-medium transition-all cursor-pointer ${
-                isActive 
-                  ? 'bg-brand-blue/10 text-brand-blue border-l-2 border-brand-blue' 
+                isActive
+                  ? 'bg-brand-blue/10 text-brand-blue border-l-2 border-brand-blue'
                   : 'text-app-text-muted hover:bg-app-bg/50 hover:text-app-text'
               }`}
             >
