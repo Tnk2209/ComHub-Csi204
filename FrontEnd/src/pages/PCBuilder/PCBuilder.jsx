@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Cpu as CpuIcon,
@@ -17,60 +17,71 @@ import {
   Info,
   RotateCcw,
   X,
+  Loader2,
 } from 'lucide-react';
+import * as productService from '../../services/productService';
+import { useCart } from '../../contexts/CartContext';
+import { buildCompatibility as computeCompatibility } from './buildCompatibility';
+import { loadBuilderState, saveBuilderState, clearBuilderState } from './builderStorage';
 
-// Mock database of PC Components
-const COMPONENT_DATABASE = {
-  cpu: [
-    { id: 'cpu-1', name: 'Intel Core i7-14700K', price: 409.00, tdp: 125, socket: 'LGA1700', details: '20 Cores (8 P-Cores + 12 E-Cores), Up to 5.6 GHz' },
-    { id: 'cpu-2', name: 'AMD Ryzen 7 7800X3D', price: 369.00, tdp: 120, socket: 'AM5', details: '8 Cores / 16 Threads, 3D V-Cache, Best for Gaming' },
-    { id: 'cpu-3', name: 'AMD Ryzen 5 7600', price: 199.00, tdp: 65, socket: 'AM5', details: '6 Cores / 12 Threads, Up to 5.1 GHz, Includes Cooler' },
-  ],
-  gpu: [
-    { id: 'gpu-1', name: 'NVIDIA RTX 4090 Founders Edition', price: 1599.00, tdp: 450, length: 340, details: '24GB GDDR6X, Ada Lovelace, DLSS 3, Ray Tracing' },
-    { id: 'gpu-2', name: 'NVIDIA RTX 4070 Ti Super', price: 799.00, tdp: 285, length: 310, details: '16GB GDDR6X, Dual Fan, Excellent 1440p & 4K' },
-    { id: 'gpu-3', name: 'AMD Radeon RX 7800 XT', price: 499.00, tdp: 263, length: 280, details: '16GB GDDR6, FSR 3, Competitive Performance' },
-  ],
-  motherboard: [
-    { id: 'mb-1', name: 'ASUS ROG STRIX B650-A GAMING WIFI', price: 219.00, tdp: 30, socket: 'AM5', ramType: 'DDR5', details: 'ATX Form Factor, PCIe 5.0, WiFi 6E' },
-    { id: 'mb-2', name: 'MSI PRO Z790-A MAX WIFI', price: 209.00, tdp: 35, socket: 'LGA1700', ramType: 'DDR5', details: 'ATX, PCIe 5.0, Heavy Duty VRMs' },
-    { id: 'mb-3', name: 'Gigabyte B650 AORUS ELITE AX', price: 199.00, tdp: 30, socket: 'AM5', ramType: 'DDR5', details: 'ATX, Dual PCIe 4.0 M.2 slots, Sleek Black Design' },
-  ],
-  ram: [
-    { id: 'ram-1', name: 'Corsair Vengeance RGB 32GB (2x16GB) DDR5 6000MHz', price: 110.00, tdp: 10, details: 'CL30, Intel XMP & AMD EXPO Compatible' },
-    { id: 'ram-2', name: 'G.Skill Trident Z5 Neo 32GB (2x16GB) DDR5 6400MHz', price: 125.00, tdp: 12, details: 'CL32, Premium aluminum spreaders, RGB sync' },
-  ],
-  storage: [
-    { id: 'ssd-1', name: 'Samsung 990 Pro 2TB NVMe M.2 SSD', price: 170.00, tdp: 8, details: 'Read Up to 7450 MB/s, Write Up to 6900 MB/s' },
-    { id: 'ssd-2', name: 'Crucial T500 2TB PCIe Gen4 NVMe SSD', price: 140.00, tdp: 7, details: 'Read Up to 7400 MB/s, Write Up to 7000 MB/s' },
-  ],
-  case: [
-    { id: 'case-1', name: 'NZXT H9 Flow Dual-Chamber Mid-Tower', price: 159.00, tdp: 0, maxGpuLength: 435, details: 'Panoramic glass panels, 4x 120mm fans included' },
-    { id: 'case-2', name: 'Corsair 4000D Airflow Tempered Glass', price: 104.00, tdp: 0, maxGpuLength: 360, details: 'High-airflow front panel, cable routing channels' },
-  ],
-  psu: [
-    { id: 'psu-1', name: 'Corsair RM850x 850W 80+ Gold Fully Modular', price: 149.00, tdp: 0, wattage: 850, efficiency: 'Gold', details: 'ATX 3.0 Compatible, Zero RPM fan mode' },
-    { id: 'psu-2', name: 'Seasonic Focus GX-750 750W 80+ Gold Modular', price: 119.00, tdp: 0, wattage: 750, efficiency: 'Gold', details: 'Compact ATX size, high reliability japanese caps' },
-    { id: 'psu-3', name: 'MSI MAG A650BN 650W 80+ Bronze Non-Modular', price: 59.00, tdp: 0, wattage: 650, efficiency: 'Bronze', details: 'Budget friendly, DC-to-DC circuit design' },
-  ],
+const CATEGORY_MAP = {
+  cpu: 'CPU',
+  motherboard: 'Mainboard',
+  gpu: 'GPU',
+  ram: 'RAM',
+  storage: 'SSD',
+  case: 'Case',
+  psu: 'PSU',
 };
 
 function PCBuilder({ onNavigate }) {
   const { t } = useTranslation();
+  const { addItem } = useCart();
+
+  const [componentDB, setComponentDB] = useState({});
+  const [loadingCategory, setLoadingCategory] = useState(null);
 
   // State for selected components
-  const [selectedParts, setSelectedParts] = useState({
-    cpu: null,
-    gpu: null,
-    motherboard: null,
-    ram: null,
-    storage: null,
-    case: null,
-    psu: null,
-  });
+  const [selectedParts, setSelectedParts] = useState(loadBuilderState);
+
+  useEffect(() => {
+    saveBuilderState(selectedParts);
+  }, [selectedParts]);
 
   // Modal selector states
   const [activeCategory, setActiveCategory] = useState(null);
+  const [filterRecommendedPsu, setFilterRecommendedPsu] = useState(true);
+
+  const openCategoryModal = async (key) => {
+    setActiveCategory(key);
+    if (componentDB[key]) return;
+    setLoadingCategory(key);
+    try {
+      const apiCategory = CATEGORY_MAP[key];
+      const products = await productService.getByCategory(apiCategory);
+      const mapped = products.map((p) => {
+        const specs = p.specifications || {};
+        return {
+          id: p.id,
+          name: p.name,
+          price: Number(p.price),
+          tdp: Number(specs.tdp) || 0,
+          socket: specs.socket || null,
+          ramType: specs.ram_type || specs.supported_ram || null,
+          formFactor: specs.form_factor || null,
+          length: (specs.gpu_length_mm || specs.length_mm) ? Number(specs.gpu_length_mm || specs.length_mm) : null,
+          maxGpuLength: specs.max_gpu_length_mm ? Number(specs.max_gpu_length_mm) : null,
+          wattage: specs.wattage ? Number(specs.wattage) : null,
+          details: Object.entries(specs).map(([k, v]) => `${k}: ${v}`).join(', '),
+        };
+      });
+      setComponentDB((prev) => ({ ...prev, [key]: mapped }));
+    } catch {
+      setComponentDB((prev) => ({ ...prev, [key]: [] }));
+    } finally {
+      setLoadingCategory(null);
+    }
+  };
 
   // Reset all selections
   const handleReset = () => {
@@ -83,6 +94,7 @@ function PCBuilder({ onNavigate }) {
       case: null,
       psu: null,
     });
+    clearBuilderState();
   };
 
   // Add component to build
@@ -104,90 +116,8 @@ function PCBuilder({ onNavigate }) {
 
   // Compatibility Calculations
   const buildCompatibility = useMemo(() => {
-    const checks = {
-      socket: { status: 'idle', message: t('builder.compat_rules.socket_idle') },
-      power: { status: 'idle', message: t('builder.compat_rules.power_idle') },
-      clearance: { status: 'idle', message: t('builder.compat_rules.clearance_idle') }
-    };
-
-    const cpu = selectedParts.cpu;
-    const mb = selectedParts.motherboard;
-    const gpu = selectedParts.gpu;
-    const computerCase = selectedParts.case;
-    const psu = selectedParts.psu;
-
-    // 1. Socket Check
-    if (cpu && mb) {
-      if (cpu.socket === mb.socket) {
-        checks.socket = {
-          status: 'success',
-          message: t('builder.compat_rules.socket_match', { cpuSocket: cpu.socket })
-        };
-      } else {
-        checks.socket = {
-          status: 'error',
-          message: t('builder.compat_rules.socket_mismatch', { cpuSocket: cpu.socket, mbSocket: mb.socket })
-        };
-      }
-    }
-
-    // 2. Power Analysis (TDP calculations)
-    let totalTdp = 0;
-    if (cpu) totalTdp += cpu.tdp;
-    if (gpu) totalTdp += gpu.tdp;
-    if (mb) totalTdp += mb.tdp;
-    if (selectedParts.ram) totalTdp += selectedParts.ram.tdp || 10;
-    if (selectedParts.storage) totalTdp += selectedParts.storage.tdp || 10;
-    totalTdp += 30; // safety baseline for fans & controllers
-
-    if (psu) {
-      const loadPercentage = (totalTdp / psu.wattage) * 100;
-      if (totalTdp > psu.wattage) {
-        checks.power = {
-          status: 'error',
-          message: t('builder.compat_rules.power_overload', { totalTdp, psuWattage: psu.wattage })
-        };
-      } else if (loadPercentage > 80) {
-        checks.power = {
-          status: 'warning',
-          message: t('builder.compat_rules.power_warning', { loadPercentage: Math.round(loadPercentage) })
-        };
-      } else {
-        checks.power = {
-          status: 'success',
-          message: t('builder.compat_rules.power_match', { totalTdp, psuWattage: psu.wattage, loadPercentage: Math.round(loadPercentage) })
-        };
-      }
-    } else {
-      if (totalTdp > 30) {
-        checks.power = {
-          status: 'warning',
-          message: t('builder.compat_rules.power_need_psu', { totalTdp, recommendedWattage: Math.ceil((totalTdp * 1.25) / 50) * 50 })
-        };
-      }
-    }
-
-    // 3. Physical Clearance (GPU Length vs Case limit)
-    if (gpu && computerCase) {
-      if (gpu.length > computerCase.maxGpuLength) {
-        checks.clearance = {
-          status: 'error',
-          message: t('builder.compat_rules.clearance_mismatch', { gpuLength: gpu.length, caseLimit: computerCase.maxGpuLength })
-        };
-      } else {
-        checks.clearance = {
-          status: 'success',
-          message: t('builder.compat_rules.clearance_match', { gpuLength: gpu.length, caseLimit: computerCase.maxGpuLength })
-        };
-      }
-    }
-
-    return {
-      checks,
-      totalTdp,
-      totalCost: Object.values(selectedParts).reduce((sum, item) => sum + (item ? item.price : 0), 0)
-    };
-  }, [selectedParts, t]);
+    return computeCompatibility(selectedParts);
+  }, [selectedParts]);
 
   // Component configuration
   const categories = {
@@ -246,7 +176,7 @@ function PCBuilder({ onNavigate }) {
             </>
           ) : (
             <button
-              onClick={() => setActiveCategory(key)}
+              onClick={() => openCategoryModal(key)}
               className="bg-blue hover:bg-blue/90 text-white text-[10px] font-semibold px-2 py-1.5 rounded-md transition-all flex items-center gap-1 cursor-pointer"
             >
               <Plus className="w-3 h-3" />
@@ -485,10 +415,14 @@ function PCBuilder({ onNavigate }) {
             <div className="flex flex-col gap-2.5">
               {[
                 { key: 'socket', label: 'Socket' },
+                { key: 'ramType', label: 'RAM Type' },
+                { key: 'formFactor', label: 'Form Factor' },
                 { key: 'power', label: 'TDP Power' },
                 { key: 'clearance', label: 'GPU Clearance' },
               ].map(({ key, label }) => {
-                const status = buildCompatibility.checks[key].status;
+                const check = buildCompatibility.checks[key];
+                const status = check.status;
+                const message = t(`builder.compat_rules.${check.message}`, check.params || {});
                 const Icon = status === 'success' ? CheckCircle2
                   : status === 'warning' ? AlertTriangle
                   : status === 'error' ? AlertCircle
@@ -502,8 +436,8 @@ function PCBuilder({ onNavigate }) {
                     <Icon className={`w-4 h-4 mt-0.5 flex-shrink-0 ${iconColor}`} />
                     <div className="min-w-0 flex-grow">
                       <h4 className="text-[10px] font-bold text-app-text uppercase tracking-wide">{label}</h4>
-                      <p className="text-[11px] text-app-text-muted leading-snug line-clamp-2" title={buildCompatibility.checks[key].message}>
-                        {buildCompatibility.checks[key].message}
+                      <p className="text-[11px] text-app-text-muted leading-snug line-clamp-2" title={message}>
+                        {message}
                       </p>
                     </div>
                   </div>
@@ -554,7 +488,10 @@ function PCBuilder({ onNavigate }) {
                 </h2>
               </div>
               <button
-                onClick={() => onNavigate && onNavigate('cart')}
+                onClick={() => {
+                  Object.values(selectedParts).filter(Boolean).forEach((part) => addItem(part));
+                  onNavigate && onNavigate('cart');
+                }}
                 disabled={buildCompatibility.totalCost === 0}
                 className={`w-full text-white font-semibold py-3 px-4 rounded-xl text-sm text-center transition-all flex items-center justify-center gap-2 cursor-pointer ${
                   buildCompatibility.totalCost > 0
@@ -590,9 +527,55 @@ function PCBuilder({ onNavigate }) {
               </button>
             </div>
 
+            {/* PSU Safety Margin Filter */}
+            {activeCategory === 'psu' && (
+              <div className="px-5 py-3 bg-blue/5 border-b border-[rgba(60,60,67,0.12)] dark:border-[rgba(84,84,88,0.65)] flex items-center justify-between flex-shrink-0">
+                <label htmlFor="psu-filter-checkbox" className="flex items-center gap-2.5 text-xs text-app-text font-medium cursor-pointer select-none">
+                  <input
+                    id="psu-filter-checkbox"
+                    type="checkbox"
+                    checked={filterRecommendedPsu}
+                    onChange={(e) => setFilterRecommendedPsu(e.target.checked)}
+                    className="w-4 h-4 rounded border-[rgba(60,60,67,0.12)] dark:border-[rgba(84,84,88,0.65)] text-blue focus:ring-blue cursor-pointer"
+                  />
+                  <span>{t('builder.psu_filter_label', { wattage: Math.ceil(buildCompatibility.totalTdp * 1.2) })}</span>
+                </label>
+                <span className="text-[10px] bg-blue/20 text-blue font-bold px-2.5 py-0.5 rounded-full">
+                  Min: {Math.ceil(buildCompatibility.totalTdp * 1.2)}W
+                </span>
+              </div>
+            )}
+
             {/* Modal Body: Items list */}
             <div className="p-5 overflow-y-auto flex-grow flex flex-col gap-3">
-              {COMPONENT_DATABASE[activeCategory]?.map((item) => (
+              {loadingCategory === activeCategory ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-6 h-6 text-blue animate-spin" />
+                </div>
+              ) : (() => {
+                const items = componentDB[activeCategory] || [];
+                const recommendedMinWattage = Math.ceil(buildCompatibility.totalTdp * 1.2);
+                let displayItems = items;
+
+                if (activeCategory === 'psu' && filterRecommendedPsu) {
+                  displayItems = items.filter((item) => item.wattage >= recommendedMinWattage);
+                }
+
+                if (displayItems.length === 0 && activeCategory === 'psu') {
+                  return (
+                    <div className="bg-amber-500/10 border border-amber-500/20 p-5 rounded-xl text-center">
+                      <p className="text-sm font-semibold text-amber-500 mb-1">
+                        {t('builder.psu_no_recommended_title', 'No recommended PSUs match your build.')}
+                      </p>
+                      <p className="text-xs text-app-text-muted">
+                        {t('builder.psu_no_recommended_desc', 'Your system needs at least {{wattage}}W. Uncheck the filter to see all options.', { wattage: recommendedMinWattage })}
+                      </p>
+                    </div>
+                  );
+                }
+
+                return displayItems;
+              })().map((item) => (
                 <div
                   key={item.id}
                   className="bg-app-bg/60 hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] p-4 rounded-xl flex justify-between items-center gap-4 transition-all shadow-[0_1px_3px_rgba(0,0,0,0.08)]"
@@ -600,7 +583,7 @@ function PCBuilder({ onNavigate }) {
                   <div className="min-w-0">
                     <h4 className="text-app-text font-bold text-base block">{item.name}</h4>
                     <p className="text-xs text-app-text-muted mt-1 leading-relaxed">{item.details}</p>
-                    <div className="flex gap-2 mt-2">
+                    <div className="flex gap-2 mt-2 flex-wrap">
                       {item.socket && (
                         <span className="text-[10px] font-bold bg-app-surface text-app-text-muted border border-app-border px-2 py-0.5 rounded">
                           Socket: {item.socket}
@@ -614,6 +597,16 @@ function PCBuilder({ onNavigate }) {
                       {item.length && (
                         <span className="text-[10px] font-bold bg-app-surface text-app-text-muted border border-app-border px-2 py-0.5 rounded">
                           Length: {item.length}mm
+                        </span>
+                      )}
+                      {item.wattage && (
+                        <span className="text-[10px] font-bold bg-app-surface text-app-text-muted border border-app-border px-2 py-0.5 rounded">
+                          Wattage: {item.wattage}W
+                        </span>
+                      )}
+                      {activeCategory === 'psu' && item.wattage >= Math.ceil(buildCompatibility.totalTdp * 1.2) && (
+                        <span className="text-[10px] font-bold bg-emerald-500/15 text-emerald-500 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                          {t('builder.recommended_badge', 'Recommended')}
                         </span>
                       )}
                     </div>

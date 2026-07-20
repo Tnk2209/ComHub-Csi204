@@ -1,79 +1,68 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Swal from 'sweetalert2';
 import { ArrowLeft, ShoppingCart, Trash2, Upload, CheckCircle, MapPin } from 'lucide-react';
+import { useCart } from '../../contexts/CartContext';
+import * as orderService from '../../services/orderService';
+import { compressImage } from '../../utils/imageCompressor';
 
 function CartCheckout({ onNavigate }) {
   const { t } = useTranslation();
+  const { items: cartItems, removeItem, updateQuantity, clear, totalPrice } = useCart();
   const [slipUploaded, setSlipUploaded] = useState(false);
   const [uploadedSlipName, setUploadedSlipName] = useState('');
-
-  // Mock cart data
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: 'Intel Core i9-14900K',
-      category: 'CPU',
-      price: 599.99,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=200&h=150&fit=crop'
-    },
-    {
-      id: 3,
-      name: 'NVIDIA RTX 4090',
-      category: 'GPU',
-      price: 1599.99,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=200&h=150&fit=crop'
-    },
-    {
-      id: 5,
-      name: 'Corsair Vengeance DDR5 32GB',
-      category: 'RAM',
-      price: 129.99,
-      quantity: 2,
-      image: 'https://images.unsplash.com/photo-1541348263662-e068662d82af?w=200&h=150&fit=crop'
-    }
-  ]);
+  const [slipData, setSlipData] = useState(null);
+  const [slipPreview, setSlipPreview] = useState(null);
+  const [slipSizes, setSlipSizes] = useState(null);
+  const [compressing, setCompressing] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const shippingCost = 15.0;
-
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const total = subtotal + shippingCost;
+  const total = totalPrice + shippingCost;
 
   const [shippingAddress, setShippingAddress] = useState('');
 
-  const removeItem = (itemId) => {
-    setCartItems(cartItems.filter((item) => item.id !== itemId));
-  };
-
-  const updateQuantity = (itemId, newQuantity) => {
-    if (newQuantity < 1) return;
-    setCartItems(
-      cartItems.map((item) => (item.id === itemId ? { ...item, quantity: newQuantity } : item))
-    );
-  };
-
-  const handleSlipUpload = (e) => {
+  const handleSlipUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      // In real app: compress to WebP and upload
-      setUploadedSlipName(file.name);
+    if (!file) return;
+    setUploadedSlipName(file.name);
+    setCompressing(true);
+    try {
+      const result = await compressImage(file);
+      setSlipData(result.base64);
+      setSlipPreview(result.base64);
+      setSlipSizes({ original: result.originalSize, compressed: result.compressedSize });
       setSlipUploaded(true);
-      alert(t('cart.slip_uploaded', { name: file.name }));
+    } catch {
+      Swal.fire({ icon: 'error', title: t('cart.compression_failed') || 'Compression failed' });
+    } finally {
+      setCompressing(false);
     }
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (!shippingAddress.trim()) {
-      alert(t('cart.address_required'));
+      Swal.fire({ icon: 'warning', title: t('cart.address_required') });
       return;
     }
     if (!slipUploaded) {
-      alert(t('cart.slip_required'));
+      Swal.fire({ icon: 'warning', title: t('cart.slip_required') });
       return;
     }
-    alert(t('cart.checkout_success', { total: total.toFixed(2) }));
-    onNavigate('order-tracking', { orderId: 'ORD-2026-001' });
+    setSubmitting(true);
+    try {
+      const items = cartItems.map((i) => ({ product_id: i.product_id, quantity: i.quantity }));
+      const order = await orderService.create({ items, shipping_address: shippingAddress.trim() });
+
+      await orderService.uploadSlip(order.id, slipData);
+
+      clear();
+      onNavigate('order-tracking', { orderId: order.id });
+    } catch (err) {
+      Swal.fire({ icon: 'error', title: 'Error', text: err.message || 'Failed to create order' });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -115,22 +104,22 @@ function CartCheckout({ onNavigate }) {
             ) : (
               cartItems.map((item) => (
                 <div
-                  key={item.id}
+                  key={item.product_id}
                   className="bg-app-surface rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-4 flex gap-4"
                 >
                   <img
-                    src={item.image}
+                    src={item.image_url || `https://placehold.co/200x150/EEE/333?text=${encodeURIComponent(item.name)}`}
                     alt={item.name}
                     className="w-24 h-24 object-cover rounded-lg bg-bg-secondary flex-shrink-0"
+                    onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/200x150/EEE/333?text=${encodeURIComponent(item.name)}`; }}
                   />
                   <div className="flex-grow">
                     <div className="flex items-start justify-between mb-2">
                       <div>
                         <h3 className="font-semibold text-app-text">{item.name}</h3>
-                        <p className="text-sm text-app-text-muted">{item.category}</p>
                       </div>
                       <button
-                        onClick={() => removeItem(item.id)}
+                        onClick={() => removeItem(item.product_id)}
                         className="text-red hover:text-red/80 transition-colors p-2"
                         title={t('cart.remove')}
                       >
@@ -140,7 +129,7 @@ function CartCheckout({ onNavigate }) {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3 bg-bg-secondary rounded-lg px-3 py-1.5">
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() => updateQuantity(item.product_id, item.quantity - 1)}
                           className="text-app-text hover:text-blue font-bold"
                         >
                           −
@@ -149,7 +138,7 @@ function CartCheckout({ onNavigate }) {
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateQuantity(item.product_id, item.quantity + 1)}
                           className="text-app-text hover:text-blue font-bold"
                         >
                           +
@@ -157,10 +146,10 @@ function CartCheckout({ onNavigate }) {
                       </div>
                       <div className="text-right">
                         <div className="text-lg font-bold text-blue">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ฿{(item.price * item.quantity).toLocaleString()}
                         </div>
                         <div className="text-xs text-app-text-muted">
-                          ${item.price.toFixed(2)} {t('cart.each')}
+                          ฿{item.price.toLocaleString()} {t('cart.each')}
                         </div>
                       </div>
                     </div>
@@ -193,15 +182,15 @@ function CartCheckout({ onNavigate }) {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between text-app-text-muted">
                   <span>{t('cart.subtotal')}</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>฿{totalPrice.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-app-text-muted">
                   <span>{t('cart.shipping')}</span>
-                  <span>${shippingCost.toFixed(2)}</span>
+                  <span>฿{shippingCost.toLocaleString()}</span>
                 </div>
                 <div className="border-t border-app-border pt-3 flex justify-between text-app-text font-bold text-lg">
                   <span>{t('cart.total')}</span>
-                  <span className="text-blue">${total.toFixed(2)}</span>
+                  <span className="text-blue">฿{total.toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -234,7 +223,12 @@ function CartCheckout({ onNavigate }) {
                     onChange={handleSlipUpload}
                     className="hidden"
                   />
-                  {slipUploaded ? (
+                  {compressing ? (
+                    <div className="flex items-center justify-center gap-2 text-app-text-muted">
+                      <div className="w-5 h-5 border-2 border-blue border-t-transparent rounded-full animate-spin" />
+                      <span className="text-sm font-medium">{t('cart.compressing') || 'Compressing...'}</span>
+                    </div>
+                  ) : slipUploaded ? (
                     <div className="flex items-center justify-center gap-2 text-green">
                       <CheckCircle className="w-6 h-6" />
                       <span className="text-sm font-medium">{uploadedSlipName}</span>
@@ -248,15 +242,35 @@ function CartCheckout({ onNavigate }) {
                   )}
                 </div>
               </label>
+
+              {/* Preview + Size Comparison */}
+              {slipPreview && (
+                <div className="mt-4 space-y-3">
+                  <img
+                    src={slipPreview}
+                    alt="Payment slip preview"
+                    className="w-full max-h-48 object-contain rounded-lg border border-app-border"
+                  />
+                  {slipSizes && (
+                    <div className="flex justify-between text-xs text-app-text-muted bg-bg-secondary rounded-lg px-3 py-2">
+                      <span>{t('cart.original_size') || 'Original'}: {(slipSizes.original / 1024).toFixed(1)} KB</span>
+                      <span>{t('cart.compressed_size') || 'Compressed'}: {(slipSizes.compressed / 1024).toFixed(1)} KB</span>
+                      <span className="text-green font-semibold">
+                        -{Math.round((1 - slipSizes.compressed / slipSizes.original) * 100)}%
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Checkout Button */}
             <button
               onClick={handleCheckout}
-              disabled={cartItems.length === 0}
+              disabled={cartItems.length === 0 || submitting}
               className="w-full bg-blue hover:bg-blue/90 text-white text-base font-semibold px-6 py-4 rounded-xl transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {t('cart.confirm_order')}
+              {submitting ? t('cart.processing') || 'Processing...' : t('cart.confirm_order')}
             </button>
           </div>
         </div>

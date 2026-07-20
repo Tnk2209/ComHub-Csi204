@@ -1,23 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Settings, Menu, X, ShoppingCart, Heart, Package, Home, Wrench, ShoppingBag, User } from 'lucide-react';
+import { Settings, Menu, X, ShoppingCart, Heart, Package, Home, Wrench, ShoppingBag, User, LogOut, Shield } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import LanguagePicker from './LanguagePicker';
+import { useAuth } from '../../contexts/AuthContext';
 
 function Header({ currentPage, onNavigate }) {
   const { t } = useTranslation();
+  const { user, isAuthenticated, logout } = useAuth();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const settingsRef = useRef(null);
-
-  // Mock cart count - in real app this would come from state/context
-  const cartCount = 3;
+  const profileRef = useRef(null);
 
   // Close dropdown on outside clicks
   useEffect(() => {
     function handleClickOutside(event) {
       if (settingsRef.current && !settingsRef.current.contains(event.target)) {
         setIsSettingsOpen(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -47,10 +51,10 @@ function Header({ currentPage, onNavigate }) {
       pages: ['catalog', 'product', 'wishlist', 'cart']
     },
     {
-      id: 'account',
-      icon: User,
-      label: t('nav.account'),
-      pages: ['order-tracking', 'profile']
+      id: 'orders',
+      icon: Package,
+      label: t('nav.orders'),
+      pages: ['order-tracking']
     },
   ];
 
@@ -70,7 +74,8 @@ function Header({ currentPage, onNavigate }) {
           </span>
         </div>
 
-        {/* Center: Grouped Navigation (Desktop) */}
+        {/* Center: Grouped Navigation (Desktop) — hidden for Admin */}
+        {user?.role !== 'Admin' && (
         <nav className="hidden md:flex items-center gap-1">
           {navGroups.map((group) => {
             const Icon = group.icon;
@@ -93,44 +98,12 @@ function Header({ currentPage, onNavigate }) {
             );
           })}
         </nav>
+        )}
 
         {/* Right Side: Icons & Auth */}
         <div className="flex items-center gap-3 flex-shrink-0">
 
-          {/* Action Icons (Desktop) */}
-          <div className="hidden md:flex items-center gap-2">
-            {/* Order Tracking */}
-            <button
-              onClick={() => onNavigate('order-tracking')}
-              className="p-2 rounded-lg text-text-secondary hover:text-blue hover:bg-bg-secondary transition-all"
-              title={t('nav.orders')}
-            >
-              <Package className="w-5 h-5" />
-            </button>
-
-            {/* Wishlist */}
-            <button
-              onClick={() => onNavigate('wishlist')}
-              className="p-2 rounded-lg text-text-secondary hover:text-blue hover:bg-bg-secondary transition-all"
-              title={t('nav.wishlist')}
-            >
-              <Heart className="w-5 h-5" />
-            </button>
-
-            {/* Cart with badge */}
-            <button
-              onClick={() => onNavigate('cart')}
-              className="relative p-2 rounded-lg text-text-secondary hover:text-blue hover:bg-bg-secondary transition-all"
-              title={t('nav.cart')}
-            >
-              <ShoppingCart className="w-5 h-5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-semibold w-5 h-5 rounded-full flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </button>
-          </div>
+          {/* Action Icons removed — moved into profile dropdown for Customer */}
 
           {/* Mobile Menu Toggle */}
           <button
@@ -177,14 +150,75 @@ function Header({ currentPage, onNavigate }) {
           <div className="hidden md:block h-6 w-px bg-separator-light dark:bg-separator-dark" />
 
           {/* Auth Buttons (Desktop) */}
-          <div className="hidden md:flex items-center gap-3">
-            <button
-              onClick={() => onNavigate('login')}
-              className="flex items-center gap-2 bg-blue hover:bg-blue/90 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all cursor-pointer shadow-sm hover:shadow-md"
-            >
-              <User className="w-4 h-4" />
-              {t('nav.account')}
-            </button>
+          <div className="hidden md:flex items-center gap-3" ref={profileRef}>
+            {isAuthenticated ? (
+              <div className="relative">
+                <button
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="flex items-center gap-2 text-text-primary hover:text-blue text-sm font-medium px-3 py-2 rounded-lg transition-all cursor-pointer hover:bg-bg-secondary"
+                >
+                  <div className="w-7 h-7 rounded-full bg-blue/10 flex items-center justify-center">
+                    <User className="w-4 h-4 text-blue" />
+                  </div>
+                  <span>{user.first_name || user.email}</span>
+                </button>
+
+                {isProfileOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-bg-surface rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)] py-2 z-50">
+                    {user.role === 'Admin' && (
+                      <button
+                        onClick={() => { onNavigate('admin-dashboard'); setIsProfileOpen(false); }}
+                        className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-text-secondary hover:text-blue hover:bg-bg-secondary transition-colors"
+                      >
+                        <Shield className="w-4 h-4" />
+                        Admin Panel
+                      </button>
+                    )}
+                    {user.role !== 'Admin' && (
+                      <>
+                        <button
+                          onClick={() => { onNavigate('order-tracking'); setIsProfileOpen(false); }}
+                          className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-text-secondary hover:text-blue hover:bg-bg-secondary transition-colors"
+                        >
+                          <Package className="w-4 h-4" />
+                          {t('nav.orders')}
+                        </button>
+                        <button
+                          onClick={() => { onNavigate('wishlist'); setIsProfileOpen(false); }}
+                          className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-text-secondary hover:text-blue hover:bg-bg-secondary transition-colors"
+                        >
+                          <Heart className="w-4 h-4" />
+                          {t('nav.wishlist')}
+                        </button>
+                        <button
+                          onClick={() => { onNavigate('cart'); setIsProfileOpen(false); }}
+                          className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-text-secondary hover:text-blue hover:bg-bg-secondary transition-colors"
+                        >
+                          <ShoppingCart className="w-4 h-4" />
+                          {t('nav.cart')}
+                        </button>
+                        <div className="my-1 border-t border-separator-light dark:border-separator-dark" />
+                      </>
+                    )}
+                    <button
+                      onClick={() => { logout(); setIsProfileOpen(false); onNavigate('landing'); }}
+                      className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-500/10 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={() => onNavigate('login')}
+                className="flex items-center gap-2 bg-blue hover:bg-blue/90 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all cursor-pointer shadow-sm hover:shadow-md"
+              >
+                <User className="w-4 h-4" />
+                {t('nav.account')}
+              </button>
+            )}
           </div>
         </div>
 
@@ -194,8 +228,8 @@ function Header({ currentPage, onNavigate }) {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-bg-surface border-t border-separator-light dark:border-separator-dark">
           <nav className="px-4 py-4 space-y-2">
-            {/* Grouped Navigation */}
-            {navGroups.map((group) => {
+            {/* Grouped Navigation — hidden for Admin */}
+            {user?.role !== 'Admin' && navGroups.map((group) => {
               const Icon = group.icon;
               const active = isActive(group.pages);
 
@@ -218,7 +252,8 @@ function Header({ currentPage, onNavigate }) {
               );
             })}
 
-            {/* Quick Access Section */}
+            {/* Quick Access Section — hidden for Admin */}
+            {user?.role !== 'Admin' && (
             <div className="pt-4 border-t border-separator-light dark:border-separator-dark space-y-2">
               <button
                 onClick={() => {
@@ -251,26 +286,44 @@ function Header({ currentPage, onNavigate }) {
                   <ShoppingCart className="w-5 h-5" />
                   {t('nav.cart')}
                 </div>
-                {cartCount > 0 && (
-                  <span className="bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
-                    {cartCount}
-                  </span>
-                )}
               </button>
             </div>
+            )}
 
             {/* Auth Section */}
             <div className="pt-4 border-t border-separator-light dark:border-separator-dark flex flex-col gap-2">
-              <button
-                onClick={() => {
-                  onNavigate('login');
-                  setIsMobileMenuOpen(false);
-                }}
-                className="w-full flex items-center justify-center gap-2 bg-blue hover:bg-blue/90 text-white text-sm font-semibold px-4 py-3 rounded-lg transition-all shadow-sm hover:shadow-md"
-              >
-                <User className="w-5 h-5" />
-                {t('nav.account')}
-              </button>
+              {isAuthenticated ? (
+                <>
+                  <div className="px-4 py-2 text-sm text-text-secondary">
+                    <span className="font-medium text-text-primary">{user.first_name || user.email}</span>
+                    <span className="text-xs ml-2 text-text-tertiary">({user.role})</span>
+                  </div>
+                  {user.role === 'Admin' && (
+                    <button
+                      onClick={() => { onNavigate('admin-dashboard'); setIsMobileMenuOpen(false); }}
+                      className="w-full flex items-center gap-3 text-sm font-medium text-text-secondary hover:text-blue px-4 py-3 rounded-lg hover:bg-bg-secondary transition-all"
+                    >
+                      <Shield className="w-5 h-5" />
+                      Admin Panel
+                    </button>
+                  )}
+                  <button
+                    onClick={() => { logout(); setIsMobileMenuOpen(false); onNavigate('landing'); }}
+                    className="w-full flex items-center gap-3 text-sm font-medium text-red-500 hover:bg-red-500/10 px-4 py-3 rounded-lg transition-all"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => { onNavigate('login'); setIsMobileMenuOpen(false); }}
+                  className="w-full flex items-center justify-center gap-2 bg-blue hover:bg-blue/90 text-white text-sm font-semibold px-4 py-3 rounded-lg transition-all shadow-sm hover:shadow-md"
+                >
+                  <User className="w-5 h-5" />
+                  {t('nav.account')}
+                </button>
+              )}
 
               {/* Settings */}
               <div className="pt-2 space-y-3">

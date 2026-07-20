@@ -29,7 +29,9 @@
       "tdp_title": "TDP Power Analysis",
       "tdp_desc": "Calculates cumulative thermal design power and filters reliable Power Supplies with a 20% safety headroom.",
       "tracking_title": "Order Tracking",
-      "tracking_desc": "Track your order across 5 stages: Pending Payment → Paid → Processing → Shipped → Delivered."
+      "tracking_desc": "Track your order across 5 stages: Pending Payment → Paid → Processing → Shipped → Delivered.",
+      "uat_title": "Order Tracking",
+      "uat_desc": "Track your order across 5 stages: Pending Payment → Paid → Processing → Shipped → Delivered."
     }
   },
   "builder": {
@@ -52,6 +54,10 @@
     "empty_space": "Empty",
     "select_hardware_title": "Select {{category}}",
     "select_hardware_desc": "Select the hardware item to install in your build",
+    "psu_filter_label": "Show only recommended PSUs (>= {{wattage}}W)",
+    "psu_no_recommended_title": "No recommended PSUs match your build.",
+    "psu_no_recommended_desc": "Your system needs at least {{wattage}}W (safety margin). Uncheck the filter to see all options.",
+    "recommended_badge": "Recommended",
     "categories": {
       "cpu": "CPU (Processor)",
       "motherboard": "Motherboard",
@@ -65,6 +71,8 @@
       "socket_idle": "Please select CPU and Motherboard to analyze socket compatibility",
       "power_idle": "Select components and Power Supply to verify wattage safety limits",
       "clearance_idle": "Select Graphics Card and Case to verify physical size clearance",
+      "ram_type_idle": "Select Motherboard and RAM to verify DDR generation compatibility",
+      "form_factor_idle": "Select Motherboard and Case to verify form factor fit",
       "socket_match": "Compatible: Both CPU and Motherboard use matching {{cpuSocket}} socket",
       "socket_mismatch": "Socket mismatch: CPU uses {{cpuSocket}} but Motherboard has {{mbSocket}} slot! Cannot assemble.",
       "power_overload": "Wattage limit exceeded! Components require at least ~{{totalTdp}}W but PSU only supplies {{psuWattage}}W",
@@ -72,7 +80,12 @@
       "power_match": "Power safe: Estimated cumulative TDP is ~{{totalTdp}}W from a {{psuWattage}}W PSU (only {{loadPercentage}}% load)",
       "power_need_psu": "Selected components require at least ~{{totalTdp}}W. Recommend choosing a PSU with at least {{recommendedWattage}}W capacity",
       "clearance_mismatch": "GPU length ({{gpuLength}}mm) exceeds maximum clearance limit supported by the chassis ({{caseLimit}}mm)!",
-      "clearance_match": "Clearance OK: GPU length ({{gpuLength}}mm) fits inside the case limit ({{caseLimit}}mm)"
+      "clearance_match": "Clearance OK: GPU length ({{gpuLength}}mm) fits inside the case limit ({{caseLimit}}mm)",
+      "ram_type_match": "Compatible: Motherboard and RAM both use {{ramType}}",
+      "ram_type_mismatch": "RAM type mismatch: Motherboard supports {{mbRamType}} but RAM is {{ramType}}! Incompatible.",
+      "cpu_ram_type_mismatch": "RAM Mismatch with CPU: CPU {{cpuName}} only supports {{cpuSupported}} but RAM is {{ramType}}! Incompatible.",
+      "form_factor_match": "Compatible: {{mbFormFactor}} motherboard fits in this case",
+      "form_factor_mismatch": "Form factor mismatch: {{mbFormFactor}} motherboard does not fit! Case only supports: {{caseFormFactors}}"
     }
   },
   "footer": {
@@ -137,7 +150,15 @@
     "spec_tdp": "TDP",
     "spec_maxTdp": "Max TDP",
     "spec_integrated": "Integrated Graphics",
-    "spec_technology": "Process Technology"
+    "spec_technology": "Process Technology",
+    "no_reviews": "No reviews yet",
+    "add_to_builder": "Add to PC Builder",
+    "added_to_builder": "Added to PC Builder!",
+    "go_to_builder": "Go to PC Builder",
+    "already_in_builder": "This item is already in your custom PC build",
+    "compatibility_status": "PC Builder Compatibility Checker",
+    "compatible": "Fully compatible with your selected parts!",
+    "no_conflicts": "No conflicting parts selected yet"
   },
   "cart": {
     "title": "Shopping Cart",
@@ -162,10 +183,17 @@
     "slip_uploaded": "Uploaded {{name}} successfully",
     "slip_required": "Please upload payment slip before confirming order",
     "confirm_order": "Confirm Order",
-    "checkout_success": "Order confirmed successfully! Total: ${{total}}"
+    "checkout_success": "Order confirmed successfully! Total: ${{total}}",
+    "compressing": "Compressing image...",
+    "compression_failed": "Compression failed, using original",
+    "original_size": "Original",
+    "compressed_size": "Compressed",
+    "processing": "Processing..."
   },
   "order_tracking": {
     "back_to_home": "Back to Home",
+    "back_to_list": "Back to Orders",
+    "my_orders": "My Orders",
     "order": "Order",
     "order_date": "Order Date",
     "estimated_delivery": "Estimated Delivery",
@@ -179,7 +207,10 @@
     "pending": "Pending",
     "order_items": "Order Items",
     "qty": "Qty",
-    "total": "Total"
+    "total": "Total",
+    "items_count": "{{count}} item(s)",
+    "no_orders": "No orders found",
+    "no_orders_desc": "Once you place an order, you can track its progress here."
   },
   "wishlist": {
     "title": "Wishlist",
@@ -196,7 +227,13 @@
     "added_to_cart": "Added {{name}} to cart successfully!",
     "out_of_stock_error": "Cannot add out-of-stock item to cart",
     "total_items": "Total Items",
-    "available_items": "Available"
+    "available_items": "Available",
+    "login_required": "Login Required",
+    "login_required_desc": "Please sign in to view and manage your wishlist",
+    "alert_info": "Enable stock alerts to get notified when out-of-stock items become available",
+    "alert_enabled": "Alert Enabled",
+    "alerts_enabled": "Alerts Enabled",
+    "enable_alert": "Enable Stock Alert"
   },
   "admin_products": {
     "title": "Product Management",
@@ -237,6 +274,8 @@
   "admin_accounts": {
     "title": "Account Management",
     "subtitle": "Create and manage Customer/Admin accounts",
+    "add_admin_btn": "Add Admin",
+    "add_admin_title": "Add New Admin",
     "create_account": "Create Account",
     "total_accounts": "Total Accounts",
     "customer_count": "Customers",
@@ -265,7 +304,9 @@
     "update_success": "Account updated successfully",
     "validation_required": "Please fill in all required fields",
     "validation_password": "Password is required for new accounts",
-    "validation_password_mismatch": "Passwords do not match"
+    "validation_password_mismatch": "Passwords do not match",
+    "search_btn": "Search",
+    "search_placeholder": "Search accounts..."
   },
   "admin_payment": {
     "title": "Payment Review",
@@ -287,7 +328,8 @@
     "close": "Close",
     "confirm_reject": "Are you sure you want to reject {{orderId}}? This will rollback stock reservation.",
     "approve_success": "{{orderId}} approved. Stock confirmed.",
-    "reject_success": "{{orderId}} rejected. Stock rolled back."
+    "reject_success": "{{orderId}} rejected. Stock rolled back.",
+    "reject_reason": "Reason for rejection"
   },
   "login": {
     "welcome_back": "Welcome Back",
@@ -332,5 +374,12 @@
     "validation_password_length": "Password must be at least 8 characters",
     "validation_terms": "Please agree to Terms & Conditions",
     "register_success": "Account created successfully! Please sign in."
+  },
+  "compare": {
+    "title": "Product Comparison",
+    "empty": "No products to compare. Add items from the catalog.",
+    "go_to_catalog": "Go to Catalog",
+    "clear_all": "Clear All",
+    "spec": "Specification"
   }
 }

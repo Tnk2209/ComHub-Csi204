@@ -29,7 +29,9 @@
       "tdp_title": "TDP Power Analysis",
       "tdp_desc": "คำนวณปริมาณไฟฟ้าสะสมของชิ้นส่วน และแนะพาวเวอร์ซัพพลายที่ปลอดภัยเผื่อกระแสไฟ 20%",
       "tracking_title": "ติดตามออเดอร์",
-      "tracking_desc": "ติดตามสถานะออเดอร์ 5 ขั้น: Pending Payment → Paid → Processing → Shipped → Delivered"
+      "tracking_desc": "ติดตามสถานะออเดอร์ 5 ขั้น: Pending Payment → Paid → Processing → Shipped → Delivered",
+      "uat_title": "ติดตามออเดอร์",
+      "uat_desc": "ติดตามสถานะออเดอร์ 5 ขั้น: Pending Payment → Paid → Processing → Shipped → Delivered"
     }
   },
   "builder": {
@@ -52,6 +54,10 @@
     "empty_space": "ว่าง",
     "select_hardware_title": "เลือก {{category}}",
     "select_hardware_desc": "เลือกฮาร์ดแวร์ไอทีที่ต้องการเพื่อติดตั้งลงสเปค",
+    "psu_filter_label": "แสดงเฉพาะ PSU ที่แนะนำ (>= {{wattage}}W)",
+    "psu_no_recommended_title": "ไม่มี PSU ที่แนะนำสำหรับสเปคนี้",
+    "psu_no_recommended_desc": "ระบบของคุณต้องการกำลังวัตต์อย่างน้อย {{wattage}}W (เผื่อ 20%) กรุณาติ๊กช่องกรองออกเพื่อดูตัวเลือกทั้งหมด",
+    "recommended_badge": "แนะนำสำหรับสเปคนี้",
     "categories": {
       "cpu": "CPU (หน่วยประมวลผล)",
       "motherboard": "Motherboard (เมนบอร์ด)",
@@ -65,6 +71,8 @@
       "socket_idle": "กรุณาเลือก CPU และ Motherboard เพื่อวิเคราะห์ความเข้ากันได้",
       "power_idle": "เลือกชิ้นส่วนและพาวเวอร์ซัพพลายเพื่อตรวจเช็คกระแสไฟ",
       "clearance_idle": "เลือกการ์ดจอและเคสคอมพิวเตอร์เพื่อตรวจขนาดทางกายภาพ",
+      "ram_type_idle": "เลือกเมนบอร์ดและ RAM เพื่อตรวจสอบรุ่น DDR ที่เข้ากัน",
+      "form_factor_idle": "เลือกเมนบอร์ดและเคสเพื่อตรวจสอบขนาดฟอร์มแฟกเตอร์",
       "socket_match": "เข้ากันได้: ทั้ง CPU และ เมนบอร์ด ใช้ซ็อกเก็ต {{cpuSocket}} ตรงกัน",
       "socket_mismatch": "ขั้วเชื่อมพอร์ตไม่ตรงกัน: CPU ใช้ {{cpuSocket}} แต่เมนบอร์ดใช้ {{mbSocket}}! ไม่สามารถประกอบร่วมกันได้",
       "power_overload": "กระแสไฟโหลดเกินขีดจำกัด! อุปกรณ์ต้องการไฟอย่างน้อย ~{{totalTdp}}W แต่ PSU ให้ได้แค่ {{psuWattage}}W",
@@ -72,7 +80,12 @@
       "power_match": "กำลังไฟปลอดภัย: ใช้กำลังไฟรวมประมาณ ~{{totalTdp}}W จากพาวเวอร์ซัพพลายขนาด {{psuWattage}}W (โหลดเพียง {{loadPercentage}}%)",
       "power_need_psu": "ชิ้นส่วนที่เลือกต้องการกำลังไฟอย่างน้อย ~{{totalTdp}}W แนะนำให้เลือกพาวเวอร์ซัพพลายขนาด {{recommendedWattage}}W ขึ้นไป",
       "clearance_mismatch": "การ์ดจอมีความยาว {{gpuLength}}mm ซึ่งเกินขนาดการ์ดจอสูงสุดที่เคสรองรับได้ ({{caseLimit}}mm)!",
-      "clearance_match": "ประกอบลงเคสได้แน่นอน: การ์ดจอ ({{gpuLength}}mm) สั้นกว่าขนาดสูงสุดของเคส ({{caseLimit}}mm)"
+      "clearance_match": "ประกอบลงเคสได้แน่นอน: การ์ดจอ ({{gpuLength}}mm) สั้นกว่าขนาดสูงสุดของเคส ({{caseLimit}}mm)",
+      "ram_type_match": "เข้ากันได้: เมนบอร์ดและ RAM ใช้ {{ramType}} เหมือนกัน",
+      "ram_type_mismatch": "RAM ไม่ตรงรุ่น: เมนบอร์ดรองรับ {{mbRamType}} แต่ RAM เป็น {{ramType}}! ใช้ร่วมกันไม่ได้",
+      "cpu_ram_type_mismatch": "RAM ไม่ตรงกับ CPU: CPU รุ่น {{cpuName}} รองรับเฉพาะ {{cpuSupported}} แต่ RAM ที่เลือกเป็น {{ramType}}! ใช้ร่วมกันไม่ได้",
+      "form_factor_match": "เข้ากันได้: เมนบอร์ด {{mbFormFactor}} ใส่ลงเคสนี้ได้",
+      "form_factor_mismatch": "ฟอร์มแฟกเตอร์ไม่ตรง: เมนบอร์ด {{mbFormFactor}} ใส่เคสนี้ไม่ได้! เคสรองรับเฉพาะ: {{caseFormFactors}}"
     }
   },
   "footer": {
@@ -137,7 +150,15 @@
     "spec_tdp": "TDP (วัตต์)",
     "spec_maxTdp": "TDP สูงสุด",
     "spec_integrated": "กราฟิกในตัว",
-    "spec_technology": "เทคโนโลยีผลิต"
+    "spec_technology": "เทคโนโลยีผลิต",
+    "no_reviews": "ยังไม่มีรีวิว",
+    "add_to_builder": "เพิ่มลงสเปคคอมฯ",
+    "added_to_builder": "เพิ่มลงสเปคคอมฯ เรียบร้อยแล้ว!",
+    "go_to_builder": "ไปหน้าจัดสเปคคอมฯ",
+    "already_in_builder": "ชิ้นส่วนนี้อยู่ในรายการจัดสเปคคอมฯ ของคุณแล้ว",
+    "compatibility_status": "การตรวจสอบความเข้ากันได้กับ PC Builder",
+    "compatible": "เข้ากันได้ดีกับชิ้นส่วนอื่นๆ ในสเปคของคุณ!",
+    "no_conflicts": "ยังไม่มีชิ้นส่วนอื่นที่ขัดแย้งกันในขณะนี้"
   },
   "cart": {
     "title": "ตะกร้าสินค้า",
@@ -162,10 +183,17 @@
     "slip_uploaded": "อัปโหลด {{name}} เรียบร้อย",
     "slip_required": "กรุณาอัปโหลดสลิปโอนเงินก่อนยืนยันคำสั่งซื้อ",
     "confirm_order": "ยืนยันคำสั่งซื้อ",
-    "checkout_success": "ยืนยันคำสั่งซื้อเรียบร้อย! ยอดชำระ ${{total}}"
+    "checkout_success": "ยืนยันคำสั่งซื้อเรียบร้อย! ยอดชำระ ${{total}}",
+    "compressing": "กำลังบีบอัดรูปภาพ...",
+    "compression_failed": "บีบอัดไม่สำเร็จ ใช้ไฟล์ต้นฉบับ",
+    "original_size": "ขนาดเดิม",
+    "compressed_size": "ขนาดหลังบีบอัด",
+    "processing": "กำลังดำเนินการ..."
   },
   "order_tracking": {
     "back_to_home": "กลับสู่หน้าหลัก",
+    "back_to_list": "กลับไปรายการ",
+    "my_orders": "คำสั่งซื้อของฉัน",
     "order": "คำสั่งซื้อ",
     "order_date": "วันที่สั่งซื้อ",
     "estimated_delivery": "กำหนดส่งโดยประมาณ",
@@ -179,7 +207,10 @@
     "pending": "รอดำเนินการ",
     "order_items": "รายการสินค้าในออเดอร์",
     "qty": "จำนวน",
-    "total": "ยอดรวม"
+    "total": "ยอดรวม",
+    "items_count": "{{count}} รายการ",
+    "no_orders": "ไม่พบคำสั่งซื้อ",
+    "no_orders_desc": "เมื่อคุณสั่งซื้อสินค้าแล้ว สามารถติดตามสถานะได้ที่นี่"
   },
   "wishlist": {
     "title": "รายการโปรด",
@@ -196,7 +227,13 @@
     "added_to_cart": "เพิ่ม {{name}} ลงตะกร้าเรียบร้อย!",
     "out_of_stock_error": "ไม่สามารถเพิ่มสินค้าที่หมดสต็อกลงตะกร้าได้",
     "total_items": "รายการทั้งหมด",
-    "available_items": "พร้อมจำหน่าย"
+    "available_items": "พร้อมจำหน่าย",
+    "login_required": "กรุณาเข้าสู่ระบบ",
+    "login_required_desc": "เข้าสู่ระบบเพื่อดูและจัดการรายการโปรดของคุณ",
+    "alert_info": "เปิดแจ้งเตือนสต็อกเพื่อรับการแจ้งเตือนเมื่อสินค้าที่หมดกลับมาพร้อมจำหน่าย",
+    "alert_enabled": "เปิดแจ้งเตือนแล้ว",
+    "alerts_enabled": "แจ้งเตือนที่เปิด",
+    "enable_alert": "เปิดแจ้งเตือนสต็อก"
   },
   "admin_products": {
     "title": "จัดการสินค้า",
@@ -237,6 +274,8 @@
   "admin_accounts": {
     "title": "จัดการบัญชีผู้ใช้",
     "subtitle": "สร้างและจัดการบัญชี Customer/Admin",
+    "add_admin_btn": "เพิ่มแอดมิน",
+    "add_admin_title": "เพิ่มผู้ดูแลระบบ (Admin)",
     "create_account": "สร้างบัญชี",
     "total_accounts": "บัญชีทั้งหมด",
     "customer_count": "ลูกค้า",
@@ -265,7 +304,9 @@
     "update_success": "อัพเดทบัญชีเรียบร้อยแล้ว",
     "validation_required": "กรุณากรอกข้อมูลที่จำเป็นทั้งหมด",
     "validation_password": "ต้องระบุรหัสผ่านสำหรับบัญชีใหม่",
-    "validation_password_mismatch": "รหัสผ่านไม่ตรงกัน"
+    "validation_password_mismatch": "รหัสผ่านไม่ตรงกัน",
+    "search_btn": "ค้นหา",
+    "search_placeholder": "ค้นหาบัญชี..."
   },
   "admin_payment": {
     "title": "ตรวจสอบการชำระเงิน",
@@ -287,7 +328,8 @@
     "close": "ปิด",
     "confirm_reject": "คุณแน่ใจหรือไม่ว่าต้องการปฏิเสธ {{orderId}}? จะคืนสต็อกที่จองไว้",
     "approve_success": "อนุมัติ {{orderId}} เรียบร้อย ยืนยันสต็อกแล้ว",
-    "reject_success": "ปฏิเสธ {{orderId}} เรียบร้อย คืนสต็อกแล้ว"
+    "reject_success": "ปฏิเสธ {{orderId}} เรียบร้อย คืนสต็อกแล้ว",
+    "reject_reason": "เหตุผลที่ปฏิเสธ"
   },
   "login": {
     "welcome_back": "ยินดีต้อนรับกลับมา",
@@ -332,5 +374,12 @@
     "validation_password_length": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
     "validation_terms": "กรุณายอมรับข้อกำหนดและเงื่อนไข",
     "register_success": "สร้างบัญชีสำเร็จ! กรุณาเข้าสู่ระบบ"
+  },
+  "compare": {
+    "title": "เปรียบเทียบสินค้า",
+    "empty": "ไม่มีสินค้าที่จะเปรียบเทียบ เพิ่มรายการจากแค็ตตาล็อก",
+    "go_to_catalog": "ไปที่แค็ตตาล็อก",
+    "clear_all": "ล้างทั้งหมด",
+    "spec": "สเปค"
   }
 }

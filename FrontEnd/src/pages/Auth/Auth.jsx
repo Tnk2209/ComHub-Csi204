@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Swal from 'sweetalert2';
 import { Eye, EyeOff, User, Mail, Lock } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
 function Auth({ onNavigate }) {
   const { t } = useTranslation();
-  const [mode, setMode] = useState('login'); // 'login' or 'register'
+  const { login, register } = useAuth();
+  const [mode, setMode] = useState('login');
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -15,48 +18,64 @@ function Auth({ onNavigate }) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const isLogin = mode === 'login';
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
 
     if (isLogin) {
-      // Login validation
       if (!formData.email || !formData.password) {
-        alert(t('login.validation_required'));
+        setError(t('login.validation_required'));
         return;
       }
 
-      console.log('Login attempt:', { email: formData.email, password: formData.password, rememberMe });
-      alert(t('login.login_success'));
-      onNavigate('landing');
+      setSubmitting(true);
+      try {
+        const loggedInUser = await login({ email: formData.email, password: formData.password });
+        onNavigate(loggedInUser.role === 'Admin' ? 'admin-dashboard' : 'landing');
+      } catch (err) {
+        setError(err.body?.message || t('login.login_failed', 'Login failed'));
+      } finally {
+        setSubmitting(false);
+      }
     } else {
-      // Register validation
       if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword) {
-        alert(t('register.validation_required'));
+        setError(t('register.validation_required'));
         return;
       }
 
       if (formData.password !== formData.confirmPassword) {
-        alert(t('register.validation_password_mismatch'));
+        setError(t('register.validation_password_mismatch'));
         return;
       }
 
       if (formData.password.length < 8) {
-        alert(t('register.validation_password_length'));
+        setError(t('register.validation_password_length'));
         return;
       }
 
       if (!agreeToTerms) {
-        alert(t('register.validation_terms'));
+        setError(t('register.validation_terms'));
         return;
       }
 
-      console.log('Register attempt:', formData);
-      alert(t('register.register_success'));
-      setMode('login');
-      setFormData({ ...formData, password: '', confirmPassword: '' });
+      const nameParts = formData.fullName.trim().split(/\s+/);
+      const first_name = nameParts[0];
+      const last_name = nameParts.slice(1).join(' ') || '-';
+
+      setSubmitting(true);
+      try {
+        await register({ email: formData.email, password: formData.password, first_name, last_name });
+        onNavigate('landing');
+      } catch (err) {
+        setError(err.body?.message || t('register.register_failed', 'Registration failed'));
+      } finally {
+        setSubmitting(false);
+      }
     }
   };
 
@@ -89,6 +108,13 @@ function Auth({ onNavigate }) {
         {/* Auth Card */}
         <div className="bg-bg-surface rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)] p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
+
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm px-4 py-3 rounded-lg">
+                {error}
+              </div>
+            )}
 
             {/* Full Name Field (Register only) */}
             {!isLogin && (
@@ -199,7 +225,7 @@ function Auth({ onNavigate }) {
                 </label>
                 <button
                   type="button"
-                  onClick={() => alert(t('login.forgot_password_info'))}
+                  onClick={() => Swal.fire({ icon: 'info', title: t('login.forgot_password_info') })}
                   className="text-sm text-blue hover:text-blue/80 font-medium transition-colors"
                 >
                   {t('login.forgot_password')}
@@ -223,7 +249,7 @@ function Auth({ onNavigate }) {
                       type="button"
                       onClick={(e) => {
                         e.preventDefault();
-                        alert(t('register.terms_info'));
+                        Swal.fire({ icon: 'info', title: t('register.terms_info') });
                       }}
                       className="text-blue hover:text-blue/80 font-medium"
                     >
@@ -237,9 +263,12 @@ function Auth({ onNavigate }) {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-blue hover:bg-blue/90 text-white font-semibold py-3 rounded-lg transition-all shadow-[0_1px_3px_rgba(0,122,255,0.3)] hover:shadow-[0_2px_6px_rgba(0,122,255,0.4)]"
+              disabled={submitting}
+              className="w-full bg-blue hover:bg-blue/90 text-white font-semibold py-3 rounded-lg transition-all shadow-[0_1px_3px_rgba(0,122,255,0.3)] hover:shadow-[0_2px_6px_rgba(0,122,255,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLogin ? t('login.sign_in') : t('register.create_account_button')}
+              {submitting
+                ? '...'
+                : isLogin ? t('login.sign_in') : t('register.create_account_button')}
             </button>
           </form>
 

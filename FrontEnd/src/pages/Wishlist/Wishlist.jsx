@@ -1,96 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Heart, Bell, Trash2, ShoppingCart } from 'lucide-react';
+import { Heart, Trash2, ShoppingCart, LogIn } from 'lucide-react';
+import * as wishlistService from '../../services/wishlistService';
+import { useCart } from '../../contexts/CartContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 function Wishlist({ onNavigate }) {
   const { t } = useTranslation();
+  const { addItem } = useCart();
+  const { isAuthenticated } = useAuth();
+  const [wishlistItems, setWishlistItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock wishlist data
-  const [wishlistItems, setWishlistItems] = useState([
-    {
-      id: 1,
-      name: 'Intel Core i9-14900K',
-      category: 'CPU',
-      price: 599.99,
-      stock: 12,
-      stockStatus: 'in_stock',
-      image: 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=400&h=300&fit=crop',
-      alertEnabled: true
-    },
-    {
-      id: 3,
-      name: 'NVIDIA RTX 4090',
-      category: 'GPU',
-      price: 1599.99,
-      stock: 3,
-      stockStatus: 'low_stock',
-      image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=400&h=300&fit=crop',
-      alertEnabled: false
-    },
-    {
-      id: 9,
-      name: 'AMD Ryzen 9 7900X',
-      category: 'CPU',
-      price: 449.99,
-      stock: 0,
-      stockStatus: 'out_of_stock',
-      image: 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=400&h=300&fit=crop',
-      alertEnabled: true
-    },
-    {
-      id: 10,
-      name: 'ASUS ROG STRIX X670E',
-      category: 'Motherboard',
-      price: 499.99,
-      stock: 8,
-      stockStatus: 'in_stock',
-      image: 'https://images.unsplash.com/photo-1562976540-1502c2145186?w=400&h=300&fit=crop',
-      alertEnabled: false
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setLoading(false);
+      return;
     }
-  ]);
+    wishlistService.list()
+      .then((data) => setWishlistItems(data))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [isAuthenticated]);
 
-  const removeFromWishlist = (itemId) => {
-    setWishlistItems(wishlistItems.filter((item) => item.id !== itemId));
+  const removeFromWishlist = async (productId) => {
+    try {
+      await wishlistService.remove(productId);
+      setWishlistItems(wishlistItems.filter((item) => item.product_id !== productId));
+    } catch { /* ignore */ }
   };
 
-  const toggleStockAlert = (itemId) => {
-    setWishlistItems(
-      wishlistItems.map((item) =>
-        item.id === itemId ? { ...item, alertEnabled: !item.alertEnabled } : item
-      )
-    );
-  };
 
-  const addToCart = (itemId) => {
-    const item = wishlistItems.find((i) => i.id === itemId);
-    if (item.stock > 0) {
-      alert(t('wishlist.added_to_cart', { name: item.name }));
-    } else {
-      alert(t('wishlist.out_of_stock_error'));
+
+  const addToCart = (item) => {
+    if (item.product_stock > 0) {
+      addItem({ id: item.product_id, name: item.product_name, price: Number(item.product_price), image_url: item.product_image_url });
     }
   };
 
-  const getStockBadge = (stockStatus, stock) => {
-    if (stockStatus === 'out_of_stock') {
+  const getStockBadge = (stock) => {
+    if (stock === 0) {
       return (
         <span className="inline-flex items-center gap-1 bg-red/10 text-red text-xs font-semibold px-3 py-1 rounded-full">
           {t('wishlist.out_of_stock')}
         </span>
       );
-    } else if (stockStatus === 'low_stock') {
+    } else if (stock <= 5) {
       return (
         <span className="inline-flex items-center gap-1 bg-orange/10 text-orange text-xs font-semibold px-3 py-1 rounded-full">
           {t('wishlist.low_stock')} ({stock} {t('wishlist.left')})
         </span>
       );
-    } else {
-      return (
-        <span className="inline-flex items-center gap-1 bg-green/10 text-green text-xs font-semibold px-3 py-1 rounded-full">
-          {t('wishlist.in_stock')} ({stock})
-        </span>
-      );
     }
+    return (
+      <span className="inline-flex items-center gap-1 bg-green/10 text-green text-xs font-semibold px-3 py-1 rounded-full">
+        {t('wishlist.in_stock')} ({stock})
+      </span>
+    );
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-app-bg flex items-center justify-center">
+        <p className="text-app-text-muted">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-app-bg flex items-center justify-center">
+        <div className="bg-app-surface rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-12 text-center max-w-md">
+          <LogIn className="w-16 h-16 text-app-text-muted mx-auto mb-4" />
+          <p className="text-app-text text-lg font-semibold mb-2">{t('wishlist.login_required')}</p>
+          <p className="text-app-text-muted text-sm mb-6">{t('wishlist.login_required_desc')}</p>
+          <button
+            onClick={() => onNavigate('login')}
+            className="bg-blue hover:bg-blue/90 text-white text-sm font-semibold px-6 py-3 rounded-lg transition-all"
+          >
+            {t('nav.account')}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-app-bg pb-12">
@@ -104,15 +97,7 @@ function Wishlist({ onNavigate }) {
           </span>
         </div>
 
-        {/* Info Card */}
-        <div className="bg-blue/5 border-l-4 border-blue rounded-xl p-4 mb-8">
-          <div className="flex items-start gap-3">
-            <Bell className="w-5 h-5 text-blue flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm text-app-text leading-relaxed">{t('wishlist.alert_info')}</p>
-            </div>
-          </div>
-        </div>
+
 
         {/* Wishlist Items */}
         {wishlistItems.length === 0 ? (
@@ -131,25 +116,18 @@ function Wishlist({ onNavigate }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {wishlistItems.map((item) => (
               <div
-                key={item.id}
+                key={item.product_id}
                 className="bg-app-surface rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-all overflow-hidden"
               >
                 {/* Product Image */}
-                <div
-                  className="relative h-48 bg-bg-secondary cursor-pointer group"
-                  onClick={() => onNavigate('product-detail', item.id)}
-                >
+                <div className="relative h-48 bg-bg-secondary cursor-pointer group" onClick={() => onNavigate('product-detail', item.product_id)}>
                   <img
-                    src={item.image}
-                    alt={item.name}
+                    src={item.product_image_url || 'https://via.placeholder.com/400x300'}
+                    alt={item.product_name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  {/* Remove Button */}
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeFromWishlist(item.id);
-                    }}
+                    onClick={(e) => { e.stopPropagation(); removeFromWishlist(item.product_id); }}
                     className="absolute top-2 right-2 bg-app-surface/90 backdrop-blur-sm p-2 rounded-full text-red hover:bg-app-surface transition-all shadow-sm"
                     title={t('wishlist.remove')}
                   >
@@ -159,53 +137,31 @@ function Wishlist({ onNavigate }) {
 
                 {/* Product Info */}
                 <div className="p-4">
-                  <div className="text-xs text-app-text-muted uppercase tracking-wide mb-1">
-                    {item.category}
-                  </div>
+                  <div className="text-xs text-app-text-muted uppercase tracking-wide mb-1">{item.product_category}</div>
                   <h3
                     className="text-base font-semibold text-app-text mb-3 line-clamp-2 cursor-pointer hover:text-blue transition-colors"
-                    onClick={() => onNavigate('product-detail', item.id)}
+                    onClick={() => onNavigate('product-detail', item.product_id)}
                   >
-                    {item.name}
+                    {item.product_name}
                   </h3>
 
-                  {/* Stock Status Badge */}
-                  <div className="mb-3">{getStockBadge(item.stockStatus, item.stock)}</div>
-
-                  {/* Price */}
-                  <div className="text-2xl font-bold text-blue mb-4">${item.price}</div>
+                  <div className="mb-3">{getStockBadge(item.product_stock)}</div>
+                  <div className="text-2xl font-bold text-blue mb-4">฿{Number(item.product_price).toLocaleString()}</div>
 
                   {/* Actions */}
                   <div className="space-y-2">
                     <button
-                      onClick={() => addToCart(item.id)}
-                      disabled={item.stock === 0}
+                      onClick={() => addToCart(item)}
+                      disabled={item.product_stock === 0}
                       className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-                        item.stock > 0
+                        item.product_stock > 0
                           ? 'bg-blue hover:bg-blue/90 text-white'
                           : 'bg-bg-secondary text-app-text-muted cursor-not-allowed'
                       }`}
                     >
                       <ShoppingCart className="w-4 h-4" />
-                      {item.stock > 0 ? t('wishlist.add_to_cart') : t('wishlist.out_of_stock')}
+                      {item.product_stock > 0 ? t('wishlist.add_to_cart') : t('wishlist.out_of_stock')}
                     </button>
-
-                    {/* Stock Alert Toggle */}
-                    {item.stock <= 5 && (
-                      <button
-                        onClick={() => toggleStockAlert(item.id)}
-                        className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                          item.alertEnabled
-                            ? 'bg-orange/10 text-orange border-2 border-orange'
-                            : 'bg-bg-secondary text-app-text hover:bg-bg-tertiary border-2 border-transparent'
-                        }`}
-                      >
-                        <Bell className="w-4 h-4" />
-                        {item.alertEnabled
-                          ? t('wishlist.alert_enabled')
-                          : t('wishlist.enable_alert')}
-                      </button>
-                    )}
                   </div>
                 </div>
               </div>
@@ -216,22 +172,16 @@ function Wishlist({ onNavigate }) {
         {/* Summary Card */}
         {wishlistItems.length > 0 && (
           <div className="mt-8 bg-app-surface rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
               <div>
                 <div className="text-2xl font-bold text-blue">{wishlistItems.length}</div>
                 <div className="text-sm text-app-text-muted">{t('wishlist.total_items')}</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-green">
-                  {wishlistItems.filter((i) => i.stock > 0).length}
+                  {wishlistItems.filter((i) => i.product_stock > 0).length}
                 </div>
                 <div className="text-sm text-app-text-muted">{t('wishlist.available_items')}</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-orange">
-                  {wishlistItems.filter((i) => i.alertEnabled).length}
-                </div>
-                <div className="text-sm text-app-text-muted">{t('wishlist.alerts_enabled')}</div>
               </div>
             </div>
           </div>

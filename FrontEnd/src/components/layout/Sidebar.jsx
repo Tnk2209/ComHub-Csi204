@@ -1,8 +1,10 @@
 import React from 'react';
 import {
+  LayoutDashboard,
   Database,
   Users,
   CreditCard,
+  ShoppingBag,
   LogOut,
   Home
 } from 'lucide-react';
@@ -12,9 +14,11 @@ function Sidebar({ role, activeMenu, onSelectMenu, onLogout }) {
     switch (role) {
       case 'Admin':
         return [
+          { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard },
           { id: 'products', name: 'Products CRUD', icon: Database },
           { id: 'accounts', name: 'Account Controls', icon: Users },
           { id: 'payments', name: 'Payment Review', icon: CreditCard },
+          { id: 'orders', name: 'Order Management', icon: ShoppingBag },
         ];
       default:
         return [];

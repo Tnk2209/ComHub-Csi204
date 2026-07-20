@@ -7,10 +7,10 @@
 > **📝 หมายเหตุ MVP Scope:** ตัด Issue 013 (Staff Assembly + Burn-in), 016 (Gallery), 017 (Manager Templates) ออกตาม `project-scope.md` และปรับ Issue 012, 015 ให้ตัด Coupon และ Stock Alert ตามลำดับ เพิ่ม Issue 022 (Admin Dashboard) และ 023 (Admin Account Management A-04)
 
 ## 📊 สถานะการดำเนินงานภาพรวม (Overall Status Dashboard)
-- **ทั้งหมด (Total Issues):** 20 (MVP)
-- **ยังไม่ได้เริ่ม (Todo):** 14
+- **ทั้งหมด (Total Issues):** 28 (MVP)
+- **ยังไม่ได้เริ่ม (Todo):** 15
 - **กำลังทำ (In Progress):** 1
-- **เสร็จสิ้น (Done):** 5
+- **เสร็จสิ้น (Done):** 12
 
 ---
 
@@ -38,3 +38,11 @@
 | **021** | **4. Development** | [UI Theme (DarkMode/LightMode) & i18n](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-021-ui-theme-i18n.md) | `[ ] Todo` | - | - | นายหาญณรงค์ |
 | **022** | **4. Development** | Admin Payment Review + Order Management (A-02 / A-03) | `[ ] Todo` | - | - | นายหาญณรงค์ |
 | **023** | **4. Development** | Admin Account & Role Management + Dashboard (A-04 / A-05) | `[ ] Todo` | - | - | นายธนกร |
+| **026** | **4. Development** | [Specifications Keys Mismatch Alignment](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-026-spec-keys-alignment.md) | `[x] Done` | 2026-07-21 | 2026-07-21 | นายหาญณรงค์ |
+| **027** | **4. Development** | [CPU RAM Type Compatibility Check Logic](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-027-cpu-ram-compatibility.md) | `[x] Done` | 2026-07-21 | 2026-07-21 | นายธนกร |
+| **028** | **4. Development** | [PC Builder PSU Filtering & Recommendation](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-028-psu-recommendation-filter.md) | `[x] Done` | 2026-07-21 | 2026-07-21 | นายธนกร |
+| **029** | **4. Development** | [Order Status Paid Step in Timeline](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-029-order-status-paid-timeline.md) | `[x] Done` | 2026-07-21 | 2026-07-21 | นายธนกร |
+| **030** | **4. Development** | [Google OAuth Authentication](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-030-google-oauth-auth.md) | `[ ] Todo` | - | - | นายหาญณรงค์ |
+| **031** | **4. Development** | [Admin Add Account Form/Modal](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-031-admin-add-user-modal.md) | `[x] Done` | 2026-07-21 | 2026-07-21 | นายธนกร |
+| **032** | **4. Development** | [Wishlist Stock Alert Clean-up](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-032-wishlist-stock-alert-cleanup.md) | `[x] Done` | 2026-07-21 | 2026-07-21 | นายธนกร |
+| **033** | **4. Development** | [Product Detail PC Builder & Spec Enhancements](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-033-product-detail-enhancements.md) | `[x] Done` | 2026-07-21 | 2026-07-21 | นายธนกร |

@@ -1,120 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import Swal from 'sweetalert2';
 import { Search, Heart, ShoppingCart, BarChart3 } from 'lucide-react';
+import * as productService from '../../services/productService.js';
+import * as wishlistService from '../../services/wishlistService.js';
+import { useCompare } from '../../contexts/CompareContext';
+import { useCart } from '../../contexts/CartContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 function Catalog({ onNavigate }) {
   const { t } = useTranslation();
+  const { addItem } = useCart();
+  const { isAuthenticated } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [compareList, setCompareList] = useState([]);
+  const { compareItems, addToCompare, removeFromCompare } = useCompare();
   const [wishlist, setWishlist] = useState([]);
-
-  // Mock product data
-  const mockProducts = [
-    {
-      id: 1,
-      name: 'Intel Core i9-14900K',
-      category: 'cpu',
-      price: 599.99,
-      image: 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=400&h=300&fit=crop',
-      stock: 12,
-      specs: { socket: 'LGA1700', cores: 24, tdp: 125 }
-    },
-    {
-      id: 2,
-      name: 'AMD Ryzen 9 7950X',
-      category: 'cpu',
-      price: 549.99,
-      image: 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=400&h=300&fit=crop',
-      stock: 8,
-      specs: { socket: 'AM5', cores: 16, tdp: 170 }
-    },
-    {
-      id: 3,
-      name: 'NVIDIA RTX 4090',
-      category: 'gpu',
-      price: 1599.99,
-      image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=400&h=300&fit=crop',
-      stock: 5,
-      specs: { vram: '24GB', tdp: 450, length: 336 }
-    },
-    {
-      id: 4,
-      name: 'ASUS ROG STRIX Z790-E',
-      category: 'motherboard',
-      price: 459.99,
-      image: 'https://images.unsplash.com/photo-1562976540-1502c2145186?w=400&h=300&fit=crop',
-      stock: 15,
-      specs: { socket: 'LGA1700', formFactor: 'ATX', ram: 'DDR5' }
-    },
-    {
-      id: 5,
-      name: 'Corsair Vengeance DDR5 32GB',
-      category: 'ram',
-      price: 129.99,
-      image: 'https://images.unsplash.com/photo-1541348263662-e068662d82af?w=400&h=300&fit=crop',
-      stock: 25,
-      specs: { capacity: '32GB', speed: '6000MHz', type: 'DDR5' }
-    },
-    {
-      id: 6,
-      name: 'Samsung 990 Pro 2TB NVMe',
-      category: 'storage',
-      price: 199.99,
-      image: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=400&h=300&fit=crop',
-      stock: 30,
-      specs: { capacity: '2TB', interface: 'PCIe 4.0', speed: '7450MB/s' }
-    },
-    {
-      id: 7,
-      name: 'NZXT H7 Flow',
-      category: 'case',
-      price: 139.99,
-      image: 'https://images.unsplash.com/photo-1587202372583-49330a15584d?w=400&h=300&fit=crop',
-      stock: 10,
-      specs: { formFactor: 'Mid Tower', gpuClearance: 400, panelType: 'Tempered Glass' }
-    },
-    {
-      id: 8,
-      name: 'Corsair RM1000x 1000W',
-      category: 'psu',
-      price: 189.99,
-      image: 'https://images.unsplash.com/photo-1591238372408-221238c0c98e?w=400&h=300&fit=crop',
-      stock: 18,
-      specs: { wattage: 1000, efficiency: '80+ Gold', modular: 'Fully Modular' }
-    }
-  ];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const categories = [
     { id: 'all', label: t('catalog.categories.all') },
-    { id: 'cpu', label: t('catalog.categories.cpu') },
-    { id: 'gpu', label: t('catalog.categories.gpu') },
-    { id: 'motherboard', label: t('catalog.categories.motherboard') },
-    { id: 'ram', label: t('catalog.categories.ram') },
-    { id: 'storage', label: t('catalog.categories.storage') },
-    { id: 'case', label: t('catalog.categories.case') },
-    { id: 'psu', label: t('catalog.categories.psu') }
+    { id: 'CPU', label: t('catalog.categories.cpu') },
+    { id: 'GPU', label: t('catalog.categories.gpu') },
+    { id: 'Mainboard', label: t('catalog.categories.motherboard') },
+    { id: 'RAM', label: t('catalog.categories.ram') },
+    { id: 'SSD', label: t('catalog.categories.storage') },
+    { id: 'Case', label: t('catalog.categories.case') },
+    { id: 'PSU', label: t('catalog.categories.psu') }
   ];
 
-  const filteredProducts = mockProducts.filter((product) => {
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  useEffect(() => {
+    setLoading(true);
+    const params = {};
+    if (selectedCategory !== 'all') params.category = selectedCategory;
+    if (searchQuery.trim()) params.q = searchQuery.trim();
 
-  const toggleWishlist = (productId) => {
-    setWishlist((prev) =>
-      prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
-    );
+    productService.list(params)
+      .then(data => setProducts(data))
+      .catch(() => setProducts([]))
+      .finally(() => setLoading(false));
+  }, [selectedCategory, searchQuery]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    wishlistService.list()
+      .then((items) => setWishlist(items.map((i) => i.product_id)))
+      .catch(() => {});
+  }, [isAuthenticated]);
+
+  const toggleWishlist = async (productId) => {
+    if (wishlist.includes(productId)) {
+      setWishlist((prev) => prev.filter((id) => id !== productId));
+      try { await wishlistService.remove(productId); } catch {}
+    } else {
+      setWishlist((prev) => [...prev, productId]);
+      try { await wishlistService.add(productId); } catch {}
+    }
   };
 
-  const toggleCompare = (productId) => {
-    if (compareList.includes(productId)) {
-      setCompareList((prev) => prev.filter((id) => id !== productId));
-    } else if (compareList.length < 3) {
-      setCompareList((prev) => [...prev, productId]);
+  const compareList = compareItems.map((p) => p.id);
+
+  const toggleCompare = (product) => {
+    if (compareList.includes(product.id)) {
+      removeFromCompare(product.id);
     } else {
-      alert(t('catalog.compare_limit'));
+      addToCompare({ id: product.id, name: product.name, category: product.category });
     }
   };
 
@@ -176,7 +127,7 @@ function Catalog({ onNavigate }) {
               </span>
             </div>
             <button
-              onClick={() => alert(t('catalog.compare_feature_coming_soon'))}
+              onClick={() => onNavigate('compare')}
               className="bg-blue hover:bg-blue/90 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all"
             >
               {t('catalog.compare_btn')}
@@ -185,8 +136,13 @@ function Catalog({ onNavigate }) {
         )}
 
         {/* Product Grid */}
+        {loading ? (
+          <div className="text-center py-16">
+            <p className="text-app-text-muted text-lg">Loading...</p>
+          </div>
+        ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
+          {products.map((product) => (
             <div
               key={product.id}
               className="bg-app-surface rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-all overflow-hidden group"
@@ -197,11 +153,12 @@ function Catalog({ onNavigate }) {
                 onClick={() => onNavigate('product-detail', product.id)}
               >
                 <img
-                  src={product.image}
+                  src={product.image_url || `https://placehold.co/400x300?text=${encodeURIComponent(product.name)}`}
                   alt={product.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x300/EEE/333?text=${encodeURIComponent(product.name)}`; }}
                 />
-                {product.stock <= 5 && (
+                {product.stock_quantity <= 5 && (
                   <div className="absolute top-2 right-2 bg-orange text-white text-xs font-semibold px-2 py-1 rounded-full">
                     {t('catalog.low_stock')}
                   </div>
@@ -217,16 +174,19 @@ function Catalog({ onNavigate }) {
                   {product.name}
                 </h3>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-2xl font-bold text-blue">${product.price}</span>
+                  <span className="text-2xl font-bold text-blue">${Number(product.price).toFixed(2)}</span>
                   <span className="text-sm text-app-text-muted">
-                    {t('catalog.in_stock')}: {product.stock}
+                    {t('catalog.in_stock')}: {product.stock_quantity}
                   </span>
                 </div>
 
                 {/* Action Buttons */}
                 <div className="flex gap-2">
                   <button
-                    onClick={() => alert(t('catalog.added_to_cart'))}
+                    onClick={() => {
+                      addItem({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url });
+                      Swal.fire({ icon: 'success', title: t('catalog.added_to_cart'), timer: 1500, showConfirmButton: false });
+                    }}
                     className="flex-1 bg-blue hover:bg-blue/90 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-all flex items-center justify-center gap-2"
                   >
                     <ShoppingCart className="w-4 h-4" />
@@ -249,7 +209,7 @@ function Catalog({ onNavigate }) {
                   <input
                     type="checkbox"
                     checked={compareList.includes(product.id)}
-                    onChange={() => toggleCompare(product.id)}
+                    onChange={() => toggleCompare(product)}
                     className="w-4 h-4 text-blue rounded focus:ring-blue"
                   />
                   <span className="text-xs text-app-text-muted">{t('catalog.add_to_compare')}</span>
@@ -258,9 +218,10 @@ function Catalog({ onNavigate }) {
             </div>
           ))}
         </div>
+        )}
 
         {/* Empty State */}
-        {filteredProducts.length === 0 && (
+        {!loading && products.length === 0 && (
           <div className="text-center py-16">
             <p className="text-app-text-muted text-lg">{t('catalog.no_products_found')}</p>
           </div>

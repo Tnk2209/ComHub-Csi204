@@ -1,83 +1,82 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import Swal from 'sweetalert2';
 import { Package, Plus, Edit2, Trash2, Power, PowerOff, Save, X, Search } from 'lucide-react';
+import * as adminService from '../../services/adminService';
 
 function AdminProducts({ onNavigate }) {
   const { t } = useTranslation();
 
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: 'Intel Core i9-14900K',
-      category: 'CPU',
-      price: 599.99,
-      stock: 45,
-      isActive: true,
-      specifications: {
-        cores: 24,
-        threads: 32,
-        baseClock: '3.0 GHz',
-        boostClock: '6.0 GHz',
-        socket: 'LGA1700'
-      }
-    },
-    {
-      id: 2,
-      name: 'NVIDIA RTX 4090',
-      category: 'GPU',
-      price: 1599.99,
-      stock: 8,
-      isActive: true,
-      specifications: {
-        memory: '24GB GDDR6X',
-        coreClock: '2.23 GHz',
-        boostClock: '2.52 GHz',
-        tdp: '450W'
-      }
-    },
-    {
-      id: 3,
-      name: 'AMD RX 6700 XT',
-      category: 'GPU',
-      price: 399.99,
-      stock: 0,
-      isActive: false,
-      specifications: {
-        memory: '12GB GDDR6',
-        coreClock: '2.42 GHz',
-        boostClock: '2.58 GHz',
-        tdp: '230W'
-      }
-    },
-    {
-      id: 4,
-      name: 'Corsair Vengeance DDR5 64GB',
-      category: 'RAM',
-      price: 249.99,
-      stock: 52,
-      isActive: true,
-      specifications: {
-        capacity: '64GB',
-        speed: '5600 MHz',
-        type: 'DDR5',
-        modules: '2x32GB'
-      }
-    }
-  ]);
-
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [isCreating, setIsCreating] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     category: 'CPU',
     price: '',
-    stock: '',
+    stock_quantity: '',
     specifications: {}
   });
 
-  const categories = ['CPU', 'GPU', 'RAM', 'Motherboard', 'Storage', 'Case', 'PSU'];
+  const CATEGORY_SPECS = {
+    CPU: [
+      { key: 'socket', label: 'Socket', placeholder: 'LGA1700' },
+      { key: 'cores', label: 'Cores', placeholder: '24' },
+      { key: 'threads', label: 'Threads', placeholder: '32' },
+      { key: 'base_clock_ghz', label: 'Base Clock (GHz)', placeholder: '3.2' },
+      { key: 'boost_clock_ghz', label: 'Boost Clock (GHz)', placeholder: '5.8' },
+      { key: 'tdp', label: 'TDP (W)', placeholder: '125' },
+    ],
+    GPU: [
+      { key: 'vram_gb', label: 'VRAM (GB)', placeholder: '16' },
+      { key: 'boost_clock_mhz', label: 'Boost Clock (MHz)', placeholder: '2520' },
+      { key: 'tdp', label: 'TDP (W)', placeholder: '320' },
+      { key: 'gpu_length_mm', label: 'Length (mm)', placeholder: '336' },
+    ],
+    Mainboard: [
+      { key: 'socket', label: 'Socket', placeholder: 'LGA1700' },
+      { key: 'supported_ram', label: 'Supported RAM (e.g. DDR5)', placeholder: 'DDR5' },
+      { key: 'form_factor', label: 'Form Factor', placeholder: 'ATX' },
+    ],
+    RAM: [
+      { key: 'ram_type', label: 'Type', placeholder: 'DDR5' },
+      { key: 'capacity_gb', label: 'Capacity (GB)', placeholder: '32' },
+      { key: 'speed_mhz', label: 'Speed (MHz)', placeholder: '6000' },
+    ],
+    SSD: [
+      { key: 'form_factor', label: 'Form Factor', placeholder: 'M.2' },
+      { key: 'capacity_gb', label: 'Capacity (GB)', placeholder: '1000' },
+      { key: 'interface', label: 'Interface', placeholder: 'NVMe M.2' },
+      { key: 'read_mb_s', label: 'Read Speed (MB/s)', placeholder: '7000' },
+      { key: 'write_mb_s', label: 'Write Speed (MB/s)', placeholder: '5000' },
+    ],
+    Case: [
+      { key: 'form_factor', label: 'Form Factor (comma-separated)', placeholder: 'ATX, mATX, ITX' },
+      { key: 'max_gpu_length_mm', label: 'Max GPU Length (mm)', placeholder: '400' },
+    ],
+    PSU: [
+      { key: 'wattage', label: 'Wattage (W)', placeholder: '850' },
+      { key: 'efficiency', label: 'Efficiency', placeholder: '80+ Gold' },
+    ],
+  };
+
+  const categories = ['CPU', 'GPU', 'RAM', 'Mainboard', 'SSD', 'Case', 'PSU'];
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const data = await adminService.listProducts();
+      setProducts(data);
+    } catch { /* ignore */ }
+    finally { setLoading(false); }
+  };
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -90,69 +89,123 @@ function AdminProducts({ onNavigate }) {
     setFormData({
       name: product.name,
       category: product.category,
-      price: product.price.toString(),
-      stock: product.stock.toString(),
-      specifications: { ...product.specifications }
+      price: String(product.price),
+      stock_quantity: String(product.stock_quantity),
+      specifications: product.specifications ? { ...product.specifications } : {}
     });
     setIsCreating(true);
   };
 
-  const handleDelete = (id) => {
-    if (confirm(t('admin_products.confirm_delete'))) {
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: t('admin_products.confirm_delete'),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#FF3B30',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: t('common.delete', 'Delete'),
+      cancelButtonText: t('common.cancel', 'Cancel')
+    });
+    if (!result.isConfirmed) return;
+    try {
+      await adminService.deleteProduct(id);
       setProducts(products.filter((p) => p.id !== id));
-      alert(t('admin_products.delete_success'));
+    } catch (err) {
+      Swal.fire({ icon: 'error', title: 'Error', text: err.message || 'Failed to delete' });
     }
   };
 
-  const handleToggleActive = (id) => {
-    setProducts(
-      products.map((p) => (p.id === id ? { ...p, isActive: !p.isActive } : p))
-    );
+  const handleToggleActive = async (id) => {
     const product = products.find((p) => p.id === id);
-    alert(
-      product.isActive
-        ? t('admin_products.deactivate_success')
-        : t('admin_products.activate_success')
-    );
+    try {
+      await adminService.toggleProductStatus(id, !product.is_active);
+      setProducts(products.map((p) => (p.id === id ? { ...p, is_active: !p.is_active } : p)));
+    } catch (err) {
+      Swal.fire({ icon: 'error', title: 'Error', text: err.message || 'Failed to toggle status' });
+    }
   };
 
-  const handleSave = () => {
-    if (!formData.name || !formData.price || !formData.stock) {
-      alert(t('admin_products.validation_required'));
+  const handleSave = async () => {
+    if (!formData.name || !formData.price || !formData.stock_quantity) {
+      Swal.fire({ icon: 'warning', title: t('admin_products.validation_required') });
       return;
     }
+    setSaving(true);
 
-    const newProduct = {
-      id: editingProduct || Date.now(),
+    // Process and sanitize specifications
+    const processedSpecs = { ...formData.specifications };
+
+    // 1. Convert numeric specifications from strings to Numbers
+    const numericKeys = [
+      'tdp',
+      'gpu_length_mm',
+      'max_gpu_length_mm',
+      'wattage',
+      'capacity_gb',
+      'speed_mhz',
+      'read_mb_s',
+      'write_mb_s',
+      'cores',
+      'threads',
+      'base_clock_ghz',
+      'boost_clock_ghz',
+      'boost_clock_mhz'
+    ];
+    for (const key of numericKeys) {
+      if (processedSpecs[key] !== undefined && processedSpecs[key] !== null && processedSpecs[key] !== '') {
+        const val = Number(processedSpecs[key]);
+        if (!isNaN(val)) processedSpecs[key] = val;
+      }
+    }
+
+    // 2. Convert comma-separated strings to arrays where expected
+    if (formData.category === 'Case' && processedSpecs.form_factor) {
+      processedSpecs.form_factor = String(processedSpecs.form_factor)
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+    if (formData.category === 'CPU' && processedSpecs.supported_ram) {
+      processedSpecs.supported_ram = String(processedSpecs.supported_ram)
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+    if (formData.category === 'Mainboard' && processedSpecs.supported_ram) {
+      const strVal = String(processedSpecs.supported_ram);
+      processedSpecs.supported_ram = strVal.split(',').map((s) => s.trim()).filter(Boolean);
+      // For backwards compatibility in rendering, set both supported_ram and ram_type
+      processedSpecs.ram_type = processedSpecs.supported_ram[0] || '';
+    }
+
+    const payload = {
       name: formData.name,
       category: formData.category,
       price: parseFloat(formData.price),
-      stock: parseInt(formData.stock),
-      isActive: true,
-      specifications: { ...formData.specifications }
+      stock_quantity: parseInt(formData.stock_quantity),
+      specifications: processedSpecs
     };
 
-    if (editingProduct) {
-      setProducts(products.map((p) => (p.id === editingProduct ? newProduct : p)));
-      alert(t('admin_products.update_success'));
-    } else {
-      setProducts([...products, newProduct]);
-      alert(t('admin_products.create_success'));
+    try {
+      if (editingProduct) {
+        const updated = await adminService.updateProduct(editingProduct, payload);
+        setProducts(products.map((p) => (p.id === editingProduct ? updated : p)));
+      } else {
+        const created = await adminService.createProduct(payload);
+        setProducts([...products, created]);
+      }
+      handleCancel();
+    } catch (err) {
+      Swal.fire({ icon: 'error', title: 'Error', text: err.message || 'Failed to save' });
+    } finally {
+      setSaving(false);
     }
-
-    handleCancel();
   };
 
   const handleCancel = () => {
     setIsCreating(false);
     setEditingProduct(null);
-    setFormData({
-      name: '',
-      category: 'CPU',
-      price: '',
-      stock: '',
-      specifications: {}
-    });
+    setFormData({ name: '', category: 'CPU', price: '', stock_quantity: '', specifications: {} });
   };
 
   const handleInputChange = (field, value) => {
@@ -160,24 +213,16 @@ function AdminProducts({ onNavigate }) {
   };
 
   const handleSpecChange = (key, value) => {
-    setFormData({
-      ...formData,
-      specifications: { ...formData.specifications, [key]: value }
-    });
+    setFormData({ ...formData, specifications: { ...formData.specifications, [key]: value } });
   };
 
-  const addSpecField = () => {
-    const key = prompt(t('admin_products.spec_key_prompt'));
-    if (key) {
-      handleSpecChange(key, '');
-    }
-  };
-
-  const removeSpecField = (key) => {
-    const newSpecs = { ...formData.specifications };
-    delete newSpecs[key];
-    setFormData({ ...formData, specifications: newSpecs });
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-app-bg flex items-center justify-center">
+        <p className="text-app-text-muted">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-app-bg pb-12">
@@ -220,9 +265,7 @@ function AdminProducts({ onNavigate }) {
             >
               <option value="all">{t('admin_products.all_categories')}</option>
               {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
+                <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
           </div>
@@ -259,9 +302,7 @@ function AdminProducts({ onNavigate }) {
                     className="w-full px-4 py-3 bg-bg-secondary border border-app-border rounded-lg text-app-text focus:outline-none focus:ring-2 focus:ring-blue transition-all"
                   >
                     {categories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
+                      <option key={cat} value={cat}>{cat}</option>
                     ))}
                   </select>
                 </div>
@@ -270,7 +311,7 @@ function AdminProducts({ onNavigate }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-app-text mb-2">
-                    {t('admin_products.price')} * ($)
+                    {t('admin_products.price')} * (฿)
                   </label>
                   <input
                     type="number"
@@ -287,49 +328,33 @@ function AdminProducts({ onNavigate }) {
                   </label>
                   <input
                     type="number"
-                    value={formData.stock}
-                    onChange={(e) => handleInputChange('stock', e.target.value)}
+                    value={formData.stock_quantity}
+                    onChange={(e) => handleInputChange('stock_quantity', e.target.value)}
                     placeholder="45"
                     className="w-full px-4 py-3 bg-bg-secondary border border-app-border rounded-lg text-app-text placeholder-app-text-muted focus:outline-none focus:ring-2 focus:ring-blue transition-all"
                   />
                 </div>
               </div>
 
-              {/* Specifications */}
+              {/* Specifications — auto fields per category */}
               <div className="border-t border-app-border pt-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-app-text">
-                    {t('admin_products.specifications')}
-                  </h3>
-                  <button
-                    onClick={addSpecField}
-                    className="text-sm text-blue hover:text-blue/90 font-medium"
-                  >
-                    + {t('admin_products.add_spec')}
-                  </button>
-                </div>
-                <div className="space-y-3">
-                  {Object.entries(formData.specifications).map(([key, value]) => (
-                    <div key={key} className="flex gap-3">
+                <h3 className="text-lg font-semibold text-app-text mb-4">{t('admin_products.specifications')}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {(CATEGORY_SPECS[formData.category] || []).map((spec) => (
+                    <div key={spec.key}>
+                      <label htmlFor={`spec-${spec.key}`} className="block text-sm font-medium text-app-text mb-2">{spec.label}</label>
                       <input
+                        id={`spec-${spec.key}`}
                         type="text"
-                        value={key}
-                        disabled
-                        className="w-1/3 px-4 py-3 bg-bg-tertiary border border-app-border rounded-lg text-app-text-muted"
+                        value={
+                          Array.isArray(formData.specifications[spec.key])
+                            ? formData.specifications[spec.key].join(', ')
+                            : formData.specifications[spec.key] || ''
+                        }
+                        onChange={(e) => handleSpecChange(spec.key, e.target.value)}
+                        placeholder={spec.placeholder}
+                        className="w-full px-4 py-3 bg-bg-secondary border border-app-border rounded-lg text-app-text placeholder-app-text-muted focus:outline-none focus:ring-2 focus:ring-blue transition-all"
                       />
-                      <input
-                        type="text"
-                        value={value}
-                        onChange={(e) => handleSpecChange(key, e.target.value)}
-                        placeholder={t('admin_products.spec_value')}
-                        className="flex-grow px-4 py-3 bg-bg-secondary border border-app-border rounded-lg text-app-text placeholder-app-text-muted focus:outline-none focus:ring-2 focus:ring-blue transition-all"
-                      />
-                      <button
-                        onClick={() => removeSpecField(key)}
-                        className="p-3 text-red hover:bg-red/10 rounded-lg transition-all"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
                     </div>
                   ))}
                 </div>
@@ -339,15 +364,13 @@ function AdminProducts({ onNavigate }) {
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={handleSave}
-                  className="flex-grow flex items-center justify-center gap-2 bg-blue hover:bg-blue/90 text-white px-6 py-3 rounded-lg font-semibold transition-all"
+                  disabled={saving}
+                  className="flex-grow flex items-center justify-center gap-2 bg-blue hover:bg-blue/90 text-white px-6 py-3 rounded-lg font-semibold transition-all disabled:opacity-50"
                 >
                   <Save className="w-5 h-5" />
                   {editingProduct ? t('admin_products.update') : t('admin_products.create')}
                 </button>
-                <button
-                  onClick={handleCancel}
-                  className="px-6 py-3 bg-bg-secondary hover:bg-bg-tertiary text-app-text rounded-lg font-medium transition-all"
-                >
+                <button onClick={handleCancel} className="px-6 py-3 bg-bg-secondary hover:bg-bg-tertiary text-app-text rounded-lg font-medium transition-all">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -362,24 +385,12 @@ function AdminProducts({ onNavigate }) {
               <table className="w-full">
                 <thead className="bg-bg-secondary border-b border-app-border">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">
-                      {t('admin_products.product')}
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">
-                      {t('admin_products.category')}
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">
-                      {t('admin_products.price')}
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">
-                      {t('admin_products.stock')}
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">
-                      {t('admin_products.status')}
-                    </th>
-                    <th className="px-6 py-4 text-right text-xs font-semibold text-app-text uppercase">
-                      {t('admin_products.actions')}
-                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">{t('admin_products.product')}</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">{t('admin_products.category')}</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">{t('admin_products.price')}</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">{t('admin_products.stock')}</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">{t('admin_products.status')}</th>
+                    <th className="px-6 py-4 text-right text-xs font-semibold text-app-text uppercase">{t('admin_products.actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-app-border">
@@ -389,72 +400,40 @@ function AdminProducts({ onNavigate }) {
                         <div className="text-sm font-semibold text-app-text">{product.name}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="inline-flex items-center bg-blue/10 text-blue text-xs font-medium px-2 py-1 rounded-full">
-                          {product.category}
-                        </span>
+                        <span className="inline-flex items-center bg-blue/10 text-blue text-xs font-medium px-2 py-1 rounded-full">{product.category}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm font-bold text-blue">${product.price}</div>
+                        <div className="text-sm font-bold text-blue">฿{Number(product.price).toLocaleString()}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div
-                          className={`text-sm font-semibold ${
-                            product.stock === 0
-                              ? 'text-red'
-                              : product.stock < 10
-                              ? 'text-orange'
-                              : 'text-green'
-                          }`}
-                        >
-                          {product.stock}
+                        <div className={`text-sm font-semibold ${product.stock_quantity === 0 ? 'text-red' : product.stock_quantity < 10 ? 'text-orange' : 'text-green'}`}>
+                          {product.stock_quantity}
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        {product.isActive ? (
+                        {product.is_active ? (
                           <span className="inline-flex items-center gap-1 bg-green/10 text-green text-xs font-semibold px-2 py-1 rounded-full">
-                            <Power className="w-3 h-3" />
-                            {t('admin_products.active')}
+                            <Power className="w-3 h-3" />{t('admin_products.active')}
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 bg-red/10 text-red text-xs font-semibold px-2 py-1 rounded-full">
-                            <PowerOff className="w-3 h-3" />
-                            {t('admin_products.inactive')}
+                            <PowerOff className="w-3 h-3" />{t('admin_products.inactive')}
                           </span>
                         )}
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => handleEdit(product)}
-                            className="p-2 text-blue hover:bg-blue/10 rounded-lg transition-all"
-                            title={t('admin_products.edit')}
-                          >
+                          <button onClick={() => handleEdit(product)} className="p-2 text-blue hover:bg-blue/10 rounded-lg transition-all" title={t('admin_products.edit')}>
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleToggleActive(product.id)}
-                            className={`p-2 rounded-lg transition-all ${
-                              product.isActive
-                                ? 'text-orange hover:bg-orange/10'
-                                : 'text-green hover:bg-green/10'
-                            }`}
-                            title={
-                              product.isActive
-                                ? t('admin_products.deactivate')
-                                : t('admin_products.activate')
-                            }
+                            className={`p-2 rounded-lg transition-all ${product.is_active ? 'text-orange hover:bg-orange/10' : 'text-green hover:bg-green/10'}`}
+                            title={product.is_active ? t('admin_products.deactivate') : t('admin_products.activate')}
                           >
-                            {product.isActive ? (
-                              <PowerOff className="w-4 h-4" />
-                            ) : (
-                              <Power className="w-4 h-4" />
-                            )}
+                            {product.is_active ? <PowerOff className="w-4 h-4" /> : <Power className="w-4 h-4" />}
                           </button>
-                          <button
-                            onClick={() => handleDelete(product.id)}
-                            className="p-2 text-red hover:bg-red/10 rounded-lg transition-all"
-                            title={t('admin_products.delete')}
-                          >
+                          <button onClick={() => handleDelete(product.id)} className="p-2 text-red hover:bg-red/10 rounded-lg transition-all" title={t('admin_products.delete')}>
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
