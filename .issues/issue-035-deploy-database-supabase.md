@@ -11,7 +11,7 @@
    - เข้าสู่เว็บ [https://supabase.com](https://supabase.com) กด Sign In ด้วยบัญชี GitHub
    - กดปุ่ม **"New Project"** เลือกองค์กร (Organization)
    - กรอก **Name:** `comhub-db`
-   - กำหนด **Database Password:** (บันทึกรหัสผ่านไว้ใช้งาน) ​comhub-db@99
+   - กำหนด **Database Password:** (บันทึกรหัสผ่านไว้ใช้งาน) UQH9M0p7HAUCRpGw
    - เลือก **Region:** `Singapore (ap-southeast-1)`
    - เลือก Plan: **Free Tier** แล้วกด **"Create new project"** (รอระบบ provisioning ประมาณ 1-2 นาที)
 2. **คัดลอก Connection String:**
