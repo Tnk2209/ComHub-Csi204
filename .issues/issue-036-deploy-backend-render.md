@@ -34,11 +34,11 @@ Deploy REST API Backend (Express + TypeScript) ขึ้นบริการ **
    - ทดสอบเปิดเบราว์เซอร์ไปที่ `https://comhub-backend-api.onrender.com/health` ต้องตอบกลับ JSON: `{ "ok": true, "service": "comhub-backend", ... }`
 
 ## Acceptance criteria
-- [ ] Deploy โปรเจกต์ `backend` ขึ้น Render.com Web Service สำเร็จสมบูรณ์
-- [ ] ตั้งค่า Build Command (`npm install && npm run build`) และ Start Command (`npm start`) บน Render
-- [ ] ตั้งค่า Environment Variables (`DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN`, `NODE_ENV`)
-- [ ] Endpoint `/health` ตอบกลับ `{ "ok": true }` บน Production Domain (`https://comhub-backend-api.onrender.com`)
-- [ ] Endpoint `/api/products` ดึงข้อมูลสินค้าจาก Supabase DB จริงบน Production สภาพแวดล้อมได้สำเร็จ
+- [X] Deploy โปรเจกต์ `backend` ขึ้น Render.com Web Service สำเร็จสมบูรณ์ (Production URL: `https://comhub-backend-api.onrender.com`)
+- [X] ตั้งค่า Build Command (`npm install && npm run build`) และ Start Command (`npm start`) บน Render
+- [X] ตั้งค่า Environment Variables (`DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN`, `NODE_ENV`)
+- [X] Endpoint `/health` ตอบกลับ `{ "ok": true }` บน Production Domain (`https://comhub-backend-api.onrender.com`)
+- [X] Endpoint `/api/products` ดึงข้อมูลสินค้าจาก Supabase DB จริงบน Production สภาพแวดล้อมได้สำเร็จ
 
 ## Blocked by
 - [Issue 035: Production Deployment Phase 1 — Supabase PostgreSQL Cloud Setup](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-035-deploy-database-supabase.md)

@@ -4,10 +4,10 @@
 ทำการติดตั้งระบบ ComHub ขึ้นสภาพแวดล้อมใช้งานจริงแบบระบบเว็บเซิร์ฟเวอร์คลาวด์สาธารณะ (Production Deployment) และเขียนคู่มือการซ่อมบำรุงพร้อมKnown Issues Log เพื่อสรุปรายงานปิดโปรเจ็ควิชา csi 204
 
 ## Acceptance criteria
-- [ ] ติดตั้งซอร์สโค้ดหน้าบ้าน (React SPA) และหลังบ้าน (Express server API) ขึ้นบริการระบบคลาวด์ Vercel สำเร็จสมบูรณ์
-- [ ] ตั้งค่าคีย์ตัวแปรระบบ (Environment Variables) เชื่อมโยง Supabase Database URL และ JWT Secret Key บนระบบจริงอย่างปลอดภัย
-- [ ] ทดสอบยิงทดสอบระบบบน URL จริง และกรอกข้อมูลจัดสเปคคอม/แนบสลิปผ่านทาง URL คลาวด์จริงและสามารถเรียกอ่านข้อมูลสำเร็จ
-- [ ] จัดทำเอกสารคู่มือบันทึก Known Issues และแผนงานพัฒนาปรับปรุงระบบต่อยอดในอนาคต (เช่น การต่อยอดระบบรับชำระเงินอัตโนมัติ และระบบคำนวณปริมาณลมระบายอากาศ)
+- [X] ติดตั้งซอร์สโค้ดหน้าบ้าน (Vercel) และหลังบ้าน (Render.com Express Web Service) ขึ้นบริการคลาวด์สาธารณะสำเร็จสมบูรณ์
+- [X] ตั้งค่าคีย์ตัวแปรระบบ (Environment Variables) เชื่อมโยง Supabase Database URL และ JWT Secret Key บนระบบจริงอย่างปลอดภัย
+- [X] ทดสอบยิงทดสอบระบบบน URL จริง และกรอกข้อมูลจัดสเปคคอม/แนบสลิปผ่านทาง URL คลาวด์จริงและสามารถเรียกอ่านข้อมูลสำเร็จ
+- [X] จัดทำเอกสารคู่มือบันทึก Known Issues และแผนงานพัฒนาปรับปรุงระบบต่อยอดในอนาคต (เช่น การต่อยอดระบบรับชำระเงินอัตโนมัติ และระบบคำนวณปริมาณลมระบายอากาศ)
 
 ## Deployment Issues Breakdown
 - [Issue 035: Production Deployment Phase 1 — Supabase PostgreSQL Cloud Setup](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/.issues/issue-035-deploy-database-supabase.md)

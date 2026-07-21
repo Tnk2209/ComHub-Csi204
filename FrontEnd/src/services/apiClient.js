@@ -1,8 +1,9 @@
 // Read Vite env var in browser, or fallback to localhost for Node test runner.
-const BASE_URL =
+const RAW_BASE_URL =
   (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) ||
   process.env.VITE_API_BASE_URL ||
   'http://localhost:3000';
+const BASE_URL = RAW_BASE_URL.replace(/\/+$/, '');
 
 let _token = null;
 

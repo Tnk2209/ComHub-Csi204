@@ -6,7 +6,7 @@ ComHub is an E-Commerce platform specialized in Computer Hardware, PC Parts, and
 - **Frontend:** React (Vite) + Tailwind CSS + Lucide Icons
 - **Backend:** Node.js + Express + TypeScript
 - **Database:** PostgreSQL (7 relational tables)
-- **Deployment:** Vercel Serverless / Static + Supabase PostgreSQL
+- **Deployment:** Vercel Static (Frontend: `https://comhub-frontend.vercel.app`) + Render.com Web Service (Backend: `https://comhub-backend-api.onrender.com`) + Supabase PostgreSQL Cloud
 
 ---
 
