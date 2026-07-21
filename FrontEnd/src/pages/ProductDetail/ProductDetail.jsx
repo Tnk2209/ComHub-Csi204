@@ -96,7 +96,7 @@ const formatSpecValue = (val) => {
 
 function ProductDetail({ onNavigate, productId: propProductId }) {
   const { t, i18n } = useTranslation();
-  const { addItem } = useCart();
+  const { addItem, totalItems } = useCart();
   const { user, isAuthenticated } = useAuth();
   const location = useLocation();
   const productId = propProductId || location.state;
@@ -221,11 +221,16 @@ function ProductDetail({ onNavigate, productId: propProductId }) {
   const handleAddToCart = () => {
     if (product && product.stock_quantity > 0) {
       addItem({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url }, quantity);
-      Swal.fire({
-        icon: 'success',
-        title: t('product_detail.added_to_cart', { name: product.name, quantity }),
-        timer: 1500,
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-end',
         showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+      Toast.fire({
+        icon: 'success',
+        title: t('product_detail.added_to_cart_toast', { name: product.name, quantity, total: totalItems + quantity }),
       });
     }
   };
@@ -349,6 +354,36 @@ function ProductDetail({ onNavigate, productId: propProductId }) {
                 {avgRating.toFixed(1)} ({reviewTotal} {t('product_detail.reviews')})
               </span>
             </div>
+
+            {/* Spec Highlight Badges */}
+            {specs && Object.keys(specs).length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                {specs.socket && (
+                  <div className="bg-app-surface/90 border border-app-border/40 p-2.5 rounded-xl text-center shadow-xs">
+                    <span className="text-[10px] uppercase text-app-text-muted block font-semibold">Socket</span>
+                    <span className="text-xs font-bold text-blue font-mono">{specs.socket}</span>
+                  </div>
+                )}
+                {(specs.tdp || specs.wattage) && (
+                  <div className="bg-app-surface/90 border border-app-border/40 p-2.5 rounded-xl text-center shadow-xs">
+                    <span className="text-[10px] uppercase text-app-text-muted block font-semibold">Power</span>
+                    <span className="text-xs font-bold text-amber-500 font-mono">{specs.tdp ? `${specs.tdp}W TDP` : `${specs.wattage}W`}</span>
+                  </div>
+                )}
+                {specs.form_factor && (
+                  <div className="bg-app-surface/90 border border-app-border/40 p-2.5 rounded-xl text-center shadow-xs">
+                    <span className="text-[10px] uppercase text-app-text-muted block font-semibold">Form Factor</span>
+                    <span className="text-xs font-bold text-app-text font-mono">{specs.form_factor}</span>
+                  </div>
+                )}
+                {(specs.supported_ram || specs.ram_type) && (
+                  <div className="bg-app-surface/90 border border-app-border/40 p-2.5 rounded-xl text-center shadow-xs">
+                    <span className="text-[10px] uppercase text-app-text-muted block font-semibold">RAM</span>
+                    <span className="text-xs font-bold text-cyan-500 font-mono">{formatSpecValue(specs.supported_ram || specs.ram_type)}</span>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Price */}
             <div className="bg-app-surface rounded-xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.08)]">

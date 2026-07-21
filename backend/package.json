@@ -11,24 +11,32 @@
     "migrate": "tsx src/scripts/migrate-safe.ts",
     "migrate:fresh": "tsx src/scripts/migrate.ts",
     "typecheck": "tsc --noEmit",
-    "test": "node --import tsx --test --test-concurrency=1 src/tests/*.test.ts"
+    "test": "node --import tsx --test --test-concurrency=1 src/tests/*.test.ts",
+    "seed:opendb": "node src/scripts/seed-from-opendb.mjs",
+    "migrate:prices": "tsx src/scripts/migrate-price-update.ts"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-rate-limit": "^8.6.0",
+    "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/compression": "^1.8.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/helmet": "^0.0.48",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.9.0",
     "@types/pg": "^8.11.10",
     "@types/supertest": "^7.2.1",
+    "sharp": "^0.35.3",
     "supertest": "^7.2.2",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3"

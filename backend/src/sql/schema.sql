@@ -46,6 +46,7 @@ CREATE TABLE products (
     stock_quantity INT NOT NULL DEFAULT 0 CHECK (stock_quantity >= 0),
     image_url VARCHAR(500),
     specifications JSONB NOT NULL DEFAULT '{}',
+    brand VARCHAR(100) NOT NULL DEFAULT 'Generic',
     is_active BOOLEAN NOT NULL DEFAULT TRUE
 );
 

@@ -52,6 +52,21 @@ export function apiGet(path) {
   return request('GET', path);
 }
 
+/**
+ * Like apiGet but returns { data, total } where total comes from X-Total-Count header.
+ */
+export async function apiGetWithHeaders(path) {
+  const res = await fetch(BASE_URL + path, {
+    method: 'GET',
+    headers: { ...authHeader() },
+  });
+  const parsed = await parseBody(res);
+  if (!res.ok) throw new ApiError(res.status, parsed, parsed?.message ?? `HTTP ${res.status}`);
+  const total = parseInt(res.headers.get('X-Total-Count') ?? '0', 10);
+  return { data: parsed, total };
+}
+
+
 export function apiPost(path, body) {
   return request('POST', path, body);
 }

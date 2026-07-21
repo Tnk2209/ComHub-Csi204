@@ -20,7 +20,7 @@
 
 **Total Tables:** 7 tables (MVP aligned with `data-dictionary.md`)
 **Roles:** Customer, Admin
-**Authentication:** Native (email/password) + Google OAuth 2.0
+**Authentication:** Native (email/password)
 
 > **📝 หมายเหตุ MVP Scope:** Cart, Product Comparison, และ Session (refresh token) จัดเก็บที่ **Client-side (LocalStorage / JWT)** ไม่มีตารางใน DB / สลิปโอนเงินเก็บเป็น **Base64 WebP ในตาราง `orders`** ไม่แยกตาราง `payments` / ตัดตาราง `prebuilt_templates`, `template_items`, `assembly_records`, `gallery_posts` ออกจาก scope เดิม
 
@@ -71,24 +71,21 @@ erDiagram
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255),                       -- NULL for Google OAuth users
+    password_hash VARCHAR(255) NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     role VARCHAR(50) NOT NULL DEFAULT 'Customer'
         CHECK (role IN ('Customer', 'Admin')),
     auth_provider VARCHAR(20) NOT NULL DEFAULT 'native'
-        CHECK (auth_provider IN ('native', 'google')),
-    google_id VARCHAR(255) UNIQUE,                    -- Google User ID (NULL for native)
+        CHECK (auth_provider IN ('native')),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_google_id ON users(google_id);
 CREATE INDEX idx_users_role ON users(role);
 ```
 
 **Notes:**
-- `password_hash` is NULL when `auth_provider = 'google'`
 - Only 2 roles in MVP: `Customer`, `Admin` (no Staff/Manager)
 
 ---

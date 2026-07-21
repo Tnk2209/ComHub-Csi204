@@ -18,6 +18,10 @@ vi.mock('../../services/adminService', () => ({
   toggleProductStatus: vi.fn(() => Promise.resolve()),
 }));
 
+vi.mock('../../utils/imageCompressor', () => ({
+  compressImage: vi.fn(),
+}));
+
 describe('AdminProducts spec fields per category', () => {
   beforeEach(() => vi.clearAllMocks());
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import Landing from './pages/Landing/Landing';
 import PCBuilder from './pages/PCBuilder/PCBuilder';
 import Catalog from './pages/Catalog/Catalog';
@@ -8,6 +8,7 @@ import ProductComparison from './pages/ProductComparison/ProductComparison';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import CartCheckout from './pages/CartCheckout/CartCheckout';
 import OrderTracking from './pages/OrderTracking/OrderTracking';
+import OrderHistory from './pages/OrderHistory/OrderHistory';
 import Wishlist from './pages/Wishlist/Wishlist';
 import AdminProducts from './pages/AdminProducts/AdminProducts';
 import AdminAccounts from './pages/AdminAccounts/AdminAccounts';
@@ -22,10 +23,12 @@ import CustomerGuard from './components/CustomerGuard';
 // Wrapper component to inject navigate prop into pages
 function PageWrapper({ Component, layout = 'main', ...props }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  // Derive currentPage from URL path (e.g. '/order-history' → 'order-history')
+  const currentPage = location.pathname.replace(/^\//, '') || 'landing';
 
   const handleNavigate = (page, data) => {
     if (data) {
-      // For pages that need to pass data, use state
       navigate(`/${page}`, { state: data });
     } else {
       navigate(`/${page}`);
@@ -42,7 +45,7 @@ function PageWrapper({ Component, layout = 'main', ...props }) {
     return <DashboardLayout>{content}</DashboardLayout>;
   }
 
-  return <MainLayout onNavigate={handleNavigate}>{content}</MainLayout>;
+  return <MainLayout currentPage={currentPage} onNavigate={handleNavigate}>{content}</MainLayout>;
 }
 
 function App() {
@@ -57,6 +60,7 @@ function App() {
         <Route path="/compare" element={<CustomerGuard><PageWrapper Component={ProductComparison} /></CustomerGuard>} />
         <Route path="/product-detail" element={<CustomerGuard><PageWrapper Component={ProductDetail} /></CustomerGuard>} />
         <Route path="/cart" element={<CustomerGuard><PageWrapper Component={CartCheckout} /></CustomerGuard>} />
+        <Route path="/order-history" element={<CustomerGuard><PageWrapper Component={OrderHistory} /></CustomerGuard>} />
         <Route path="/order-tracking" element={<CustomerGuard><PageWrapper Component={OrderTracking} /></CustomerGuard>} />
         <Route path="/wishlist" element={<CustomerGuard><PageWrapper Component={Wishlist} /></CustomerGuard>} />
 

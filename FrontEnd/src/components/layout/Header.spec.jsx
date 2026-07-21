@@ -18,6 +18,20 @@ vi.mock('../../contexts/AuthContext', () => ({
   }),
 }));
 
+vi.mock('../../contexts/CartContext', () => ({
+  useCart: () => ({ totalItems: 2 }),
+}));
+
+vi.mock('sweetalert2', () => {
+  const mockFire = vi.fn(() => Promise.resolve({ isConfirmed: true }));
+  return {
+    default: {
+      fire: mockFire,
+      mixin: vi.fn(() => ({ fire: mockFire })),
+    },
+  };
+});
+
 vi.mock('./ThemeToggle', () => ({ default: () => <div data-testid="theme-toggle" /> }));
 vi.mock('./LanguagePicker', () => ({ default: () => <div data-testid="lang-picker" /> }));
 
@@ -51,17 +65,18 @@ describe('Header — Admin vs Customer', () => {
     expect(screen.getAllByText('nav.shop').length).toBeGreaterThan(0);
   });
 
-  it('shows nav.orders label instead of nav.account in nav group', () => {
+  it('shows nav.order_history and nav.order_tracking labels in nav group', () => {
     mockUser = { role: 'Customer', first_name: 'John', email: 'john@test.com' };
     mockIsAuthenticated = true;
 
     render(<Header currentPage="order-tracking" onNavigate={onNavigate} />);
 
-    expect(screen.getAllByText('nav.orders').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('nav.order_history').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('nav.order_tracking').length).toBeGreaterThan(0);
     expect(screen.queryByText('nav.account')).toBeNull();
   });
 
-  it('shows Orders/Wishlist/Cart in profile dropdown for Customer', () => {
+  it('shows Order History/Order Tracking/Wishlist/Cart in profile dropdown for Customer', () => {
     mockUser = { role: 'Customer', first_name: 'John', email: 'john@test.com' };
     mockIsAuthenticated = true;
 
@@ -70,7 +85,8 @@ describe('Header — Admin vs Customer', () => {
     // Open profile dropdown
     fireEvent.click(screen.getByText('John'));
 
-    expect(screen.getAllByText('nav.orders').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('nav.order_history').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('nav.order_tracking').length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText('nav.wishlist')).toBeInTheDocument();
     expect(screen.getByText('nav.cart')).toBeInTheDocument();
   });
@@ -84,7 +100,8 @@ describe('Header — Admin vs Customer', () => {
     fireEvent.click(screen.getByText('Boss'));
 
     expect(screen.getByText('Admin Panel')).toBeInTheDocument();
-    expect(screen.queryByText('nav.orders')).toBeNull();
+    expect(screen.queryByText('nav.order_history')).toBeNull();
+    expect(screen.queryByText('nav.order_tracking')).toBeNull();
     expect(screen.queryByText('nav.wishlist')).toBeNull();
   });
 });

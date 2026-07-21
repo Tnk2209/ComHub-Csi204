@@ -44,34 +44,93 @@ export async function listProducts(req: Request, res: Response): Promise<void> {
     filters.push(`category = $${params.length}`);
   }
 
+  const rawBrand = req.query.brand;
+  if (typeof rawBrand === 'string' && rawBrand.trim().length > 0) {
+    const brands = rawBrand.split(',').map((b) => b.trim()).filter((b) => b.length > 0);
+    if (brands.length === 1) {
+      params.push(brands[0]);
+      filters.push(`brand = $${params.length}`);
+    } else if (brands.length > 1) {
+      const placeholders = brands.map((b) => {
+        params.push(b);
+        return `$${params.length}`;
+      });
+      filters.push(`brand IN (${placeholders.join(', ')})`);
+    }
+  }
+
   const rawQ = req.query.q;
   if (typeof rawQ === 'string' && rawQ.trim().length > 0) {
     params.push(rawQ.trim());
     filters.push(`to_tsvector('simple', name) @@ plainto_tsquery('simple', $${params.length})`);
   }
 
-  const limit = parsePositiveInt(req.query.limit, 20);
+  // Price range filters
+  const rawMinPrice = req.query.min_price;
+  if (typeof rawMinPrice === 'string' && rawMinPrice.trim().length > 0) {
+    const minPrice = parseFloat(rawMinPrice);
+    if (!isNaN(minPrice) && minPrice >= 0) {
+      params.push(minPrice);
+      filters.push(`price >= $${params.length}`);
+    }
+  }
+  const rawMaxPrice = req.query.max_price;
+  if (typeof rawMaxPrice === 'string' && rawMaxPrice.trim().length > 0) {
+    const maxPrice = parseFloat(rawMaxPrice);
+    if (!isNaN(maxPrice) && maxPrice >= 0) {
+      params.push(maxPrice);
+      filters.push(`price <= $${params.length}`);
+    }
+  }
+
+  // In-stock filter
+  if (req.query.in_stock === 'true') {
+    filters.push('stock_quantity > 0');
+  }
+
+  // Sort order
+  const rawSort = req.query.sort;
+  let orderBy = 'id ASC';
+  if (rawSort === 'price_asc') orderBy = 'price ASC';
+  else if (rawSort === 'price_desc') orderBy = 'price DESC';
+  else if (rawSort === 'name_asc') orderBy = 'name ASC';
+
+  const limit = parsePositiveInt(req.query.limit, 1000);
   const offset = parsePositiveInt(req.query.offset, 0);
   if (limit === null || offset === null) {
     res.status(400).json({ error: 'validation_error', message: 'limit and offset must be non-negative integers' });
     return;
   }
-  const cappedLimit = Math.min(limit, 100);
+  const cappedLimit = Math.min(limit, 1000);
+
+  const whereClause = `WHERE ${filters.join(' AND ')}`;
+
+  // Get total count for pagination
+  const countParams = params.slice();
+  const countResult = await pool.query(
+    `SELECT COUNT(*)::text AS count FROM products ${whereClause}`,
+    countParams
+  );
+  const totalCount = parseInt(countResult.rows[0]?.count ?? '0', 10);
 
   params.push(cappedLimit, offset);
   const limitParam = params.length - 1;
   const offsetParam = params.length;
 
   const result = await pool.query(
-    `SELECT id, name, category, price, stock_quantity, image_url, specifications, is_active
+    `SELECT id, name, category, price, stock_quantity, image_url, specifications, brand, is_active
      FROM products
-     WHERE ${filters.join(' AND ')}
-     ORDER BY id
+     ${whereClause}
+     ORDER BY ${orderBy}
      LIMIT $${limitParam} OFFSET $${offsetParam}`,
     params
   );
+
+  res.setHeader('X-Total-Count', String(totalCount));
+  res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
   res.status(200).json(result.rows);
 }
+
 
 export async function adminListProducts(req: Request, res: Response): Promise<void> {
   const rawCategory = req.query.category;
@@ -90,13 +149,25 @@ export async function adminListProducts(req: Request, res: Response): Promise<vo
     filters.push(`category = $${params.length}`);
   }
 
-  const limit = parsePositiveInt(req.query.limit, 50);
+  const rawBrand = req.query.brand;
+  if (typeof rawBrand === 'string' && rawBrand.trim().length > 0) {
+    params.push(rawBrand.trim());
+    filters.push(`brand = $${params.length}`);
+  }
+
+  const rawQ = req.query.q;
+  if (typeof rawQ === 'string' && rawQ.trim().length > 0) {
+    params.push(rawQ.trim());
+    filters.push(`to_tsvector('simple', name) @@ plainto_tsquery('simple', $${params.length})`);
+  }
+
+  const limit = parsePositiveInt(req.query.limit, 1000);
   const offset = parsePositiveInt(req.query.offset, 0);
   if (limit === null || offset === null) {
     res.status(400).json({ error: 'validation_error', message: 'limit and offset must be non-negative integers' });
     return;
   }
-  const cappedLimit = Math.min(limit, 100);
+  const cappedLimit = Math.min(limit, 1000);
 
   params.push(cappedLimit, offset);
   const limitParam = params.length - 1;
@@ -104,7 +175,7 @@ export async function adminListProducts(req: Request, res: Response): Promise<vo
 
   const where = filters.length ? `WHERE ${filters.join(' AND ')}` : '';
   const result = await pool.query(
-    `SELECT id, name, category, price, stock_quantity, image_url, specifications, is_active
+    `SELECT id, name, category, price, stock_quantity, image_url, specifications, brand, is_active
      FROM products ${where}
      ORDER BY id
      LIMIT $${limitParam} OFFSET $${offsetParam}`,
@@ -121,7 +192,7 @@ function parsePositiveInt(raw: unknown, fallback: number): number | null {
 }
 
 export async function createProduct(req: Request, res: Response): Promise<void> {
-  const { name, category, price, stock_quantity, image_url, specifications } = req.body ?? {};
+  const { name, category, price, stock_quantity, image_url, specifications, brand } = req.body ?? {};
 
   const errors: string[] = [];
   if (typeof name !== 'string' || !name.trim()) errors.push('name is required');
@@ -133,6 +204,9 @@ export async function createProduct(req: Request, res: Response): Promise<void> 
   if (specifications !== undefined && (typeof specifications !== 'object' || specifications === null || Array.isArray(specifications))) {
     errors.push('specifications must be a JSON object');
   }
+  if (brand !== undefined && typeof brand !== 'string') {
+    errors.push('brand must be a string');
+  }
   if (!errors.length && isValidCategory(category) && specifications && typeof specifications === 'object' && !Array.isArray(specifications)) {
     errors.push(...validateSpecifications(category, specifications as Record<string, unknown>));
   }
@@ -142,10 +216,10 @@ export async function createProduct(req: Request, res: Response): Promise<void> 
   }
 
   const result = await pool.query(
-    `INSERT INTO products (name, category, price, stock_quantity, image_url, specifications, is_active)
-     VALUES ($1, $2, $3, $4, $5, $6, TRUE)
-     RETURNING id, name, category, price, stock_quantity, image_url, specifications, is_active`,
-    [name, category, price, stock_quantity ?? 0, image_url ?? null, specifications ?? {}]
+    `INSERT INTO products (name, category, price, stock_quantity, image_url, specifications, brand, is_active)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, TRUE)
+     RETURNING id, name, category, price, stock_quantity, image_url, specifications, brand, is_active`,
+    [name, category, price, stock_quantity ?? 0, image_url ?? null, specifications ?? {}, brand ?? 'Generic']
   );
 
   res.status(201).json(result.rows[0]);
@@ -161,7 +235,7 @@ export async function getProduct(req: Request, res: Response): Promise<void> {
   const productId = parseInt(id!, 10);
 
   const result = await pool.query(
-    `SELECT p.id, p.name, p.category, p.price, p.stock_quantity, p.image_url, p.specifications, p.is_active,
+    `SELECT p.id, p.name, p.category, p.price, p.stock_quantity, p.image_url, p.specifications, p.brand, p.is_active,
             COALESCE(AVG(r.rating), 0) AS average_rating,
             COUNT(r.id)::int AS review_count
      FROM products p
@@ -188,7 +262,7 @@ export async function updateProduct(req: Request, res: Response): Promise<void> 
     return;
   }
 
-  const { name, category, price, stock_quantity, image_url, specifications } = req.body ?? {};
+  const { name, category, price, stock_quantity, image_url, specifications, brand } = req.body ?? {};
 
   const errors: string[] = [];
   if (typeof name !== 'string' || !name.trim()) errors.push('name is required');
@@ -200,6 +274,9 @@ export async function updateProduct(req: Request, res: Response): Promise<void> 
   if (specifications !== undefined && (typeof specifications !== 'object' || specifications === null || Array.isArray(specifications))) {
     errors.push('specifications must be a JSON object');
   }
+  if (brand !== undefined && typeof brand !== 'string') {
+    errors.push('brand must be a string');
+  }
   if (!errors.length && isValidCategory(category) && specifications && typeof specifications === 'object' && !Array.isArray(specifications)) {
     errors.push(...validateSpecifications(category, specifications as Record<string, unknown>));
   }
@@ -209,10 +286,10 @@ export async function updateProduct(req: Request, res: Response): Promise<void> 
   }
 
   const result = await pool.query(
-    `UPDATE products SET name=$1, category=$2, price=$3, stock_quantity=$4, image_url=$5, specifications=$6
-     WHERE id=$7
-     RETURNING id, name, category, price, stock_quantity, image_url, specifications, is_active`,
-    [name, category, price, stock_quantity ?? 0, image_url ?? null, specifications ?? {}, parseInt(id!, 10)]
+    `UPDATE products SET name=$1, category=$2, price=$3, stock_quantity=$4, image_url=$5, specifications=$6, brand=$7
+     WHERE id=$8
+     RETURNING id, name, category, price, stock_quantity, image_url, specifications, brand, is_active`,
+    [name, category, price, stock_quantity ?? 0, image_url ?? null, specifications ?? {}, brand ?? 'Generic', parseInt(id!, 10)]
   );
 
   if (!result.rows[0]) {
@@ -278,7 +355,7 @@ export async function getProductsByCategory(req: Request, res: Response): Promis
   const { category } = req.params;
 
   const result = await pool.query(
-    `SELECT id, name, category, price, stock_quantity, image_url, specifications
+    `SELECT id, name, category, price, stock_quantity, image_url, specifications, brand
      FROM products
      WHERE category = $1 AND is_active = true
      ORDER BY name`,

@@ -1,6 +1,9 @@
 import 'dotenv/config';
 import express, { type Application, type Request, type Response, type NextFunction } from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+import rateLimit from 'express-rate-limit';
 import authRoutes from './routes/authRoutes';
 import productRoutes from './routes/productRoutes';
 import adminRoutes from './routes/adminRoutes';
@@ -12,6 +15,9 @@ import { requireRole } from './middlewares/roleMiddleware';
 
 const app: Application = express();
 
+app.use(helmet());
+app.use(compression());
+
 const corsOrigins = (process.env.CORS_ORIGIN ?? 'http://localhost:5173')
   .split(',')
   .map((origin) => origin.trim())
@@ -19,6 +25,29 @@ const corsOrigins = (process.env.CORS_ORIGIN ?? 'http://localhost:5173')
 
 app.use(cors({ origin: corsOrigins, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
+
+// Rate Limiters (disabled in test environment)
+const isTest = process.env.NODE_ENV === 'test' || process.argv.some((arg) => arg.includes('test'));
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: isTest ? 10000 : 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'too_many_requests', message: 'Too many auth attempts from this IP, please try again after 15 minutes' }
+});
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: isTest ? 10000 : 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'too_many_requests', message: 'Too many requests from this IP, please try again later' }
+});
+
+app.use('/api/', apiLimiter);
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
 
 app.get('/health', (_req: Request, res: Response) => {
   res.json({ ok: true, service: 'comhub-backend', ts: new Date().toISOString() });

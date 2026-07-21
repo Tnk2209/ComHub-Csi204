@@ -35,6 +35,7 @@ const mockProducts = [
 
 vi.mock('../../services/productService.js', () => ({
   list: vi.fn(() => Promise.resolve(mockProducts)),
+  listWithCount: vi.fn(() => Promise.resolve({ data: mockProducts, total: mockProducts.length })),
 }));
 
 vi.mock('../../services/wishlistService.js', () => ({

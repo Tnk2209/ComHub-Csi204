@@ -174,3 +174,74 @@ describe('OrderTracking order list view', () => {
     expect(mockGet).toHaveBeenCalledWith(21);
   });
 });
+
+describe('OrderTracking product names', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('detail view shows product_name instead of Product #id', async () => {
+    const mockOrder = {
+      id: 50,
+      total_price: '35000',
+      order_status: 'processing',
+      created_at: '2026-07-21T00:00:00Z',
+      items: [
+        { product_id: 1, quantity: 1, price_per_unit: '20000', product_name: 'RTX 4070 Super' },
+        { product_id: 2, quantity: 2, price_per_unit: '7500', product_name: 'Kingston Fury 16GB DDR5' },
+      ],
+      logs: [{ id: 1, status: 'Order Created', created_at: '2026-07-21T01:00:00Z' }],
+    };
+    mockGet.mockResolvedValue(mockOrder);
+
+    render(<OrderTracking onNavigate={vi.fn()} orderData={{ orderId: 50 }} />);
+
+    // Should show product names
+    expect(await screen.findByText('RTX 4070 Super')).toBeInTheDocument();
+    expect(screen.getByText('Kingston Fury 16GB DDR5')).toBeInTheDocument();
+
+    // Should NOT show "Product #1" or "Product #2"
+    expect(screen.queryByText('Product #1')).not.toBeInTheDocument();
+    expect(screen.queryByText('Product #2')).not.toBeInTheDocument();
+  });
+
+  it('detail view falls back to Product #id when product_name is missing', async () => {
+    const mockOrder = {
+      id: 51,
+      total_price: '5000',
+      order_status: 'paid',
+      created_at: '2026-07-21T00:00:00Z',
+      items: [
+        { product_id: 7, quantity: 1, price_per_unit: '5000' },
+      ],
+      logs: [{ id: 1, status: 'Order Created', created_at: '2026-07-21T01:00:00Z' }],
+    };
+    mockGet.mockResolvedValue(mockOrder);
+
+    render(<OrderTracking onNavigate={vi.fn()} orderData={{ orderId: 51 }} />);
+
+    expect(await screen.findByText('Product #7')).toBeInTheDocument();
+  });
+
+  it('list card shows product names as summary text', async () => {
+    const mockOrders = [
+      {
+        id: 30,
+        total_price: '45000',
+        order_status: 'paid',
+        created_at: '2026-07-20T00:00:00Z',
+        items: [
+          { product_id: 1, product_name: 'RTX 4080' },
+          { product_id: 2, product_name: 'Ryzen 7 7800X3D' },
+          { product_id: 3, product_name: 'MSI B650 Tomahawk' },
+        ],
+      },
+    ];
+    mockList.mockResolvedValue(mockOrders);
+
+    render(<OrderTracking onNavigate={vi.fn()} />);
+
+    // Should show at least the first product name in the card
+    expect(await screen.findByText(/RTX 4080/)).toBeInTheDocument();
+  });
+});

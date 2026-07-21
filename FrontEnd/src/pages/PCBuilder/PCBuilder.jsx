@@ -23,6 +23,7 @@ import * as productService from '../../services/productService';
 import { useCart } from '../../contexts/CartContext';
 import { buildCompatibility as computeCompatibility } from './buildCompatibility';
 import { loadBuilderState, saveBuilderState, clearBuilderState } from './builderStorage';
+import IsometricChassis from './IsometricChassis';
 
 const CATEGORY_MAP = {
   cpu: 'CPU',
@@ -236,138 +237,9 @@ function PCBuilder({ onNavigate }) {
               <span className="text-[9px] bg-app-border text-app-text-muted px-2 py-0.5 rounded font-mono">{t('builder.middle_column_tag')}</span>
             </div>
 
-            {/* Vertical PC Case Tower SVG Schematic */}
-            <div className="w-full max-w-[260px] flex-grow flex items-center justify-center relative z-10 py-2 min-h-0">
-              <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid meet" className="w-full h-full text-gray-700">
-                {/* 1. PC Case Outer Frame (Vertical Mid-Tower shape) */}
-                <rect 
-                  x="15" y="15" width="270" height="370" rx="10" 
-                  fill="none" 
-                  stroke={selectedParts.case ? 'var(--brand-blue)' : 'var(--app-border)'} 
-                  strokeWidth="2.5" 
-                  className="transition-colors duration-300"
-                  style={{ filter: selectedParts.case ? 'drop-shadow(0 0 6px rgba(0,194,255,0.25))' : 'none' }}
-                />
-                
-                {/* Rear Exhaust Fan (Top Left) */}
-                <circle 
-                  cx="45" cy="85" r="18" fill="none" 
-                  stroke={selectedParts.case ? 'var(--brand-blue)' : 'var(--app-border)'} 
-                  strokeWidth="1.5"
-                  className={`transition-colors duration-300 ${selectedParts.case ? 'animate-[spin_4s_linear_infinite]' : ''}`} 
-                  style={{ transformOrigin: '45px 85px' }}
-                />
-                <line x1="45" y1="67" x2="45" y2="103" stroke={selectedParts.case ? 'var(--brand-blue)' : 'var(--app-border)'} strokeWidth="1" />
-                <line x1="27" y1="85" x2="63" y2="85" stroke={selectedParts.case ? 'var(--brand-blue)' : 'var(--app-border)'} strokeWidth="1" />
-
-                {/* Front Intake Fans (Right side, 3 fans vertical) */}
-                {[90, 165, 240].map((cy, i) => (
-                  <circle 
-                    key={i}
-                    cx="255" cy={cy} r="20" fill="none" 
-                    stroke={selectedParts.case ? 'var(--brand-blue)' : 'var(--app-border)'} 
-                    strokeWidth="1.5"
-                    className={`transition-colors duration-300 ${selectedParts.case ? 'animate-[spin_4s_linear_infinite]' : ''}`} 
-                    style={{ transformOrigin: `255px ${cy}px` }}
-                  />
-                ))}
-
-                {/* 2. Motherboard Board Area */}
-                <rect 
-                  x="80" y="45" width="150" height="230" rx="4" 
-                  fill="none" 
-                  stroke={selectedParts.motherboard ? 'var(--brand-blue)' : 'var(--app-border)'} 
-                  strokeWidth="2" 
-                  className="transition-colors duration-300"
-                  style={{ filter: selectedParts.motherboard ? 'drop-shadow(0 0 5px rgba(0, 194, 255, 0.2))' : 'none' }}
-                />
-                
-                {/* Motherboard socket text */}
-                <text x="155" y="55" fill="var(--app-border)" fontSize="7" textAnchor="middle" fontWeight="bold">ATX FORM FACTOR</text>
-
-                {/* 3. CPU Socket & Fan Cooler */}
-                <rect 
-                  x="115" y="70" width="55" height="55" rx="2" 
-                  fill={selectedParts.cpu ? 'rgba(var(--brand-blue-rgb),0.06)' : 'none'} 
-                  stroke={selectedParts.cpu ? 'var(--brand-blue)' : 'var(--app-border)'} 
-                  strokeWidth="1.5" 
-                  className="transition-colors duration-300"
-                  style={{ filter: selectedParts.cpu ? 'drop-shadow(0 0 8px rgba(0, 194, 255, 0.35))' : 'none' }}
-                />
-                <text 
-                  x="142" y="102" 
-                  fill={selectedParts.cpu ? 'var(--brand-blue)' : '#475569'} 
-                  fontSize="9" fontWeight="bold" textAnchor="middle"
-                  className="transition-colors duration-300 font-mono"
-                >
-                  {selectedParts.cpu ? 'CPU' : 'SOCKET'}
-                </text>
-
-                {/* 4. RAM Slots (4 vertical bars to the right of CPU) */}
-                {[0, 1, 2, 3].map((i) => (
-                  <rect 
-                    key={i}
-                    x={185 + (i * 6)} y="65" width="3" height="65" rx="0.5" 
-                    fill={selectedParts.ram ? 'rgba(0,194,255,0.2)' : 'none'} 
-                    stroke={selectedParts.ram ? 'var(--brand-blue)' : 'var(--app-border)'} 
-                    strokeWidth="0.8" 
-                    className="transition-all duration-300"
-                    style={{ filter: selectedParts.ram ? 'drop-shadow(0 0 4px rgba(0, 194, 255, 0.3))' : 'none' }}
-                  />
-                ))}
-
-                {/* 5. PCIe GPU Slot & Mounted GPU Card */}
-                <rect 
-                  x="90" y="155" width="130" height="3" 
-                  fill="var(--app-border)" 
-                />
-                {selectedParts.gpu ? (
-                  <rect 
-                    x="85" y="145" width="165" height="32" rx="3" 
-                    fill="rgba(0,194,255,0.1)" 
-                    stroke="var(--brand-blue)" 
-                    strokeWidth="1.5" 
-                    className="transition-all duration-300"
-                    style={{ filter: 'drop-shadow(0 0 10px rgba(0, 194, 255, 0.4))' }}
-                  />
-                ) : null}
-                <text 
-                  x="155" y="163" 
-                  fill={selectedParts.gpu ? 'var(--brand-blue)' : '#475569'} 
-                  fontSize="8" fontWeight="bold" textAnchor="middle"
-                  className="transition-colors duration-300 font-mono"
-                >
-                  {selectedParts.gpu ? 'GPU ON PCIe' : 'PCIe SLOT'}
-                </text>
-
-                {/* 6. M.2 Storage SSD Indicator slot */}
-                <rect 
-                  x="115" y="195" width="40" height="10" rx="1" 
-                  fill={selectedParts.storage ? 'rgba(0,194,255,0.15)' : 'none'} 
-                  stroke={selectedParts.storage ? 'var(--brand-blue)' : 'var(--app-border)'} 
-                  strokeWidth="1"
-                  className="transition-colors duration-300"
-                />
-                <text x="135" y="202" fill={selectedParts.storage ? 'var(--brand-blue)' : '#475569'} fontSize="6" textAnchor="middle" fontWeight="bold">M.2 SSD</text>
-
-                {/* 7. PSU Power Shroud Cover (Bottom Compartment) */}
-                <rect 
-                  x="25" y="315" width="250" height="55" rx="4" 
-                  fill={selectedParts.psu ? 'rgba(var(--brand-blue-rgb),0.06)' : 'none'} 
-                  stroke={selectedParts.psu ? 'var(--brand-blue)' : 'var(--app-border)'} 
-                  strokeWidth="1.5" 
-                  className="transition-colors duration-300"
-                  style={{ filter: selectedParts.psu ? 'drop-shadow(0 0 6px rgba(0,194,255,0.25))' : 'none' }}
-                />
-                <text 
-                  x="150" y="347" 
-                  fill={selectedParts.psu ? 'var(--brand-blue)' : '#475569'} 
-                  fontSize="9" fontWeight="bold" textAnchor="middle"
-                  className="transition-colors duration-300 font-mono"
-                >
-                  {selectedParts.psu ? 'PSU POWER SHROUD' : 'PSU CHAMBER'}
-                </text>
-              </svg>
+            {/* Isometric 3D PC Case SVG */}
+            <div className="w-full max-w-[400px] flex-grow flex items-center justify-center relative z-10 py-2 min-h-0">
+              <IsometricChassis selectedParts={selectedParts} />
             </div>
 
             {/* Micro-legends at the bottom */}
@@ -455,17 +327,17 @@ function PCBuilder({ onNavigate }) {
             {/* Wattage bar */}
             <div className="mb-4 flex-shrink-0">
               <div className="flex justify-between text-[11px] font-semibold text-app-text-muted mb-1.5">
-                <span>Load</span>
-                <span className="font-mono text-app-text">
+                <span>System Load</span>
+                <span className="font-mono text-app-text font-bold">
                   {buildCompatibility.totalTdp}W{selectedParts.psu ? ` / ${selectedParts.psu.wattage}W` : ''}
                 </span>
               </div>
-              <div className="w-full bg-app-bg rounded-full h-2 overflow-hidden">
+              <div className="w-full bg-app-bg rounded-full h-2.5 overflow-hidden p-0.5 border border-app-border/40">
                 <div
-                  className={`h-full transition-all duration-300 ${
-                    !selectedParts.psu ? 'bg-amber-500' :
-                    (buildCompatibility.totalTdp / selectedParts.psu.wattage) > 1.0 ? 'bg-rose-500' :
-                    (buildCompatibility.totalTdp / selectedParts.psu.wattage) > 0.8 ? 'bg-amber-400' : 'bg-blue'
+                  className={`h-full rounded-full transition-all duration-500 ${
+                    !selectedParts.psu ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' :
+                    (buildCompatibility.totalTdp / selectedParts.psu.wattage) > 1.0 ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]' :
+                    (buildCompatibility.totalTdp / selectedParts.psu.wattage) > 0.8 ? 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.5)]' : 'bg-blue shadow-[0_0_8px_rgba(59,130,246,0.5)]'
                   }`}
                   style={{
                     width: `${Math.min(
@@ -477,6 +349,14 @@ function PCBuilder({ onNavigate }) {
                   }}
                 />
               </div>
+              {selectedParts.psu && (
+                <div className="mt-2 flex items-center justify-between text-[10px] text-app-text-muted font-medium">
+                  <span>Usage: {Math.round((buildCompatibility.totalTdp / selectedParts.psu.wattage) * 100)}%</span>
+                  <span className={selectedParts.psu.wattage - buildCompatibility.totalTdp >= 0 ? 'text-emerald-500 font-semibold' : 'text-rose-500 font-semibold'}>
+                    {selectedParts.psu.wattage - buildCompatibility.totalTdp >= 0 ? `+${selectedParts.psu.wattage - buildCompatibility.totalTdp}W Headroom` : `${selectedParts.psu.wattage - buildCompatibility.totalTdp}W Deficit`}
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Total + Checkout pinned to bottom */}
@@ -484,7 +364,7 @@ function PCBuilder({ onNavigate }) {
               <div className="flex items-baseline justify-between mb-3">
                 <span className="text-[11px] text-app-text-muted uppercase tracking-wider">Total</span>
                 <h2 className="text-2xl font-extrabold text-app-text font-mono">
-                  ${buildCompatibility.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  ฿{buildCompatibility.totalCost.toLocaleString('th-TH', { minimumFractionDigits: 0 })}
                 </h2>
               </div>
               <button
@@ -613,7 +493,7 @@ function PCBuilder({ onNavigate }) {
                   </div>
                   <div className="flex items-center gap-4 flex-shrink-0">
                     <span className="text-app-text font-extrabold text-lg font-mono">
-                      ${item.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      ฿{item.price.toLocaleString('th-TH', { minimumFractionDigits: 0 })}
                     </span>
                     <button
                       onClick={() => selectComponent(activeCategory, item)}

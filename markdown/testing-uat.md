@@ -12,8 +12,6 @@
 | รหัส Use Case | หัวข้อการทดสอบ (Use Case Name) | ขั้นตอนการทดสอบ (Test Steps) | ผลลัพธ์ที่คาดหวัง (Expected Results) | สถานะ (Pass/Fail) |
 |:---:|:---|:---|:---|:---:|
 | **UC-01** | **สมัครสมาชิก (C_Register)** | กรอกรายละเอียดสมัครสมาชิกใหม่ในฟอร์ม แล้วกดบันทึก | บัญชีผู้ใช้ถูกสร้างใหม่ในตารางฐานข้อมูลสำเร็จ | `[ ] Pass` / `[ ] Fail` |
-| **UC-02** | **ล็อกอินด้วย Google OAuth (C_LoginGoogle)** | กดปุ่ม "Sign in with Google" แล้ว Google จัดการ OAuth flow | ระบบสร้าง JWT session ผูกกับ Google account และ redirect กลับ ComHub สำเร็จ | `[ ] Pass` / `[ ] Fail` |
-| **UC-02B** | **สมัครสมาชิกด้วย Google OAuth (C_RegisterGoogle)** | กดปุ่ม "Sign up with Google" ครั้งแรก — Google OAuth flow ดำเนินการยืนยัน | ระบบสร้างบัญชีใหม่ใน users: password_hash = NULL, auth_provider = 'google' | `[ ] Pass` / `[ ] Fail` |
 | **UC-03** | **ดูรายละเอียดสินค้า (C_ViewProduct)** | คลิกเข้าสู่หน้ารายละเอียดสินค้าของอุปกรณ์ไอทีชิ้นใดชิ้นหนึ่ง | แสดงรายละเอียด ข้อมูลราคา และสเปคเทคนิคจาก JSONB ครบถ้วน | `[ ] Pass` / `[ ] Fail` |
 
 ---

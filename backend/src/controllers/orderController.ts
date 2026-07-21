@@ -131,12 +131,36 @@ export async function listOrders(req: Request, res: Response): Promise<void> {
   const userId = req.user!.sub;
 
   const result = await pool.query(
-    `SELECT id, user_id, total_price, order_status, payment_status, shipping_address, tracking_number, created_at
+    `SELECT id, user_id, total_price, order_status, payment_status, shipping_address, tracking_number, created_at,
+       (SELECT created_at FROM order_logs WHERE order_id = orders.id AND (status ILIKE '%cancel%' OR status ILIKE '%reject%') ORDER BY created_at DESC LIMIT 1) AS cancelled_at
      FROM orders WHERE user_id = $1 ORDER BY created_at DESC`,
     [userId]
   );
 
-  res.status(200).json(result.rows);
+  const orders = result.rows;
+
+  if (orders.length > 0) {
+    const orderIds = orders.map((o: any) => o.id);
+    const itemsRes = await pool.query(
+      `SELECT oi.order_id, oi.id, oi.product_id, oi.quantity, oi.price_per_unit, p.name AS product_name
+       FROM order_items oi
+       LEFT JOIN products p ON p.id = oi.product_id
+       WHERE oi.order_id = ANY($1)`,
+      [orderIds]
+    );
+
+    const itemsByOrder: Record<number, any[]> = {};
+    for (const item of itemsRes.rows) {
+      if (!itemsByOrder[item.order_id]) itemsByOrder[item.order_id] = [];
+      itemsByOrder[item.order_id].push(item);
+    }
+
+    for (const order of orders) {
+      (order as any).items = itemsByOrder[(order as any).id] || [];
+    }
+  }
+
+  res.status(200).json(orders);
 }
 
 export async function getOrder(req: Request, res: Response): Promise<void> {
@@ -166,7 +190,10 @@ export async function getOrder(req: Request, res: Response): Promise<void> {
   }
 
   const itemsRes = await pool.query(
-    `SELECT id, product_id, quantity, price_per_unit FROM order_items WHERE order_id = $1`,
+    `SELECT oi.id, oi.product_id, oi.quantity, oi.price_per_unit, p.name AS product_name
+     FROM order_items oi
+     LEFT JOIN products p ON p.id = oi.product_id
+     WHERE oi.order_id = $1`,
     [numId]
   );
 

@@ -16,10 +16,8 @@
 
 - **สมัครสมาชิก (Register)**
   - สมัครบัญชี Native : กรอก username, password, confirm password และข้อมูลส่วนตัว
-  - สมัครด้วย Google OAuth : ลงทะเบียนด้วย Google Account ผ่าน Google OAuth 2.0 (Google จัดการยืนยันตัวตนผ่าน Gmail เอง)
 - **ล็อกอินเข้าสู่ระบบ (Login)**
   - เข้าสู่ระบบ Native : กรอก username + password ตรวจสอบสิทธิ์ด้วย JWT Token
-  - เข้าสู่ระบบด้วย Google OAuth : คลิก "Sign in with Google" ผ่าน Google OAuth 2.0 (Google จัดการ 2FA/OTP เอง)
 - **จัดสเปคคอมพิวเตอร์ (PC Builder)**
   - เลือกชิ้นส่วน : เลือกอุปกรณ์ทีละชิ้นจาก 7 หมวดหมู่หลัก (CPU, Mainboard, GPU, RAM, SSD, Case, PSU) ผ่านกล่อง Bento Grid
   - เปลี่ยนชิ้นส่วน : สลับเปลี่ยนอุปกรณ์ที่เลือกไว้ในแต่ละหมวดหมู่ได้ตลอดเวลา
@@ -90,7 +88,7 @@
 
 |     รหัส     | ฟังก์ชันระบบ     | รายละเอียด                                                                                    | สิทธิ์ผู้ใช้ |
 | :--------------: | :--------------------------- | :------------------------------------------------------------------------------------------------------ | :----------------------: |
-| **SYS-01** | Authentication & OAuth        | สมัครสมาชิก/ล็อกอิน Native + Google OAuth 2.0 (Passport.js), JWT Token Verification  |     ทุกบทบาท     |
+| **SYS-01** | Authentication                 | สมัครสมาชิก/ล็อกอิน Native, JWT Token Verification  |     ทุกบทบาท     |
 | **SYS-02** | RBAC (Role-Based Access Control) | แยกสิทธิ์ 2 บทบาท: Customer และ Admin ด้วย JWT + Middleware |     ทุกบทบาท     |
 | **SYS-03** | Cart & Checkout Flow         | จัดการตะกร้า (LocalStorage), กรอกที่อยู่, อัปโหลดสลิป (Mockup)                 |     Customer, Admin     |
 | **SYS-04** | Client-side WebP Compression | บีบอัดรูปภาพสลิปเป็น WebP 80% ผ่าน Canvas API, แปลงเป็น Base64        | Customer, Admin |
@@ -101,7 +99,6 @@
 |  **C-06**  | Wishlist                     | บันทึกของโปรด (ตัด Stock Alert ออก)                          |         Customer         |
 |  **C-07**  | Review (No Photos)           | รีวิว 1-5 ดาว พร้อมข้อความ (ไม่มีการอัปโหลดรูป)                             |         Customer         |
 |  **C-09**  | Order Tracking UI            | ติดตาม 5 ขั้นตอน: Pending Payment → Paid → Processing → Shipped → Delivered                                        |     Customer, Admin     |
-|  **C-10**  | Google OAuth Authentication  | ล็อกอิน/สมัครสมาชิกด้วย Google Account ผ่าน Passport.js + passport-google-oauth20 |       Customer       |
 |  **A-01**  | Product Management CRUD      | เพิ่ม/ลบ/แก้ไข/Soft Delete (is_active) สินค้า พร้อมอัปโหลดรูป WebP                                         |          Admin          |
 |  **A-02**  | Payment Review               | อนุมัติ/ปฏิเสธสลิปโอนเงิน (Mockup Base64)                                        |          Admin          |
 |  **A-03**  | Order Management             | ดู/อัปเดตสถานะออเดอร์, กรอก Tracking Number                                        |          Admin          |

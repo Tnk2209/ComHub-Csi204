@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import Swal from 'sweetalert2';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
@@ -34,9 +36,24 @@ function DashboardLayout({ children }) {
     navigate(routes[menuId] || '/admin-dashboard');
   };
 
+  const { t } = useTranslation();
+
   const handleLogout = () => {
-    logout();
-    navigate('/landing');
+    Swal.fire({
+      title: t('logout.confirm_title', 'คุณต้องการออกจากระบบใช่หรือไม่?'),
+      text: t('logout.confirm_text', 'กดยืนยันเพื่อออกจากระบบ หรือยกเลิกเพื่ออยู่ต่อ'),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e11d48',
+      cancelButtonColor: '#3b82f6',
+      confirmButtonText: t('logout.confirm_btn', 'ออกจากระบบ'),
+      cancelButtonText: t('logout.cancel_btn', 'ยกเลิก'),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+        navigate('/landing');
+      }
+    });
   };
 
   return (

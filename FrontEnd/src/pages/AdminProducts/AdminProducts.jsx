@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Swal from 'sweetalert2';
 import { Package, Plus, Edit2, Trash2, Power, PowerOff, Save, X, Search } from 'lucide-react';
 import * as adminService from '../../services/adminService';
+import { compressImage } from '../../utils/imageCompressor';
 
 function AdminProducts({ onNavigate }) {
   const { t } = useTranslation();
@@ -14,11 +15,15 @@ function AdminProducts({ onNavigate }) {
   const [isCreating, setIsCreating] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [currentPageNum, setCurrentPageNum] = useState(1);
+  const itemsPerPage = 10;
   const [formData, setFormData] = useState({
     name: '',
+    brand: '',
     category: 'CPU',
     price: '',
     stock_quantity: '',
+    image_url: '',
     specifications: {}
   });
 
@@ -78,19 +83,31 @@ function AdminProducts({ onNavigate }) {
     finally { setLoading(false); }
   };
 
+  // Reset page to 1 when filters change
+  useEffect(() => {
+    setCurrentPageNum(1);
+  }, [searchQuery, filterCategory]);
+
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = filterCategory === 'all' || product.category === filterCategory;
     return matchesSearch && matchesCategory;
   });
 
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const indexOfLastProduct = currentPageNum * itemsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
   const handleEdit = (product) => {
     setEditingProduct(product.id);
     setFormData({
       name: product.name,
+      brand: product.brand || '',
       category: product.category,
       price: String(product.price),
       stock_quantity: String(product.stock_quantity),
+      image_url: product.image_url || '',
       specifications: product.specifications ? { ...product.specifications } : {}
     });
     setIsCreating(true);
@@ -180,9 +197,11 @@ function AdminProducts({ onNavigate }) {
 
     const payload = {
       name: formData.name,
+      brand: formData.brand.trim() || 'Generic',
       category: formData.category,
       price: parseFloat(formData.price),
       stock_quantity: parseInt(formData.stock_quantity),
+      image_url: formData.image_url.trim() || null,
       specifications: processedSpecs
     };
 
@@ -205,11 +224,22 @@ function AdminProducts({ onNavigate }) {
   const handleCancel = () => {
     setIsCreating(false);
     setEditingProduct(null);
-    setFormData({ name: '', category: 'CPU', price: '', stock_quantity: '', specifications: {} });
+    setFormData({ name: '', brand: '', category: 'CPU', price: '', stock_quantity: '', image_url: '', specifications: {} });
   };
 
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const result = await compressImage(file);
+      handleInputChange('image_url', result.base64);
+    } catch {
+      Swal.fire({ icon: 'error', title: 'Image Upload Failed' });
+    }
   };
 
   const handleSpecChange = (key, value) => {
@@ -279,7 +309,7 @@ function AdminProducts({ onNavigate }) {
             </h2>
 
             <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-app-text mb-2">
                     {t('admin_products.product_name')} *
@@ -289,6 +319,18 @@ function AdminProducts({ onNavigate }) {
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     placeholder="Intel Core i9-14900K"
+                    className="w-full px-4 py-3 bg-bg-secondary border border-app-border rounded-lg text-app-text placeholder-app-text-muted focus:outline-none focus:ring-2 focus:ring-blue transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-app-text mb-2">
+                    {t('admin_products.brand', 'Brand / ยี่ห้อ')} *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.brand}
+                    onChange={(e) => handleInputChange('brand', e.target.value)}
+                    placeholder="e.g. ASUS, MSI, Intel"
                     className="w-full px-4 py-3 bg-bg-secondary border border-app-border rounded-lg text-app-text placeholder-app-text-muted focus:outline-none focus:ring-2 focus:ring-blue transition-all"
                   />
                 </div>
@@ -333,6 +375,65 @@ function AdminProducts({ onNavigate }) {
                     placeholder="45"
                     className="w-full px-4 py-3 bg-bg-secondary border border-app-border rounded-lg text-app-text placeholder-app-text-muted focus:outline-none focus:ring-2 focus:ring-blue transition-all"
                   />
+                </div>
+              </div>
+
+              {/* Product Image Selection & Upload */}
+              <div className="border-t border-app-border pt-4">
+                <label className="block text-sm font-medium text-app-text mb-2">
+                  {t('admin_products.product_image', 'Product Image / รูปภาพสินค้า')}
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                  {/* Image Preview Container */}
+                  <div className="h-32 bg-bg-secondary rounded-lg border border-app-border flex items-center justify-center overflow-hidden">
+                    {formData.image_url ? (
+                      <img
+                        src={formData.image_url}
+                        alt="Product Preview"
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/150x150/EEE/333?text=Error'; }}
+                      />
+                    ) : (
+                      <div className="text-center p-4">
+                        <Package className="w-8 h-8 text-app-text-muted mx-auto mb-1" />
+                        <span className="text-xs text-app-text-muted">No Image</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Inputs Container */}
+                  <div className="md:col-span-3 space-y-3">
+                    <div>
+                      <input
+                        type="text"
+                        value={formData.image_url}
+                        onChange={(e) => handleInputChange('image_url', e.target.value)}
+                        placeholder="Image URL (e.g. https://... or base64)"
+                        className="w-full px-4 py-2.5 bg-bg-secondary border border-app-border rounded-lg text-app-text placeholder-app-text-muted focus:outline-none focus:ring-2 focus:ring-blue transition-all text-sm"
+                      />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <label className="bg-blue hover:bg-blue/90 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-sm">
+                        <Plus className="w-3.5 h-3.5" />
+                        Upload Image
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                      </label>
+                      {formData.image_url && (
+                        <button
+                          type="button"
+                          onClick={() => handleInputChange('image_url', '')}
+                          className="bg-red/10 hover:bg-red/20 text-red text-xs font-semibold px-4 py-2.5 rounded-lg transition-all cursor-pointer"
+                        >
+                          Remove Image
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -394,10 +495,21 @@ function AdminProducts({ onNavigate }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-app-border">
-                  {filteredProducts.map((product) => (
+                  {currentProducts.map((product) => (
                     <tr key={product.id} className="hover:bg-bg-secondary transition-colors">
                       <td className="px-6 py-4">
-                        <div className="text-sm font-semibold text-app-text">{product.name}</div>
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={product.image_url || `https://placehold.co/50x50/EEE/333?text=${encodeURIComponent(product.category)}`}
+                            alt={product.name}
+                            className="w-10 h-10 object-cover rounded-lg bg-bg-secondary flex-shrink-0"
+                            onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/50x50/EEE/333?text=${encodeURIComponent(product.category)}`; }}
+                          />
+                          <div>
+                            <div className="text-sm font-semibold text-app-text">{product.name}</div>
+                            <div className="text-xs text-app-text-muted uppercase tracking-wider font-medium">{product.brand || 'Generic'}</div>
+                          </div>
+                        </div>
                       </td>
                       <td className="px-6 py-4">
                         <span className="inline-flex items-center bg-blue/10 text-blue text-xs font-medium px-2 py-1 rounded-full">{product.category}</span>
@@ -407,7 +519,7 @@ function AdminProducts({ onNavigate }) {
                       </td>
                       <td className="px-6 py-4">
                         <div className={`text-sm font-semibold ${product.stock_quantity === 0 ? 'text-red' : product.stock_quantity < 10 ? 'text-orange' : 'text-green'}`}>
-                          {product.stock_quantity}
+                           {product.stock_quantity}
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -443,6 +555,51 @@ function AdminProducts({ onNavigate }) {
                 </tbody>
               </table>
             </div>
+
+            {/* Pagination Controls */}
+            {filteredProducts.length > 0 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-4 bg-bg-secondary border-t border-app-border">
+                <div className="text-xs sm:text-sm text-app-text-muted font-medium">
+                  Showing <span className="text-app-text font-semibold">{indexOfFirstProduct + 1}</span> to{' '}
+                  <span className="text-app-text font-semibold">
+                    {Math.min(indexOfLastProduct, filteredProducts.length)}
+                  </span>{' '}
+                  of <span className="text-app-text font-semibold">{filteredProducts.length}</span> products
+                </div>
+                
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setCurrentPageNum((p) => Math.max(p - 1, 1))}
+                    disabled={currentPageNum === 1}
+                    className="px-3 py-1.5 rounded-lg border border-app-border bg-app-surface text-app-text hover:bg-bg-secondary text-xs sm:text-sm font-semibold transition-all disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+                  >
+                    Previous
+                  </button>
+                  
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPageNum(pageNum)}
+                      className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                        currentPageNum === pageNum
+                          ? 'bg-blue text-white'
+                          : 'border border-app-border bg-app-surface text-app-text hover:bg-bg-secondary'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
+                  
+                  <button
+                    onClick={() => setCurrentPageNum((p) => Math.min(p + 1, totalPages))}
+                    disabled={currentPageNum === totalPages}
+                    className="px-3 py-1.5 rounded-lg border border-app-border bg-app-surface text-app-text hover:bg-bg-secondary text-xs sm:text-sm font-semibold transition-all disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
 
             {filteredProducts.length === 0 && (
               <div className="text-center py-16">

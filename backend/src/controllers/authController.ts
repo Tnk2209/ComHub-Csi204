@@ -7,7 +7,7 @@ import type { PublicUser } from '../models/types';
 const BCRYPT_ROUNDS = 10;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MIN_PASSWORD = 6;
+const MIN_PASSWORD = 8;
 
 export async function register(req: Request, res: Response): Promise<void> {
   const { email, password, first_name, last_name } = req.body ?? {};

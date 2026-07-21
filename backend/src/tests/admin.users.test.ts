@@ -27,15 +27,15 @@ before(async () => {
   // Create customer (target for role/status changes)
   const custRes = await request(app)
     .post('/api/auth/register')
-    .send({ email: uniqueEmail('target-user'), password: 'pass123', first_name: 'Target', last_name: 'Customer' });
+    .send({ email: uniqueEmail('target-user'), password: 'password123', first_name: 'Target', last_name: 'Customer' });
   customerToken = custRes.body.token;
   targetUserId = custRes.body.user.id;
 
   // Create a few more users for list/search testing
   await request(app).post('/api/auth/register')
-    .send({ email: uniqueEmail('search-alice'), password: 'pass123', first_name: 'Alice', last_name: 'Smith' });
+    .send({ email: uniqueEmail('search-alice'), password: 'password123', first_name: 'Alice', last_name: 'Smith' });
   await request(app).post('/api/auth/register')
-    .send({ email: uniqueEmail('search-bob'), password: 'pass123', first_name: 'Bob', last_name: 'Jones' });
+    .send({ email: uniqueEmail('search-bob'), password: 'password123', first_name: 'Bob', last_name: 'Jones' });
 });
 
 after(async () => {

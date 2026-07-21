@@ -54,7 +54,7 @@ after(async () => {
 
 test('GET /api/admin/products — Admin sees inactive products', async () => {
   const res = await request(app)
-    .get('/api/admin/products?include_inactive=true')
+    .get('/api/admin/products?include_inactive=true&limit=200')
     .set('Authorization', `Bearer ${adminToken}`);
 
   assert.equal(res.status, 200, `expected 200, got ${res.status}: ${res.text}`);
@@ -65,7 +65,7 @@ test('GET /api/admin/products — Admin sees inactive products', async () => {
 
 test('GET /api/admin/products — without include_inactive still shows all for admin', async () => {
   const res = await request(app)
-    .get('/api/admin/products')
+    .get('/api/admin/products?limit=200')
     .set('Authorization', `Bearer ${adminToken}`);
 
   assert.equal(res.status, 200);

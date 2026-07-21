@@ -76,6 +76,11 @@ export function createAdminUser(data) {
 }
 
 // --- Dashboard ---
-export function getDashboard() {
-  return apiGet('/api/admin/dashboard');
+export function getDashboard(params = {}) {
+  const search = new URLSearchParams();
+  for (const [k, v] of Object.entries(params)) {
+    if (v !== undefined && v !== null && v !== '') search.set(k, String(v));
+  }
+  const qs = search.toString();
+  return apiGet(`/api/admin/dashboard${qs ? `?${qs}` : ''}`);
 }

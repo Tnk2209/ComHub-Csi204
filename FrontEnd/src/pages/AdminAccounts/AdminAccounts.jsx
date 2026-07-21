@@ -127,9 +127,9 @@ function AdminAccounts({ onNavigate }) {
 
   const getStatusBadge = (isActive) => {
     if (isActive) {
-      return <span className="inline-flex items-center bg-green/10 text-green text-xs font-semibold px-3 py-1 rounded-full">Active</span>;
+      return <span className="inline-flex items-center bg-green/10 text-green text-xs font-semibold px-3 py-1 rounded-full">{t('admin_accounts.active', 'Active')}</span>;
     }
-    return <span className="inline-flex items-center bg-red/10 text-red text-xs font-semibold px-3 py-1 rounded-full">Disabled</span>;
+    return <span className="inline-flex items-center bg-red/10 text-red text-xs font-semibold px-3 py-1 rounded-full">{t('admin_accounts.disabled', 'Disabled')}</span>;
   };
 
   const totalPages = Math.ceil(total / limit);
@@ -209,7 +209,7 @@ function AdminAccounts({ onNavigate }) {
                     <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">{t('admin_accounts.user')}</th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">{t('admin_accounts.email')}</th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">{t('admin_accounts.role')}</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">Status</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-app-text uppercase">{t('admin_accounts.status_header', 'Status')}</th>
                     <th className="px-6 py-4 text-right text-xs font-semibold text-app-text uppercase">{t('admin_accounts.actions')}</th>
                   </tr>
                 </thead>
@@ -232,7 +232,7 @@ function AdminAccounts({ onNavigate }) {
                             onClick={() => handleChangeRole(account)}
                             className="text-xs bg-blue/10 text-blue hover:bg-blue/20 px-3 py-1.5 rounded-lg font-medium transition-all"
                           >
-                            {account.role === 'Admin' ? 'Set Customer' : 'Set Admin'}
+                            {account.role === 'Admin' ? t('admin_accounts.set_customer', 'Set Customer') : t('admin_accounts.set_admin', 'Set Admin')}
                           </button>
                           <button
                             onClick={() => handleToggleStatus(account)}
@@ -242,7 +242,7 @@ function AdminAccounts({ onNavigate }) {
                                 : 'bg-green/10 text-green hover:bg-green/20'
                             }`}
                           >
-                            {account.is_active ? 'Disable' : 'Enable'}
+                            {account.is_active ? t('admin_accounts.disable_btn', 'Disable') : t('admin_accounts.enable_btn', 'Enable')}
                           </button>
                         </div>
                       </td>
@@ -257,7 +257,7 @@ function AdminAccounts({ onNavigate }) {
           {totalPages > 1 && (
             <div className="flex items-center justify-between px-6 py-4 border-t border-app-border">
               <span className="text-sm text-app-text-muted">
-                Page {page} of {totalPages} ({total} users)
+                {t('admin_accounts.pagination_bounds', { page, totalPages, total })}
               </span>
               <div className="flex gap-2">
                 <button
@@ -319,7 +319,7 @@ function AdminAccounts({ onNavigate }) {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Min 6 characters"
+                  placeholder={t('admin_accounts.password_placeholder', 'Min 6 characters')}
                   className="w-full px-3 py-2 bg-app-surface border border-app-border rounded-lg text-app-text placeholder-app-text-muted focus:outline-none focus:ring-2 focus:ring-blue transition-all"
                 />
               </div>
@@ -363,7 +363,7 @@ function AdminAccounts({ onNavigate }) {
                   disabled={submitting}
                   className="px-4 py-2 rounded-lg bg-blue hover:bg-blue/90 disabled:opacity-50 text-white font-semibold shadow-sm hover:shadow-md transition-all cursor-pointer"
                 >
-                  {submitting ? 'Submitting...' : t('common.submit', 'Submit')}
+                  {submitting ? t('common.submitting', 'Submitting...') : t('common.submit', 'Submit')}
                 </button>
               </div>
             </form>

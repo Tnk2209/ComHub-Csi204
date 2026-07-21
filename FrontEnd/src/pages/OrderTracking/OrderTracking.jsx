@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, CreditCard, CheckCircle, Cog, Truck, PackageCheck, Clock, ShoppingBag, ChevronRight } from 'lucide-react';
+import { ArrowLeft, CreditCard, CheckCircle, Cog, Truck, PackageCheck, Clock, ShoppingBag, ChevronRight, Package } from 'lucide-react';
 import * as orderService from '../../services/orderService';
 
 function OrderTracking({ onNavigate, orderData }) {
@@ -18,7 +18,7 @@ function OrderTracking({ onNavigate, orderData }) {
           setSelectedOrder(data);
           setView('detail');
         })
-        .catch(() => {})
+        .catch(() => { })
         .finally(() => setLoading(false));
     } else {
       orderService.list()
@@ -26,7 +26,7 @@ function OrderTracking({ onNavigate, orderData }) {
           setOrders(data);
           setView('list');
         })
-        .catch(() => {})
+        .catch(() => { })
         .finally(() => setLoading(false));
     }
   }, [orderData]);
@@ -48,8 +48,32 @@ function OrderTracking({ onNavigate, orderData }) {
     pending_payment: 'bg-orange text-white',
     paid: 'bg-green text-white',
     processing: 'bg-blue text-white',
-    shipped: 'bg-purple text-white',
+    shipped: 'bg-blue text-white',
     delivered: 'bg-green text-white',
+  };
+
+  const statusBorderMap = {
+    pending_payment: 'border-l-orange',
+    paid: 'border-l-green',
+    processing: 'border-l-blue',
+    shipped: 'border-l-blue',
+    delivered: 'border-l-green',
+  };
+
+  const statusIconMap = {
+    pending_payment: CreditCard,
+    paid: CheckCircle,
+    processing: Cog,
+    shipped: Truck,
+    delivered: PackageCheck,
+  };
+
+  const statusStepIndex = {
+    pending_payment: 0,
+    paid: 1,
+    processing: 2,
+    shipped: 3,
+    delivered: 4,
   };
 
   // --- LOADING ---
@@ -104,33 +128,102 @@ function OrderTracking({ onNavigate, orderData }) {
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-2xl font-bold text-app-text mb-6">{t('order_tracking.my_orders')}</h1>
+          {/* Page Header */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-2xl font-bold text-app-text">{t('order_tracking.my_orders')}</h1>
+              <p className="text-sm text-app-text-muted mt-1">
+                {orders.length} {orders.length === 1 ? 'order' : 'orders'}
+              </p>
+            </div>
+            <div className="w-12 h-12 rounded-full bg-blue/10 flex items-center justify-center">
+              <Package className="w-6 h-6 text-blue" />
+            </div>
+          </div>
 
-          <div className="space-y-3">
-            {orders.map((order) => (
-              <button
-                key={order.id}
-                data-testid="order-card"
-                onClick={() => handleSelectOrder(order)}
-                className="w-full bg-app-surface rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-4 sm:p-5 flex items-center justify-between hover:shadow-md transition-all text-left"
-              >
-                <div className="flex-grow min-w-0">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-base font-semibold text-app-text">#{order.id}</span>
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${statusColorMap[order.order_status] || 'bg-bg-secondary text-app-text-muted'}`}>
-                      {t(`order_tracking.status_${order.order_status}`)}
-                    </span>
+          {/* Order Cards */}
+          <div className="space-y-4">
+            {orders.map((order) => {
+              const StatusIcon = statusIconMap[order.order_status] || Package;
+              const stepIdx = statusStepIndex[order.order_status] ?? 0;
+              const itemCount = order.items?.length || 0;
+
+              return (
+                <button
+                  key={order.id}
+                  data-testid="order-card"
+                  onClick={() => handleSelectOrder(order)}
+                  className={`w-full bg-app-surface rounded-xl border-l-4 ${statusBorderMap[order.order_status] || 'border-l-app-border'} shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 transition-all duration-200 text-left overflow-hidden`}
+                >
+                  <div className="p-4 sm:p-5">
+                    {/* Top Row: Order ID + Price */}
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-lg ${statusColorMap[order.order_status] || 'bg-bg-secondary text-app-text-muted'} flex items-center justify-center flex-shrink-0`}>
+                          <StatusIcon className="w-5 h-5" />
+                        </div>
+
+                        <div>
+                          <span className="flex text-base font-bold text-app-text gap-2">#{order.id}
+                            {/* Product Names Summary */}
+                            {itemCount > 0 && order.items.some(i => i.product_name) && (
+                              <p className=" text-app-text-muted  truncate">
+                                {order.items
+                                  .filter(i => i.product_name)
+                                  .map(i => i.product_name)
+                                  .slice(0, 2)
+                                  .join(', ')}
+                                {order.items.filter(i => i.product_name).length > 2 && ` +${order.items.filter(i => i.product_name).length - 2}`}
+                              </p>
+                            )}
+                          </span>
+
+                          <div className="flex items-center gap-2 mt-4">
+                            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${statusColorMap[order.order_status] || 'bg-bg-secondary text-app-text-muted'}`}>
+                              {t(`order_tracking.status_${order.order_status}`)}
+                            </span>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg font-bold text-blue">฿{Number(order.total_price).toLocaleString()}</span>
+                        <ChevronRight className="w-5 h-5 text-app-text-muted" />
+                      </div>
+                    </div>
+
+
+
+                    {/* Bottom Row: Meta + Progress */}
+                    <div className="flex items-center justify-between pt-3 border-t border-app-border/50">
+                      <div className="flex items-center gap-4 text-xs text-app-text-muted">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5" />
+                          {new Date(order.created_at).toLocaleDateString()}
+                        </span>
+                        {itemCount > 0 && (
+                          <span className="flex items-center gap-1">
+                            <ShoppingBag className="w-3.5 h-3.5" />
+                            {itemCount} {itemCount === 1 ? 'item' : 'items'}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Mini Progress Dots */}
+                      <div className="flex items-center gap-1.5">
+                        {[0, 1, 2, 3, 4].map((i) => (
+                          <div
+                            key={i}
+                            className={`w-2 h-2 rounded-full transition-colors ${i <= stepIdx ? 'bg-blue' : 'bg-bg-secondary'
+                              }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-app-text-muted">
-                    <span>{new Date(order.created_at).toLocaleDateString()}</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <span className="text-base font-semibold text-blue">฿{Number(order.total_price).toLocaleString()}</span>
-                  <ChevronRight className="w-5 h-5 text-app-text-muted" />
-                </div>
-              </button>
-            ))}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -243,18 +336,16 @@ function OrderTracking({ onNavigate, orderData }) {
                   const Icon = step.icon;
                   return (
                     <div key={step.id} className="flex flex-col items-center text-center">
-                      <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-3 transition-all ${
-                        isCompleted
+                      <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-3 transition-all ${isCompleted
                           ? 'bg-blue text-white shadow-[0_2px_8px_rgba(0,0,0,0.12)]'
                           : isCurrent
-                          ? 'bg-orange text-white shadow-[0_2px_8px_rgba(0,0,0,0.12)] animate-pulse'
-                          : 'bg-bg-secondary text-app-text-muted'
-                      }`}>
+                            ? 'bg-orange text-white shadow-[0_2px_8px_rgba(0,0,0,0.12)] animate-pulse'
+                            : 'bg-bg-secondary text-app-text-muted'
+                        }`}>
                         {isCompleted ? <CheckCircle className="w-8 h-8" /> : <Icon className="w-8 h-8" />}
                       </div>
-                      <div className={`text-sm font-semibold mb-1 ${
-                        isCompleted || isCurrent ? 'text-app-text' : 'text-app-text-muted'
-                      }`}>
+                      <div className={`text-sm font-semibold mb-1 ${isCompleted || isCurrent ? 'text-app-text' : 'text-app-text-muted'
+                        }`}>
                         {step.label}
                       </div>
                       {stepDate ? (
@@ -281,19 +372,17 @@ function OrderTracking({ onNavigate, orderData }) {
               const Icon = step.icon;
               return (
                 <div key={step.id} className="flex items-start gap-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    isCompleted
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${isCompleted
                       ? 'bg-blue text-white'
                       : isCurrent
-                      ? 'bg-orange text-white animate-pulse'
-                      : 'bg-bg-secondary text-app-text-muted'
-                  }`}>
+                        ? 'bg-orange text-white animate-pulse'
+                        : 'bg-bg-secondary text-app-text-muted'
+                    }`}>
                     {isCompleted ? <CheckCircle className="w-6 h-6" /> : <Icon className="w-6 h-6" />}
                   </div>
                   <div className="flex-grow pt-2">
-                    <div className={`text-base font-semibold mb-1 ${
-                      isCompleted || isCurrent ? 'text-app-text' : 'text-app-text-muted'
-                    }`}>
+                    <div className={`text-base font-semibold mb-1 ${isCompleted || isCurrent ? 'text-app-text' : 'text-app-text-muted'
+                      }`}>
                       {step.label}
                     </div>
                     {stepDate ? (
@@ -318,7 +407,7 @@ function OrderTracking({ onNavigate, orderData }) {
             {order.items && order.items.map((item, idx) => (
               <div key={idx} className="flex justify-between items-center py-3 border-b border-app-border last:border-0">
                 <div>
-                  <div className="font-medium text-app-text">Product #{item.product_id}</div>
+                  <div className="font-medium text-app-text">{item.product_name || `Product #${item.product_id}`}</div>
                   <div className="text-sm text-app-text-muted">
                     {t('order_tracking.qty')}: {item.quantity} × ฿{Number(item.price_per_unit).toLocaleString()}
                   </div>

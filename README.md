@@ -59,8 +59,7 @@
 #### 👤 ลูกค้า (Customer)
 
 - **สมัครสมาชิก (Register) & ล็อกอิน (Login)**
-  - สร้างบัญชีใหม่แบบ Native (email + password) หรือใช้ **Google OAuth 2.0** ("Sign in / Sign up with Google")
-  - ตรวจสอบสิทธิ์ด้วย JWT Token
+  - สมัครบัญชีใหม่แบบ Native (email + password) ตรวจสอบสิทธิ์ด้วย JWT Token
 - **จัดสเปคคอมพิวเตอร์ (PC Builder)**
   - เลือก/เปลี่ยน/ลบชิ้นส่วนจาก **7 หมวดหมู่หลัก** (CPU, Mainboard, GPU, RAM, SSD, Case, PSU) ผ่าน Bento Grid
   - ดูสรุปสเปคทั้งหมดพร้อมราคารวม
@@ -75,9 +74,9 @@
   - เพิ่ม/ลบชิ้นส่วนที่สนใจไว้ในรายการโปรด
 - **เขียนรีวิว (Review)** — MVP: **ไม่มีการอัปโหลดรูป**
   - ให้คะแนน 1-5 ดาว พร้อมข้อความ (ผูก `order_id` เพื่อยืนยันว่าซื้อจริง)
-- **ตะกร้าสินค้าและสั่งซื้อ (Cart & Checkout)**
-  - เพิ่ม/แก้จำนวน/ลบสินค้าในตะกร้า (LocalStorage), กรอกที่อยู่จัดส่ง
-  - อัปโหลดสลิปโอนเงิน **Mockup** (บีบอัดเป็น WebP 80% แปลงเป็น Base64 ที่ฝั่ง Client)
+- **ตะกร้าสินค้าและสั่งซื้อ (Cart & Checkout)** — **Shopee-style 2-Step Flow**
+  - **Step 1 (Cart):** เลือก/ยกเลิกรายการสินค้าด้วย Checkbox (มี "เลือกทั้งหมด"), ปรับจำนวน, ลบรายการที่เลือก, สรุปราคารวมสินค้าที่เลือก
+  - **Step 2 (Checkout):** สรุปรายการสินค้าที่จะซื้อ, กรอกที่อยู่จัดส่ง, อัปโหลดสลิปโอนเงิน **Mockup** (บีบอัดเป็น WebP 80% แปลงเป็น Base64 ที่ฝั่ง Client)
 - **ติดตามสถานะออเดอร์ (Order Tracking)** — **5 ขั้นตอน MVP**
   - `[Pending Payment] → [Paid] → [Processing] → [Shipped] → [Delivered]`
   - ดูประวัติล็อกไทม์ไลน์ และหมายเลข Tracking Number
@@ -102,9 +101,9 @@
 
 |     รหัส     | ฟังก์ชันระบบ     | รายละเอียด                                                                                    | สิทธิ์ผู้ใช้ |
 | :--------------: | :--------------------------- | :------------------------------------------------------------------------------------------------------ | :----------------------: |
-| **SYS-01** | Authentication & OAuth        | สมัครสมาชิก/ล็อกอิน Native + Google OAuth 2.0 (Passport.js), JWT Token Verification  |     ทุกบทบาท     |
+| **SYS-01** | Authentication                 | สมัครสมาชิก/ล็อกอิน Native, JWT Token Verification  |     ทุกบทบาท     |
 | **SYS-02** | RBAC (Role-Based Access Control) | แยกสิทธิ์ 2 บทบาท: Customer และ Admin ด้วย JWT + Middleware |     ทุกบทบาท     |
-| **SYS-03** | Cart & Checkout Flow         | จัดการตะกร้า (LocalStorage), กรอกที่อยู่, อัปโหลดสลิป (Mockup)                 |     Customer, Admin     |
+| **SYS-03** | Cart & Checkout Flow         | จัดการตะกร้า (LocalStorage), เลือกรายการสินค้า (Shopee-style 2-Step), กรอกที่อยู่, อัปโหลดสลิป (Mockup)                 |     Customer, Admin     |
 | **SYS-04** | Client-side WebP Compression | บีบอัดรูปภาพสลิปเป็น WebP 80% ผ่าน Canvas API, แปลงเป็น Base64        | Customer, Admin |
 |  **C-01**  | PC Builder Page              | เลือกชิ้นส่วน 7 หมวดหมู่ พร้อม Bento Grid UI                                  |         Customer         |
 |  **C-02**  | Compatibility Checker        | กรอง Socket, ขนาดเคส/GPU, ชนิด RAM (DDR4/DDR5)                                           |     Customer, Admin     |
@@ -113,7 +112,6 @@
 |  **C-06**  | Wishlist                     | บันทึกของโปรด (ตัด Stock Alert ออก)                          |         Customer         |
 |  **C-07**  | Review (No Photos)           | รีวิว 1-5 ดาว พร้อมข้อความ (ไม่มีการอัปโหลดรูป)                             |         Customer         |
 |  **C-09**  | Order Tracking UI            | ติดตาม 5 ขั้นตอน: Pending Payment → Paid → Processing → Shipped → Delivered                                        |     Customer, Admin     |
-|  **C-10**  | Google OAuth Authentication  | ล็อกอิน/สมัครสมาชิกด้วย Google Account ผ่าน Passport.js + passport-google-oauth20 |       Customer       |
 |  **A-01**  | Product Management CRUD      | เพิ่ม/ลบ/แก้ไข/Soft Delete (is_active) สินค้า พร้อมอัปโหลดรูป WebP                                         |          Admin          |
 |  **A-02**  | Payment Review               | อนุมัติ/ปฏิเสธสลิปโอนเงิน (Mockup Base64)                                        |          Admin          |
 |  **A-03**  | Order Management             | ดู/อัปเดตสถานะออเดอร์, กรอก Tracking Number                                        |          Admin          |
@@ -147,8 +145,6 @@ graph LR
         subgraph Customer_Flow ["1. ลูกค้า (Customer)"]
             C_Register("สมัครสมาชิก<br>(Register)"):::baseUC
             C_Login("ล็อกอินเข้าสู่ระบบ<br>(Login)"):::baseUC
-            C_RegisterGoogle("สมัครด้วย Google<br>(Google OAuth Register)"):::subUC
-            C_LoginGoogle("ล็อกอินด้วย Google<br>(Google OAuth Login)"):::subUC
             C_Builder("จัดสเปคคอมพิวเตอร์<br>(PC Builder)"):::baseUC
             C_Compat("ตรวจสอบความเข้ากันได้<br>(Compatibility Checker)"):::baseUC
             C_Wattage("คำนวณกำลังไฟ<br>(Wattage Calculator)"):::baseUC
@@ -290,8 +286,6 @@ graph LR
 
     Customer ---> C_Register
     Customer ---> C_Login
-    C_LoginGoogle -.->|"«extend»"| C_Login
-    C_RegisterGoogle -.->|"«extend»"| C_Register
     Customer ---> C_Builder
     Customer ---> C_Compat
     Customer ---> C_Wattage
@@ -716,6 +710,10 @@ classDiagram
 
 | เอกสาร                     | รายละเอียด                                                                            | ลิงก์                                             |
 | :------------------------------- | :---------------------------------------------------------------------------------------------- | :----------------------------------------------------- |
+| System Architecture              | สถาปัตยกรรมระบบ, ER Diagram, Security & Performance Overview                   | [SYSTEM_ARCHITECTURE.md](./docs/SYSTEM_ARCHITECTURE.md) |
+| API Documentation                | เอกสาร REST API Specs ทั้งหมด (20+ Endpoints)                                   | [API_DOCUMENTATION.md](./docs/API_DOCUMENTATION.md)     |
+| UAT Testing Guide                | คู่มือไกด์ไลน์ขั้นตอนการทดสอบ UAT ทีละขั้นตอนอย่างละเอียด                         | [UAT_TESTING_GUIDE.md](./docs/UAT_TESTING_GUIDE.md)   |
+| UAT Report Template              | แบบฟอร์มรายงานการทดสอบ UAT ตามตารางมาตรฐานวิชา CSI204                             | [UAT_REPORT_TEMPLATE.md](./docs/UAT_REPORT_TEMPLATE.md) |
 | System Requirement Specification | ข้อกำหนดความต้องการระบบฉบับเต็ม                                  | [SRS.md](./SRS.md)                                      |
 | SDLC Planning                    | แผนดำเนินงาน 7 ขั้นตอน SDLC                                                  | [sdlc-planning.md](./markdown/sdlc-planning.md)         |
 | Features Summary                 | สรุปฟังก์ชันระบบ FR/NFR + Role Access Matrix                                    | [features-summary.md](./markdown/features-summary.md)   |
@@ -728,6 +726,33 @@ classDiagram
 | UML Diagrams                     | แผนภาพ UML (Use Case + Class) — แสดง inline พร้อม Source `.mermaid`             | [UML-Diagrams.md](./markdown/UML-Diagrams.md)           |
 | Testing (UAT)                    | แผนและเช็กลิสต์การทดสอบระบบด้วยมือ (Manual Testing Checklist) | [testing-uat.md](./markdown/testing-uat.md)             |
 | PRD                              | Product Requirement Document (User Stories, Missing Features, NFR)                 | [prd.md](./markdown/prd.md)                             |
+
+---
+
+## ⚡ วิธีการติดตั้งและรันโครงการ (Getting Started & Running)
+
+### 1. การเตรียม Database & Run Backend Server
+```bash
+cd backend
+npm install
+npm run migrate       # สร้าง Table Schema + Insert Seed Data สินค้า 35+ ชิ้น
+npm run dev           # เริ่มต้น Development Server ที่ http://localhost:3000
+```
+
+### 2. การรันชุดทดสอบ Backend (Automated Tests)
+```bash
+cd backend
+npm test              # รันชุดทดสอบ Integration & RBAC Tests (25+ Test Suites)
+npm run typecheck     # ตรวจสอบ TypeScript Types ความถูกต้องทั้งโครงการ
+```
+
+### 3. การรัน Frontend Client
+```bash
+cd FrontEnd
+npm install
+npm run dev           # เปิด Vite Dev Server ที่ http://localhost:5173
+npm run build         # คอมไพล์โปรดักชันพร้อม Chunk Optimization
+```
 
 ---
 

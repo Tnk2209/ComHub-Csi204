@@ -18,13 +18,13 @@ before(async () => {
   // Customer 1
   const c1 = await request(app)
     .post('/api/auth/register')
-    .send({ email: uniqueEmail('cust1-review'), password: 'pass123', first_name: 'R', last_name: 'One' });
+    .send({ email: uniqueEmail('cust1-review'), password: 'password123', first_name: 'R', last_name: 'One' });
   customer1Token = c1.body.token;
 
   // Customer 2
   const c2 = await request(app)
     .post('/api/auth/register')
-    .send({ email: uniqueEmail('cust2-review'), password: 'pass123', first_name: 'R', last_name: 'Two' });
+    .send({ email: uniqueEmail('cust2-review'), password: 'password123', first_name: 'R', last_name: 'Two' });
   customer2Token = c2.body.token;
 
   // Admin

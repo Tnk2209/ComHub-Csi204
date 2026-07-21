@@ -52,10 +52,9 @@
     *   ปุ่มลบออกจาก Wishlist และปุ่มเพิ่มลงตะกร้าโดยตรง
 
 ### 1.7 หน้าเข้าสู่ระบบและสมัครสมาชิก (Login / Register Page)
-*   **วัตถุประสงค์:** จัดการเข้าสู่ระบบและสร้างบัญชี (SYS-01, C-10)
+*   **วัตถุประสงค์:** จัดการเข้าสู่ระบบและสร้างบัญชี (SYS-01)
 *   **องค์ประกอบหลักบน UI:**
     *   ฟอร์ม Native Login/Register (email + password)
-    *   ปุ่ม "Sign in with Google" / "Sign up with Google" (Google OAuth 2.0 flow)
     *   ข้อความ error สำหรับกรณีอีเมลซ้ำ / รหัสผ่านผิด
 
 ### 1.8 หน้าเปรียบเทียบสินค้า (Product Comparison Page)

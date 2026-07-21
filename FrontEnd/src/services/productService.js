@@ -1,12 +1,26 @@
-import { apiGet } from './apiClient.js';
+import { apiGet, apiGetWithHeaders } from './apiClient.js';
 
-export function list(params = {}) {
+function buildQueryString(params = {}) {
   const search = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
-    if (v !== undefined && v !== null && v !== '') search.set(k, String(v));
+    if (v !== undefined && v !== null && v !== '') {
+      search.set(k, String(v));
+    }
   }
   const qs = search.toString();
-  return apiGet(`/api/products${qs ? `?${qs}` : ''}`);
+  return qs ? `?${qs}` : '';
+}
+
+export function list(params = {}) {
+  return apiGet(`/api/products${buildQueryString(params)}`);
+}
+
+/**
+ * Fetches products with total count from X-Total-Count header.
+ * Returns { data: Product[], total: number }
+ */
+export async function listWithCount(params = {}) {
+  return apiGetWithHeaders(`/api/products${buildQueryString(params)}`);
 }
 
 export function get(id) {

@@ -52,16 +52,22 @@ vi.mock('../../services/wishlistService', () => ({
 const mockAddItem = vi.fn();
 
 vi.mock('../../contexts/CartContext', () => ({
-  useCart: () => ({ addItem: mockAddItem }),
+  useCart: () => ({ addItem: mockAddItem, totalItems: 3 }),
 }));
 
 vi.mock('../../contexts/AuthContext', () => ({
   useAuth: () => ({ user: { id: 5, email: 'test@test.com' }, isAuthenticated: true }),
 }));
 
-vi.mock('sweetalert2', () => ({
-  default: { fire: vi.fn(() => Promise.resolve({ isConfirmed: true })) },
-}));
+vi.mock('sweetalert2', () => {
+  const mockFire = vi.fn(() => Promise.resolve({ isConfirmed: true }));
+  return {
+    default: {
+      fire: mockFire,
+      mixin: vi.fn(() => ({ fire: mockFire })),
+    },
+  };
+});
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({

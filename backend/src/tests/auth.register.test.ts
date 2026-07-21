@@ -66,10 +66,10 @@ test('POST /api/auth/register — invalid email returns 400', async () => {
   assert.equal(res.status, 400, `expected 400, got ${res.status}: ${res.text}`);
 });
 
-test('POST /api/auth/register — password shorter than 6 chars returns 400', async () => {
+test('POST /api/auth/register — password shorter than 8 chars returns 400', async () => {
   const res = await request(app)
     .post('/api/auth/register')
-    .send({ email: uniqueEmail('short-pw'), password: '12345', first_name: 'A', last_name: 'B' });
+    .send({ email: uniqueEmail('short-pw'), password: '1234567', first_name: 'A', last_name: 'B' });
 
   assert.equal(res.status, 400, `expected 400, got ${res.status}: ${res.text}`);
 });

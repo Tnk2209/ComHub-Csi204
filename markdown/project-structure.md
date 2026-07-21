@@ -48,7 +48,7 @@ ComHub-Csi204/
 │   │   │   ├── Cart.tsx            # หน้าตะกร้าสินค้า (LocalStorage) และการคำนวณราคารวม
 │   │   │   ├── Checkout.tsx        # หน้าตรวจสอบสินค้า, กรอกที่อยู่ และอัปโหลดสลิป WebP+Base64
 │   │   │   ├── OrderTracking.tsx   # หน้าติดตามสถานะออเดอร์ 5 ขั้น (Pending Payment → Delivered)
-│   │   │   ├── Login.tsx           # หน้าจอเข้าสู่ระบบ (Native + Google OAuth)
+│   │   │   ├── Login.tsx           # หน้าจอเข้าสู่ระบบ (Native Auth)
 │   │   │   ├── Register.tsx        # หน้าจอลงทะเบียนสมาชิกใหม่
 │   │   │   └── Admin/              # โฟลเดอร์หน้าจอควบคุมหลังบ้าน (Admin เท่านั้น)
 │   │   │       ├── AdminDashboard.tsx  # A-05: Dashboard (ยอดขาย/สินค้ายอดนิยม/สต็อกต่ำ)
@@ -76,7 +76,7 @@ ComHub-Csi204/
     │   │   ├── db.ts               # เชื่อมต่อกับ Supabase PostgreSQL
     │   │   └── supabase.ts         # เชื่อมต่อกับ Supabase Storage (สำหรับบันทึกอัปโหลดรูปภาพ)
     │   ├── controllers/            # ตัวควบคุมการรับ-ส่งข้อมูล API (Controllers แยกตามโดเมน)
-    │   │   ├── authController.ts   # ประมวลผลรหัสผ่าน bcrypt, สร้าง JWT Token, Google OAuth callback
+    │   │   ├── authController.ts   # ประมวลผลรหัสผ่าน bcrypt, สร้าง JWT Token
     │   │   ├── productController.ts # A-01: จัดการ CRUD สินค้าและสเปค JSONB
     │   │   ├── orderController.ts   # SYS-03 / C-09 / A-02 / A-03: สร้างออเดอร์, อนุมัติสลิป, อัปเดตสถานะ 5 ขั้น
     │   │   ├── reviewController.ts  # C-07: บันทึกคะแนนรีวิว 1-5 ดาว + ข้อความ (ไม่มีรูป)

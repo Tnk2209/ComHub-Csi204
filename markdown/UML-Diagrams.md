@@ -29,8 +29,6 @@ graph LR
         subgraph Customer_Flow ["1. ลูกค้า (Customer)"]
             C_Register("สมัครสมาชิก<br>(Register)"):::baseUC
             C_Login("ล็อกอินเข้าสู่ระบบ<br>(Login)"):::baseUC
-            C_RegisterGoogle("สมัครด้วย Google<br>(Google OAuth Register)"):::subUC
-            C_LoginGoogle("ล็อกอินด้วย Google<br>(Google OAuth Login)"):::subUC
             C_Builder("จัดสเปคคอมพิวเตอร์<br>(PC Builder)"):::baseUC
             C_Compat("ตรวจสอบความเข้ากันได้<br>(Compatibility Checker)"):::baseUC
             C_Wattage("คำนวณกำลังไฟ<br>(Wattage Calculator)"):::baseUC
@@ -172,9 +170,8 @@ graph LR
 
     Customer ---> C_Register
     Customer ---> C_Login
-    C_LoginGoogle -.->|"«extend»"| C_Login
-    C_RegisterGoogle -.->|"«extend»"| C_Register
     Customer ---> C_Builder
+
     Customer ---> C_Compat
     Customer ---> C_Wattage
     Customer ---> C_Compare
@@ -207,14 +204,12 @@ classDiagram
         +string email
         +string password_hash
         +string auth_provider
-        +string google_id
         +string first_name
         +string last_name
         +string role
         +datetime created_at
         +register() bool
         +login() string
-        +loginWithGoogle() string
         +logout() bool
     }
 

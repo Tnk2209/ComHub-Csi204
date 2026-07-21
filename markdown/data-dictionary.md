@@ -10,7 +10,7 @@
 
 | ลำดับที่ | ชื่อตาราง (Table Name) | ประเภทตาราง (Table Type) | คำอธิบายสั้น (Description) |
 | :---: | :--- | :---: | :--- |
-| 1 | **`users`** | Master | จัดเก็บข้อมูลผู้ใช้งาน (Customer/Admin) และรหัสผ่าน รองรับ Google OAuth |
+| 1 | **`users`** | Master | จัดเก็บข้อมูลผู้ใช้งาน (Customer/Admin) และรหัสผ่าน |
 | 2 | **`products`** | Master | จัดเก็บข้อมูลแค็ตตาล็อกสินค้าและสเปคเทคนิคแบบ JSONB |
 | 3 | **`orders`** | Transaction | จัดเก็บรายละเอียดคำสั่งซื้อและสถานะการชำระเงิน |
 | 4 | **`order_items`** | Detail | จัดเก็บรายการชิ้นส่วนสินค้าในแต่ละออเดอร์ |
@@ -32,12 +32,11 @@
 | :--- | :--- | :---: | :--- | :--- |
 | `id` | SERIAL / INT | PK | NOT NULL, Auto Increments | รหัสอ้างอิงผู้ใช้งาน (ระบบรันให้อัตโนมัติ) |
 | `email` | VARCHAR(255) | - | NOT NULL, UNIQUE | ที่อยู่อีเมลของผู้ใช้งาน (ใช้ในการล็อกอินเข้าสู่ระบบ) |
-| `password_hash` | VARCHAR(255) | - | NULL | รหัสผ่านที่เข้ารหัสด้วย bcrypt — `NULL` สำหรับ OAuth users ที่ login ด้วย Google |
+| `password_hash` | VARCHAR(255) | - | NOT NULL | รหัสผ่านที่เข้ารหัสด้วย bcrypt |
 | `first_name` | VARCHAR(100) | - | NOT NULL | ชื่อจริงของผู้ใช้งาน |
 | `last_name` | VARCHAR(100) | - | NOT NULL | นามสกุลของผู้ใช้งาน |
 | `role` | VARCHAR(50) | - | NOT NULL, DEFAULT 'Customer' | บทบาทสิทธิ์การใช้ระบบ (`'Customer'`, `'Admin'`) |
-| `auth_provider` | VARCHAR(20) | - | NOT NULL, DEFAULT 'native' | ประเภทการยืนยันตัวตน (`'native'`, `'google'`) |
-| `google_id` | VARCHAR(255) | - | UNIQUE, NULL | Google User ID สำหรับ OAuth (NULL ถ้าใช้ Native Auth) |
+| `auth_provider` | VARCHAR(20) | - | NOT NULL, DEFAULT 'native' | ประเภทการยืนยันตัวตน (`'native'`) |
 | `created_at` | TIMESTAMP | - | NOT NULL, DEFAULT CURRENT_TIMESTAMP | วันและเวลาที่ลงทะเบียนสมาชิกเข้าสู่ระบบ |
 
 ---

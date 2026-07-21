@@ -73,7 +73,7 @@ graph TD
 ฐานข้อมูลใช้ **PostgreSQL (Supabase)** และประกอบด้วย **7 ตารางตาม MVP Scope** (ดูรายละเอียดใน `data-dictionary.md` และ `database-schema.md`):
 
 1. **`users` (ข้อมูลผู้ใช้และสิทธิ์):**
-   - ฟิลด์หลัก: `id`, `email`, `password_hash`, `first_name`, `last_name`, `role` (`Customer`/`Admin`), `auth_provider` (`native`/`google`), `google_id`, `created_at`
+   - ฟิลด์หลัก: `id`, `email`, `password_hash`, `first_name`, `last_name`, `role` (`Customer`/`Admin`), `auth_provider` (`native`), `created_at`
 2. **`products` (รายละเอียดสินค้าไอที):**
    - ฟิลด์หลัก: `id`, `name`, `category` (CPU/Mainboard/GPU/RAM/SSD/Case/PSU), `price`, `stock_quantity`, `image_url`, `is_active` (Soft Delete: true = ขายปกติ, false = ปิดขาย/เลิกจำหน่าย)
    - ฟิลด์สเปคเช็ค Compatibility: `specifications` (JSONB) - เก็บโครงสร้างคุณสมบัติเฉพาะทางแบบยืดหยุ่น (เช่น `socket`, `form_factor`, `gpu_length_mm`, `max_gpu_length_mm`, `tdp`, `wattage`, `ram_type`, `supported_ram`)

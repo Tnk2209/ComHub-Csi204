@@ -98,3 +98,69 @@ test('GET /api/products — excludes inactive products (is_active=false)', async
     await pool.query('DELETE FROM products WHERE id = $1', [inactiveId]);
   }
 });
+
+test('GET /api/products — returns X-Total-Count header', async () => {
+  const res = await request(app).get('/api/products?limit=5');
+  assert.equal(res.status, 200);
+  assert.ok(res.headers['x-total-count'], 'X-Total-Count header should be present');
+  const count = parseInt(res.headers['x-total-count'], 10);
+  assert.ok(count >= 5, `expected X-Total-Count >= 5, got ${count}`);
+});
+
+test('GET /api/products?min_price=10000&max_price=20000 — filters price range', async () => {
+  const res = await request(app).get('/api/products?min_price=10000&max_price=20000');
+  assert.equal(res.status, 200);
+  assert.ok(Array.isArray(res.body));
+  for (const p of res.body) {
+    const price = Number(p.price);
+    assert.ok(price >= 10000 && price <= 20000, `price ${price} should be between 10000 and 20000`);
+  }
+});
+
+test('GET /api/products?in_stock=true — filters out out-of-stock items', async () => {
+  const res = await request(app).get('/api/products?in_stock=true');
+  assert.equal(res.status, 200);
+  for (const p of res.body) {
+    assert.ok(p.stock_quantity > 0, `product ${p.id} stock should be > 0, got ${p.stock_quantity}`);
+  }
+});
+
+test('GET /api/products?sort=price_asc — sorts by price ascending', async () => {
+  const res = await request(app).get('/api/products?sort=price_asc&limit=10');
+  assert.equal(res.status, 200);
+  for (let i = 1; i < res.body.length; i++) {
+    const prev = Number(res.body[i - 1].price);
+    const curr = Number(res.body[i].price);
+    assert.ok(prev <= curr, `expected ${prev} <= ${curr} for price_asc`);
+  }
+});
+
+test('GET /api/products?sort=price_desc — sorts by price descending', async () => {
+  const res = await request(app).get('/api/products?sort=price_desc&limit=10');
+  assert.equal(res.status, 200);
+  for (let i = 1; i < res.body.length; i++) {
+    const prev = Number(res.body[i - 1].price);
+    const curr = Number(res.body[i].price);
+    assert.ok(prev >= curr, `expected ${prev} >= ${curr} for price_desc`);
+  }
+});
+
+test('GET /api/products?sort=name_asc — sorts by name ascending', async () => {
+  const res = await request(app).get('/api/products?sort=name_asc&limit=10');
+  assert.equal(res.status, 200);
+  for (let i = 1; i < res.body.length; i++) {
+    const prev = res.body[i - 1].name;
+    const curr = res.body[i].name;
+    assert.ok(prev.localeCompare(curr) <= 0, `expected "${prev}" <= "${curr}" for name_asc`);
+  }
+});
+
+test('GET /api/products?brand=Intel,AMD — supports comma-separated brand filter', async () => {
+  const res = await request(app).get('/api/products?brand=Intel,AMD');
+  assert.equal(res.status, 200);
+  assert.ok(res.body.length > 0);
+  for (const p of res.body) {
+    assert.ok(['Intel', 'AMD'].includes(p.brand), `brand should be Intel or AMD, got ${p.brand}`);
+  }
+});
+
