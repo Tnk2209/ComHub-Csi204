@@ -11,13 +11,13 @@
    - เข้าสู่เว็บ [https://supabase.com](https://supabase.com) กด Sign In ด้วยบัญชี GitHub
    - กดปุ่ม **"New Project"** เลือกองค์กร (Organization)
    - กรอก **Name:** `comhub-db`
-   - กำหนด **Database Password:** (บันทึกรหัสผ่านไว้ใช้งาน)
+   - กำหนด **Database Password:** (บันทึกรหัสผ่านไว้ใช้งาน) ​comhub-db@99
    - เลือก **Region:** `Singapore (ap-southeast-1)`
    - เลือก Plan: **Free Tier** แล้วกด **"Create new project"** (รอระบบ provisioning ประมาณ 1-2 นาที)
 2. **คัดลอก Connection String:**
-   - ไปที่ **Project Settings** $\rightarrow$ **Database** $\rightarrow$ **Connection String**
-   - เลือกแถบ **URI** (Transaction Pooler - Port 6543)
-   - คัดลอก URL ในรูปแบบ: `postgresql://postgres.[ref]:[password]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require`
+   - ในป๊อบอัพที่เปิดขึ้นมา ให้กดเลือกกล่องตัวเลือกที่ 3: **`Direct`** (รูปทรงกระบอก DB / Connection string)
+   - เลือกรูปแบบ **URI** หรือ **Transaction Pooler** แล้วคัดลอก Connection String มาใช้งาน
+   - รูปแบบจะเป็น: `postgresql://postgres.wnbymeujegfdgrrlzuwo:comhub-db%4099@db.wnbymeujegfdgrrlzuwo.supabase.co:5432/postgres` (หรือ Port 6543)
 3. **นำเข้า Schema และ Seed Data:**
    - ไปที่เมนู **SQL Editor** ในแถบซ้ายของ Supabase
    - เปิดไฟล์ [backend/src/sql/schema.sql](file:///c:/Users/thana/Desktop/Work%20Main/ComHub-Csi204/backend/src/sql/schema.sql) คัดลอกโค้ดทั้งหมดไปวางใน SQL Editor แล้วกด **Run**
@@ -27,10 +27,10 @@
    - ตรวจสอบตาราง `products` มีข้อมูลสินค้าสะสมอย่างน้อย 35 รายการ ครบทั้ง 7 หมวดหมู่
 
 ## Acceptance criteria
-- [ ] สร้าง Project `comhub-db` บน Supabase Cloud (Region Singapore) สำเร็จ
-- [ ] รัน DDL `schema.sql` สร้างตารางครบ 7 ตารางบน Supabase พร้อม Indexes และ Constraints
-- [ ] รัน `seed.sql` นำเข้าสินค้าเริ่มต้นอย่างน้อย 35 ชิ้น พร้อม JSONB Specifications
-- [ ] ได้รับ Connection String รูปแบบ SSL พร้อมใช้อ้างอิงใน Backend Environment Variables
+- [X] สร้าง Project `comhub-db` บน Supabase Cloud สำเร็จ
+- [X] รัน DDL `schema.sql` สร้างตารางครบ 7 ตารางบน Supabase พร้อม Indexes และ Constraints
+- [X] รัน `seed.sql` นำเข้าสินค้าเริ่มต้นอย่างน้อย 35 ชิ้น พร้อม JSONB Specifications
+- [X] ได้รับ Connection String รูปแบบ SSL พร้อมใช้อ้างอิงใน Backend Environment Variables
 
 ## Blocked by
 None - Can start immediately
