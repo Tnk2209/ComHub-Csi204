@@ -404,7 +404,7 @@ function Catalog({ onNavigate }) {
                       >
                         {/* Product Image */}
                         <div
-                          className="relative h-48 bg-white dark:bg-slate-900/40 cursor-pointer overflow-hidden flex items-center justify-center"
+                          className="relative h-48 bg-white cursor-pointer overflow-hidden flex items-center justify-center border-b border-app-border/20"
                           onClick={() => onNavigate('product-detail', product.id)}
                         >
                           <img

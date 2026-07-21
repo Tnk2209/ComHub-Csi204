@@ -120,11 +120,11 @@ function Wishlist({ onNavigate }) {
                 className="bg-app-surface rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-all overflow-hidden"
               >
                 {/* Product Image */}
-                <div className="relative h-48 bg-bg-secondary cursor-pointer group" onClick={() => onNavigate('product-detail', item.product_id)}>
+                <div className="relative h-48 bg-white cursor-pointer group flex items-center justify-center p-4 border-b border-app-border/20" onClick={() => onNavigate('product-detail', item.product_id)}>
                   <img
                     src={item.product_image_url || 'https://via.placeholder.com/400x300'}
                     alt={item.product_name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                   />
                   <button
                     onClick={(e) => { e.stopPropagation(); removeFromWishlist(item.product_id); }}

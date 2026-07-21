@@ -321,11 +321,11 @@ function ProductDetail({ onNavigate, productId: propProductId }) {
           {/* Left: Product Image */}
           <div>
             <div className="bg-app-surface rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] overflow-hidden">
-              <div className="aspect-square bg-bg-secondary">
+              <div className="aspect-square bg-white flex items-center justify-center p-6 border border-app-border/20 rounded-2xl">
                 <img
                   src={product.image_url || `https://placehold.co/800x600/EEE/333?text=${encodeURIComponent(product.name)}`}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                   onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/800x600/EEE/333?text=${encodeURIComponent(product.name)}`; }}
                 />
               </div>
