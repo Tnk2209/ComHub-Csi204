@@ -723,7 +723,6 @@ classDiagram
 | User Persona                     | วิเคราะห์กลุ่มผู้ใช้จำลอง 4 Personas (3 Customer + 1 Admin)                    | [user-persona.md](./markdown/user-persona.md)           |
 | UML Diagrams                     | แผนภาพ UML (Use Case + Class) — แสดง inline พร้อม Source `.mermaid`             | [UML-Diagrams.md](./markdown/UML-Diagrams.md)           |
 | Testing (UAT)                    | แผนและเช็กลิสต์การทดสอบระบบด้วยมือ (Manual Testing Checklist) | [testing-uat.md](./markdown/testing-uat.md)             |
-| PRD                              | Product Requirement Document (User Stories, Missing 
 
 ---
 
