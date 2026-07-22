@@ -336,3 +336,86 @@ classDiagram
     Admin "1" --> "*" Order : reviews_payment
     Admin "1" --> "*" User : manages_rbac
 ```
+
+---
+
+## 3. Sequence Diagrams (แผนภาพลำดับขั้นตอนการทำงาน)
+
+แผนภาพลำดับขั้นตอนแสดงการปฏิสัมพันธ์ระหว่าง Actor, Frontend, Backend API และ Database สำหรับ 2 การทำงานหลักของระบบ ComHub
+
+### 3.1 PC Builder & Compatibility Check Sequence Diagram
+แสดงลำดับขั้นตอนการเลือกชิ้นส่วนคอมพิวเตอร์ การคำนวณกำลังไฟ (Wattage) และการตรวจสอบความเข้ากันได้ของอุปกรณ์ (Compatibility Check)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Customer as ลูกค้า (Customer)
+    participant FE as React Frontend (PC Builder Page)
+    participant API as Express Backend API
+    participant DB as JSON Database (db.json)
+
+    Customer->>FE: เปิดหน้าจัดสเปคคอมพิวเตอร์ (PC Builder)
+    FE->>API: GET /api/products (ดึงรายการอุปกรณ์ 7 หมวด)
+    API->>DB: Read products collection
+    DB-->>API: Return products JSON
+    API-->>FE: 200 OK (Product List)
+    FE-->>Customer: แสดงรายการอุปกรณ์แยกตามหมวดหมู่
+
+    Customer->>FE: เลือกอุปกรณ์ใส่สเปค (CPU, GPU, RAM, Mainboard, PSU, Storage, Case)
+    FE->>FE: คำนวณ Total Price & Total TDP (กำลังไฟ)
+    FE->>FE: ตรวจสอบความเข้ากันได้ (Socket, Case Form Factor, RAM Type)
+    
+    alt พบอุปกรณ์ที่ไม่รองรับกัน (Incompatible)
+        FE-->>Customer: แสดง Warning Alert (เช่น CPU Socket ไม่ตรงกับ Mainboard)
+    else อุปกรณ์เข้ากันได้สมบูรณ์ (Compatible)
+        FE-->>Customer: แสดง Badge "Compatible" + แนะนำ PSU กำลังไฟที่เหมาะสม (TDP x 1.2)
+    end
+
+    Customer->>FE: คลิก "บันทึกสเปคลงตะกร้า" (Add to Cart)
+    FE->>FE: บันทึกข้อมูลสเปคลิสต์ลง LocalStorage
+    FE-->>Customer: แจ้งเตือน "เพิ่มสินค้าลงตะกร้าเรียบร้อยแล้ว"
+```
+
+### 3.2 Checkout, Slip Upload & Order Tracking Sequence Diagram
+แสดงลำดับขั้นตอนการสั่งซื้อสินค้า การอัปโหลดสลิปชำระเงิน การตรวจสอบของ Admin และการติดตามสถานะ
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Customer as ลูกค้า (Customer)
+    participant FE as React Frontend (Checkout Page)
+    participant API as Express Backend API
+    participant DB as JSON Database (db.json)
+    actor Admin as ผู้ดูแลระบบ (Admin)
+
+    Customer->>FE: เข้าหน้า Checkout & กรอกที่อยู่จัดส่ง
+    Customer->>FE: อัปโหลดสลิปโอนเงิน (WebP Image / Base64)
+    Customer->>FE: กดยืนยันสั่งซื้อสินค้า (Submit Order)
+
+    FE->>API: POST /api/orders (Payload: CartItems, Address, SlipData)
+    API->>API: Validate Data & Generate Tracking Number
+    API->>DB: Write new order (status: "PENDING_VERIFICATION")
+    DB-->>API: Saved successfully
+    API-->>FE: 201 Created (Order Response + Tracking ID)
+    FE-->>Customer: แสดงหน้า Order Success + Tracking Number
+
+    Note over Admin, API: ขั้นตอนการตรวจสอบของ Admin
+    Admin->>FE: เข้าสู่ระบบ Admin Dashboard & เมนูจัดการออเดอร์
+    FE->>API: GET /api/admin/orders (Pending List)
+    API->>DB: Read pending orders
+    DB-->>API: Return pending orders
+    API-->>FE: แสดงรายการออเดอร์รอตรวจสอบสลิป
+
+    Admin->>FE: ตรวจสอบสลิป & คลิก "อนุมัติออเดอร์" (Approve)
+    FE->>API: PATCH /api/orders/:id/status (status: "PAID")
+    API->>DB: Update order status & insert OrderLog
+    DB-->>API: Saved successfully
+    API-->>FE: 200 OK (Status Updated)
+    
+    Customer->>FE: เข้าหน้า Order Tracking (กรอก Tracking ID)
+    FE->>API: GET /api/orders/track/:id
+    API->>DB: Read order & order_logs
+    DB-->>API: Return order detail
+    API-->>FE: แสดงสถานะออเดอร์ 5 ขั้นตอน (ชำระเงิน -> กำลังจัดเตรียม -> จัดส่งสำเร็จ)
+```
+
