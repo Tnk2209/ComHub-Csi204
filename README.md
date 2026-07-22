@@ -712,7 +712,6 @@ classDiagram
 | :------------------------------- | :---------------------------------------------------------------------------------------------- | :----------------------------------------------------- |
 | System Architecture              | สถาปัตยกรรมระบบ, ER Diagram, Security & Performance Overview                   | [SYSTEM_ARCHITECTURE.md](./docs/SYSTEM_ARCHITECTURE.md) |
 | API Documentation                | เอกสาร REST API Specs ทั้งหมด (20+ Endpoints)                                   | [API_DOCUMENTATION.md](./docs/API_DOCUMENTATION.md)     |
-| UAT Testing Guide                | คู่มือไกด์ไลน์ขั้นตอนการทดสอบ UAT ทีละขั้นตอนอย่างละเอียด                         | [UAT_TESTING_GUIDE.md](./docs/UAT_TESTING_GUIDE.md)   |
 | UAT Report Template              | แบบฟอร์มรายงานการทดสอบ UAT ตามตารางมาตรฐานวิชา CSI204                             | [UAT_REPORT_TEMPLATE.md](./docs/UAT_REPORT_TEMPLATE.md) |
 | System Requirement Specification | ข้อกำหนดความต้องการระบบฉบับเต็ม                                  | [SRS.md](./SRS.md)                                      |
 | SDLC Planning                    | แผนดำเนินงาน 7 ขั้นตอน SDLC                                                  | [sdlc-planning.md](./markdown/sdlc-planning.md)         |
