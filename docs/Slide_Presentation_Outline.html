@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Slide Presentation Outline - ComHub CSI204</title>
+    <style>
+        body {
+            font-family: 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .slide-card {
+            background-color: #1e293b;
+            border-left: 6px solid #38bdf8;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #38bdf8;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #f1f5f9;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+        ul {
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        strong {
+            color: #38bdf8;
+        }
+        @media print {
+            body { background-color: #fff; color: #000; padding: 0; }
+            .slide-card { background-color: #fff; color: #000; border: 1px solid #ccc; page-break-after: always; }
+            strong { color: #0284c7; }
+        }
+    </style>
+</head>
+<body>
+    <h1>📊 เนื้อหาสไลด์การนำเสนอ Final Project (ComHub - CSI204)</h1>
+<div class="slide-card">
+<h2>🖼️ Slide 1: หน้าปก (Title Slide)</h2>
+<ul>
+  <li><strong>หัวข้อโครงการ:</strong> ComHub — แพลตฟอร์มอีคอมเมิร์ซสำหรับจัดสเปคและจำหน่ายอุปกรณ์คอมพิวเตอร์ครบวงจร</li>
+  <li><strong>วิชา:</strong> CSI204 — Software Engineering (วิศวกรรมซอฟต์แวร์)</li>
+  <li><strong>สมาชิกในทีม:</strong> [ใส่ชื่อ-นามสกุล และรหัสนักศึกษาของสมาชิกกลุ่ม]</li>
+  <li><strong>อาจารย์ผู้สอน:</strong> [ใส่ชื่ออาจารย์ผู้สอน]</li>
+  <li><strong>URL ระบบจริง:</strong> https://comhub-frontend.vercel.app</li>
+</ul>
+<p>---</p>
+</div>
+<div class="slide-card">
+<h2>🖼️ Slide 2: ที่มา ปัญหา และวัตถุประสงค์ (Problem & Objective)</h2>
+<ul>
+  <li><strong>ปัญหาเดิม (Pain Points):</strong></li>
+</ul>
+<p>1. การจัดสเปคคอมประกอบซับซ้อน อุปกรณ์ไม่รองรับกัน (Incompatible Socket/Size/RAM)</p>
+<p>2. ผู้ซื้อไม่ทราบกำลังไฟ (Wattage) ที่ต้องใช้ เลือก Power Supply (PSU) ไม่ถูกต้อง</p>
+<p>3. ความยุ่งยากในการเปรียบเทียบสเปคเทคนิคของอุปกรณ์แต่ละชิ้น</p>
+<ul>
+  <li><strong>วัตถุประสงค์โครงการ (Objectives):</strong></li>
+  <li>พัฒนาเว็บแอปพลิเคชันอีคอมเมิร์ซที่มีระบบ <strong>Compatibility Checker</strong> แจ้งเตือนอุปกรณ์ไม่ตรงกันทันที</li>
+  <li>พัฒนาระบบ <strong>Wattage Calculator</strong> ช่วยคำนวณกำลังไฟรวมและกรองแนะนำ PSU ที่เหมาะสม</li>
+  <li>พัฒนาระบบเปรียบเทียบสินค้า (Product Comparison) และระบบจัดการออเดอร์หลังบ้าน</li>
+</ul>
+<p>---</p>
+</div>
+<div class="slide-card">
+<h2>🖼️ Slide 3: ผู้ใช้งานหลักและขอบเขตระบบ (Persona & Scope)</h2>
+<ul>
+  <li><strong>2 บทบาทผู้ใช้งานหลัก (MVP Scope):</strong></li>
+</ul>
+<p>1. <strong>Customer (ลูกค้าทั่วไป):</strong></p>
+<ul>
+  <li>ค้นหา กรอง เปรียบเทียบสินค้า จัดการ Wishlist และ Review</li>
+  <li>จัดสเปคคอมพิวเตอร์ 7 หมวด เช็ค Compatibility & TDP คำนวณไฟ</li>
+  <li>สั่งซื้อสินค้า แนบสลิปโอนเงิน และติดตามสถานะพัสดุผ่านไทม์ไลน์</li>
+</ul>
+<p>2. <strong>Staff / Admin (พนักงานและผู้ดูแลระบบ):</strong></p>
+<ul>
+  <li>จัดการคลังสินค้า (Product CRUD: เพิ่ม แก้ไข ซ่อนสินค้า)</li>
+  <li>ตรวจสอบสลิปโอนเงิน (Approve / Reject คืนสต็อก)</li>
+  <li>อัปเดตสถานะการจัดส่ง กรอกเลข Tracking และดู Dashboard รายงานยอดขาย</li>
+</ul>
+<p>---</p>
+</div>
+<div class="slide-card">
+<h2>🖼️ Slide 4: สถาปัตยกรรมระบบ (System Architecture)</h2>
+<ul>
+  <li><strong>Tech Stack สถาปัตยกรรม 3 ชั้น (3-Tier Architecture):</strong></li>
+  <li><strong>Frontend:</strong> React.js, TailwindCSS, Lucide Icons, LocalStorage Store (Deploy บน Vercel)</li>
+  <li><strong>Backend API:</strong> Node.js, Express.js (RESTful API), JWT Authentication (Deploy บน Render)</li>
+  <li><strong>Database:</strong> JSON Schema / Transaction Pooler Data Persistence</li>
+  <li><strong>ฟีเจอร์เด่นทางเทคนิค (Technical Highlights):</strong></li>
+  <li>Client-side Image Compression (บีบอัดสลิปเป็น WebP $<100\text{KB}$)</li>
+  <li>Centralized Builder State Store & Atomic DB Transaction</li>
+</ul>
+<p>---</p>
+</div>
+<div class="slide-card">
+<h2>🖼️ Slide 5: แผนภาพวิเคราะห์และออกแบบ (UML Diagrams)</h2>
+<ul>
+  <li><strong>Use Case Diagram:</strong> แสดงสิทธิ์การเข้าใช้ฟังก์ชันระหว่าง Customer และ Admin</li>
+  <li><strong>Class Diagram:</strong> โครงสร้าง Object (User, Customer, Admin, Product, CartItem, Order, OrderLog, Review)</li>
+  <li><strong>Sequence Diagram:</strong></li>
+  <li>*Flow 1:* PC Builder & Compatibility Checking Sequence</li>
+  <li>*Flow 2:* Order Checkout, Slip Upload & Admin Verification Sequence</li>
+</ul>
+<p>---</p>
+</div>
+<div class="slide-card">
+<h2>🖼️ Slide 6: การสาธิตการทำงานของระบบ (Live Demonstration Flow)</h2>
+<ul>
+  <li><strong>5 ขั้นตอนนำเสนอระบบจริง:</strong></li>
+</ul>
+<p>1. <strong>Catalog & Filter:</strong> ค้นหา กรองหมวดหมู่ CPU/GPU และเปรียบเทียบสินค้า Side-by-Side</p>
+<p>2. <strong>PC Builder Highlight:</strong> เลือกชิ้นส่วน 7 หมวด โชว์ <strong>Incompatible Alert สีแดง</strong> (Socket mismatch) และป้าย <strong>Compatible สีเขียว</strong> พร้อม Wattage Calculator (TDP x 1.2)</p>
+<p>3. <strong>Checkout & Slip Upload:</strong> สั่งซื้อสินค้า แนบสลิปโอนเงิน (บีบอัด WebP)</p>
+<p>4. <strong>Admin Panel:</strong> สลับเป็น Admin ตรวจสลิป อนุมัติออเดอร์ ใส่เลข Tracking</p>
+<p>5. <strong>Order Tracking Timeline:</strong> ลูกค้าเช็คสถานะพัสดุผ่าน Stepper 5 ขั้นตอน</p>
+<p>---</p>
+</div>
+<div class="slide-card">
+<h2>🖼️ Slide 7: กระบวนการพัฒนาตาม SDLC 7 ขั้นตอน (SDLC Methodology)</h2>
+<ul>
+  <li><strong>1. Planning:</strong> วิเคราะห์ขอบเขตงาน ขอบเขตระบบ MVP 4 สัปดาห์</li>
+  <li><strong>2. Analysis:</strong> จัดทำ User Persona, PRD, SRS และ UML Diagrams</li>
+  <li><strong>3. Design:</strong> ออกแบบ Wireframe/Prototype UI, Architecture และ REST API</li>
+  <li><strong>4. Development:</strong> เขียนโค้ด React Frontend, Express Backend API</li>
+  <li><strong>5. Testing:</strong> ทำ UAT Test Specification & Report รวม 35 ชุดการทดสอบ</li>
+  <li><strong>6. Deployment:</strong> ติดตั้งระบบบนโฮสต์จริง Vercel & Render</li>
+  <li><strong>7. Maintenance:</strong> บันทึกปัญหาระบบและแนวทางพัฒนาต่อยอดในอนาคต</li>
+</ul>
+<p>---</p>
+</div>
+<div class="slide-card">
+<h2>🖼️ Slide 8: ผลการทดสอบระบบ (UAT Testing Summary)</h2>
+<ul>
+  <li><strong>สรุปผลการทดสอบ User Acceptance Testing (Workshop #7):</strong></li>
+  <li>จำนวนรายการทดสอบทั้งหมด: <strong>35 ชุดการทดสอบ</strong></li>
+  <li>อัตราการทดสอบผ่าน (Pass Rate): <strong>100% (35/35 Pass)</strong></li>
+  <li><strong>ครอบคลุม 5 หมวดการทดสอบ:</strong></li>
+</ul>
+<p>1. Customer Persona Functional (12 ชุด)</p>
+<p>2. Staff / Admin Persona Functional (6 ชุด)</p>
+<p>3. Security & Vulnerability Tests (8 ชุด - ป้องกัน File Upload, XSS, Tampering, Race Condition)</p>
+<p>4. Data Validation & Boundary Edge Cases (5 ชุด)</p>
+<p>5. UI/UX & Performance Under Load (4 ชุด)</p>
+<p>---</p>
+</div>
+<div class="slide-card">
+<h2>🖼️ Slide 9: สรุปผลงานและอนาคตของระบบ (Conclusion & Future Work)</h2>
+<ul>
+  <li><strong>สรุปความสำเร็จ (Key Accomplishments):</strong></li>
+  <li>พัฒนาระบบ ComHub สำเร็จตามข้อกำหนดของโครงงาน CSI204 ครบถ้วน 100%</li>
+  <li>ช่วยแก้ปัญหาความยุ่งยากในการจัดสเปคคอมพิวเตอร์และป้องกันอุปกรณ์ไม่เข้ากันได้จริง</li>
+  <li><strong>แนวทางพัฒนาต่อยอด (Future Enhancements):</strong></li>
+  <li>พัฒนาระบบ Payment Gateway อัตโนมัติ (Omise / Stripe Integration)</li>
+  <li>ขยายฐานข้อมูลจาก JSON เป็น PostgreSQL / MongoDB บน Cloud</li>
+</ul>
+<p>---</p>
+</div>
+<div class="slide-card">
+<h2>🖼️ Slide 10: Q&A (ขอบคุณและรับฟังคำถาม)</h2>
+<ul>
+  <li><strong>ขอขอบคุณคณะกรรมการและอาจารย์ผู้ประเมินทุกท่าน</strong></li>
+  <li><strong>ComHub - PC Building & E-Commerce Platform</strong></li>
+  <li><strong>Live System URL:</strong> https://comhub-frontend.vercel.app</li>
+  <li>*พร้อมรับฟังคำถามและข้อเสนอแนะครับ*</li>
+</ul>
+</div>
+
+</body>
+</html>
