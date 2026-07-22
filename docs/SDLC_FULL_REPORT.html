@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>รายงานโครงงานวิศวกรรมซอฟต์แวร์ SDLC 7 ขั้นตอน - ComHub</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+            line-height: 1.8;
+            color: #1e293b;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: #0f172a;
+            font-size: 26px;
+            text-align: center;
+            border-bottom: 3px solid #0284c7;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            color: #0369a1;
+            font-size: 20px;
+            border-bottom: 2px solid #bae6fd;
+            padding-bottom: 8px;
+            margin-top: 35px;
+            page-break-before: always;
+        }
+        h3 {
+            color: #0f172a;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        p, li {
+            font-size: 15px;
+            color: #334155;
+        }
+        ul, ol {
+            padding-left: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            background-color: #0284c7;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f1f5f9;
+        }
+        code {
+            background-color: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        a {
+            color: #0284c7;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        @media print {
+            body { background-color: #fff; padding: 0; }
+            .container { box-shadow: none; padding: 20px; max-width: 100%; }
+            h2 { page-break-before: always; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+<h1>📘 เล่มรายงานโครงงานพัฒนาระบบซอฟต์แวร์ตามกระบวนการ SDLC 7 ขั้นตอน</h1>
+<p><strong>ชื่อโครงการ:</strong> ComHub — แพลตฟอร์มอีคอมเมิร์ซสำหรับจัดสเปคและจำหน่ายอุปกรณ์คอมพิวเตอร์ครบวงจร</p>
+<p><strong>รายวิชา:</strong> CSI204 — วิศวกรรมซอฟต์แวร์ (Software Engineering)</p>
+<p><strong>สถาบัน:</strong> มหาวิทยาลัยศรีปทุม (Sripatum University)</p>
+<p><strong>ผู้จัดทำ:</strong> นายธนกร สิงห์ก้อม และ นายหาญณรงค์ บุญยืน</p>
+<p><strong>ระบบใช้งานจริง (Public URL):</strong> <a href="https://comhub-frontend.vercel.app" target="_blank">https://comhub-frontend.vercel.app</a></p>
+<hr/>
+<h2>📌 สารบัญเล่มรายงาน (Table of Contents)</h2>
+<p>1. <a href="#บทที่-1-ขั้นตอนที่-1---planning-การวางแผนโครงการ" target="_blank">บทที่ 1: ขั้นตอนที่ 1 - Planning (การวางแผนโครงการ)</a></p>
+<p>2. <a href="#บทที่-2-ขั้นตอนที่-2---analysis-การวิเคราะห์ระบบ" target="_blank">บทที่ 2: ขั้นตอนที่ 2 - Analysis (การวิเคราะห์ระบบ)</a></p>
+<p>3. <a href="#บทที่-3-ขั้นตอนที่-3---design-การออกแบบระบบ" target="_blank">บทที่ 3: ขั้นตอนที่ 3 - Design (การออกแบบระบบ)</a></p>
+<p>4. <a href="#บทที่-4-ขั้นตอนที่-4---development-การพัฒนาระบบ" target="_blank">บทที่ 4: ขั้นตอนที่ 4 - Development (การพัฒนาระบบ)</a></p>
+<p>5. <a href="#บทที่-5-ขั้นตอนที่-5---testing-การทดสอบระบบและ-uat" target="_blank">บทที่ 5: ขั้นตอนที่ 5 - Testing (การทดสอบระบบและ UAT)</a></p>
+<p>6. <a href="#บทที่-6-ขั้นตอนที่-6---deployment-การติดตั้งและเผยแพร่" target="_blank">บทที่ 6: ขั้นตอนที่ 6 - Deployment (การติดตั้งและเผยแพร่)</a></p>
+<p>7. <a href="#บทที่-7-ขั้นตอนที่-7---maintenance-การบำรุงรักษาและพัฒนาต่อยอด" target="_blank">บทที่ 7: ขั้นตอนที่ 7 - Maintenance (การบำรุงรักษาและพัฒนาต่อยอด)</a></p>
+<hr/>
+<h2>บทที่ 1: ขั้นตอนที่ 1 - Planning (การวางแผนโครงการ)</h2>
+<h3>1.1 ที่มาและความสำคัญของปัญหา (Problem Statement)</h3>
+<p>ผู้ซื้อคอมพิวเตอร์ประกอบมักประสบปัญหาความซับซ้อนของอุปกรณ์ เช่น อุปกรณ์ไม่รองรับกัน (Compatibility Error เช่น CPU Socket ไม่ตรงกับ Mainboard หรือ RAM Type ไม่ถูกต้อง) และปัญหาการคำนวณกำลังไฟ (Wattage Calculation) ที่ไม่สอดคล้องกับ Power Supply Unit (PSU) ทำให้เกิดความเสี่ยงอุปกรณ์เสียหายหรือทำงานไม่เสถียร</p>
+<h3>1.2 วัตถุประสงค์โครงการ (Project Objectives)</h3>
+<p>1. เพื่อพัฒนาระบบอีคอมเมิร์ซจัดสเปคคอมพิวเตอร์ที่มีระบบ <strong>Compatibility Checker</strong> ตรวจสอบความเข้ากันได้ของอุปกรณ์อัตโนมัติ</p>
+<p>2. เพื่อพัฒนาระบบ <strong>Wattage Calculator</strong> คำนวณกำลังไฟ TDP รวม และแนะนำ PSU ขนาดที่เหมาะสม</p>
+<p>3. เพื่อพัฒนาระบบชำระเงิน ตรวจสอบสลิปโอนเงิน อนุมัติออเดอร์ และติดตามสถานะพัสดุผ่าน Stepper 5 ขั้นตอน</p>
+<h3>1.3 ขอบเขตโครงการ (System Scope - MVP Version)</h3>
+<p>ระบบแบ่งออกเป็น <strong>2 บทบาทหลัก (2 Main Actors)</strong>:</p>
+<ul>
+  <li><strong>Customer (ลูกค้า):</strong> ค้นหา กรอง เปรียบเทียบสินค้า, จัดสเปคคอมพิวเตอร์ (PC Builder 7 หมวด), คำนวณกำลังไฟ, สั่งซื้อสินค้าพร้อมแนบสลิป, และติดตามสถานะพัสดุ</li>
+  <li><strong>Staff / Admin (ผู้ดูแลระบบ):</strong> ล็อกอินแอดมิน (RBAC Guard), จัดการสินค้า (Product CRUD), ตรวจสอบและอนุมัติสลิปโอนเงิน (พร้อมระบบคืนสต็อก), จัดการเลขพัสดุ Tracking และดู Dashboard รายงานยอดขาย</li>
+</ul>
+<h3>1.4 การบริหารจัดการความเสี่ยง (Risk Management)</h3>
+<ul>
+  <li><strong>ความเสี่ยงข้อมูลซับซ้อน:</strong> ทำ Caching เงื่อนไขเทคนิคไว้ที่ Client LocalStorage</li>
+  <li><strong>ความเสี่ยงไฟล์อันตราย:</strong> ทำ Mime-type Validation และ Client Compression รูปสลิปเป็น WebP $<100	ext{KB}$</li>
+</ul>
+<hr/>
+<h2>บทที่ 2: ขั้นตอนที่ 2 - Analysis (การวิเคราะห์ระบบ)</h2>
+<h3>2.1 วิเคราะห์กลุ่มผู้ใช้งานจำลอง (User Persona Analysis)</h3>
+<ul>
+  <li><strong>Persona 1 (Customer):</strong> คุณสมชาย — Gamers / PC Builder Enthusiast ต้องการจัดสเปคคอมที่มั่นใจว่าอุปกรณ์รองรับกันและได้รับของชัวร์</li>
+  <li><strong>Persona 2 (Staff / Admin):</strong> คุณสมศักดิ์ — Operations & Store Manager ต้องการตรวจสอบสลิปอย่างรวดเร็ว อนุมัติออเดอร์ และดูรายงานยอดขาย</li>
+</ul>
+<h3>2.2 ข้อกำหนดความต้องการของระบบ (System Requirements)</h3>
+<ul>
+  <li><strong>Functional Requirements (FR):</strong> SYS-01..04 (Auth/JWT), C-01..12 (Customer Features), A-01..06 (Admin Features)</li>
+  <li><strong>Non-Functional Requirements (NFR):</strong> Response Time $< 500	ext{ms}$, Password Hashing (<code>bcrypt</code>), JWT Auth, Responsive Design 320px-4K, Dark Mode Theme</li>
+</ul>
+<h3>2.3 แผนภาพ Use Case Diagram</h3>
+<p>แสดงสิทธิ์การใช้งานแยกตามสิทธิ์ระหว่าง Customer (สมัครสมาชิก, จัดสเปค, สั่งซื้อ, แนบสลิป, ติดตามพัสดุ) และ Admin (จัดการคลังสินค้า, อนุมัติสลิป, ใส่เลข Tracking, ดู Dashboard)</p>
+<h3>2.4 แผนภาพ Class Diagram</h3>
+<p>แสดงคลาสหลัก <code>User</code>, <code>Customer</code>, <code>Admin</code>, <code>Product</code>, <code>CartItem</code>, <code>Order</code>, <code>OrderLog</code>, <code>Review</code> และความสัมพันธ์ระหว่าง Entity</p>
+<hr/>
+<h2>บทที่ 3: ขั้นตอนที่ 3 - Design (การออกแบบระบบ)</h2>
+<h3>3.1 สถาปัตยกรรมระบบเชิงเทคนิค (3-Tier Architecture)</h3>
+<ul>
+  <li><strong>Client Layer:</strong> React.js SPA, TailwindCSS, LocalStorage Persistence (Vercel Host)</li>
+  <li><strong>Business Logic Layer:</strong> Node.js / Express REST API Server, JWT Middleware, Compatibility Engine (Render Host)</li>
+  <li><strong>Database Layer:</strong> Supabase PostgreSQL Cloud / JSON Schema Data Store</li>
+</ul>
+<h3>3.2 แผนภาพลำดับขั้นตอน (Sequence Diagrams)</h3>
+<ul>
+  <li><strong>Sequence Diagram 3.1:</strong> PC Builder & Compatibility Check Sequence Flow</li>
+  <li><strong>Sequence Diagram 3.2:</strong> Checkout, Slip Upload & Admin Verification Sequence Flow</li>
+</ul>
+<h3>3.3 การออกแบบส่วนติดต่อผู้ใช้ (UI Wireframes & Prototype)</h3>
+<p>โครงสร้าง 5 หน้าจอหลัก: Catalog Page, PC Builder (Bento Grid Layout), Product Compare Table, Checkout with Slip Drag & Drop Area, และ Order Tracking Timeline</p>
+<h3>3.4 การออกแบบฐานข้อมูล (Database Design & Data Dictionary)</h3>
+<p>ตารางข้อมูลหลัก 7 ตาราง: <code>users</code>, <code>products</code>, <code>orders</code>, <code>order_items</code>, <code>reviews</code>, <code>wishlist_items</code>, <code>order_logs</code></p>
+<hr/>
+<h2>บทที่ 4: ขั้นตอนที่ 4 - Development (การพัฒนาระบบ)</h2>
+<h3>4.1 เทคโนโลยีที่ใช้ในการพัฒนา (Tech Stack & Libraries)</h3>
+<ul>
+  <li><strong>Frontend:</strong> React + Vite, TailwindCSS, Lucide Icons, LocalStorage</li>
+  <li><strong>Backend:</strong> Node.js, Express.js, TypeScript, JWT, bcrypt</li>
+  <li><strong>Database & Storage:</strong> Supabase PostgreSQL Cloud, Supabase Storage, Client Canvas WebP Compression</li>
+</ul>
+<h3>4.2 อัลกอริทึมหลักของระบบ (Core Engines)</h3>
+<ul>
+  <li><strong>Compatibility Engine:</strong> เปรียบเทียบ <code>CPU.socket === Mainboard.socket</code>, <code>Mainboard.size <= Case.max_mb_size</code>, <code>Mainboard.ram_type === RAM.type</code></li>
+  <li><strong>Wattage Calculator Engine:</strong> คำนวณ TDP รวม $Total TDP = CPU.tdp + GPU.tdp$, แนะนำ PSU ขนาด $PSU \ge Total TDP 	imes 1.2$</li>
+</ul>
+<hr/>
+<h2>บทที่ 5: ขั้นตอนที่ 5 - Testing (การทดสอบระบบและ UAT)</h2>
+<h3>5.1 รายงานผลการทดสอบ User Acceptance Testing (UAT Report)</h3>
+<p>ดำเนินการทดสอบรวมทั้งสิ้น <strong>35 ชุดการทดสอบ</strong> ( Pass Rate <strong>100%</strong> ) บนสภาพแวดล้อมใช้งานจริง <a href="https://comhub-frontend.vercel.app" target="_blank">https://comhub-frontend.vercel.app</a></p>
+<h3>5.2 ตารางสรุปผลการทดสอบแยกตามหมวดหมู่</h3>
+<p>1. <strong>Customer Persona Functional (12 ชุด):</strong> ผ่าน 100%</p>
+<p>2. <strong>Staff / Admin Persona Functional (6 ชุด):</strong> ผ่าน 100%</p>
+<p>3. <strong>Security & Vulnerability Tests (8 ชุด):</strong> ผ่าน 100% (ป้องกัน File Upload, DoS Bomb, Price Tampering, Direct Admin Access, XSS, Race Condition, JWT Invalid, Sensitive Data Exposure)</p>
+<p>4. <strong>Data Validation & Boundary Edge Cases (5 ชุด):</strong> ผ่าน 100%</p>
+<p>5. <strong>UI/UX & Performance Under Load (4 ชุด):</strong> ผ่าน 100%</p>
+<hr/>
+<h2>บทที่ 6: ขั้นตอนที่ 6 - Deployment (การติดตั้งและเผยแพร่)</h2>
+<h3>6.1 สภาพแวดล้อมในการติดตั้งระบบ (Deployment Environment)</h3>
+<ul>
+  <li><strong>Frontend Hosting:</strong> Vercel Static Web Hosting (Production Deployment)</li>
+  <li><strong>Backend API Hosting:</strong> Render Cloud Platform / Vercel Serverless Functions</li>
+  <li><strong>Database Hosting:</strong> Supabase Cloud Infrastructure (Transaction Pooler Port 6543)</li>
+</ul>
+<h3>6.2 ลิงก์ระบบใช้งานจริง</h3>
+<ul>
+  <li><strong>Website URL:</strong> <a href="https://comhub-frontend.vercel.app" target="_blank">https://comhub-frontend.vercel.app</a></li>
+  <li><strong>GitHub Repository:</strong> <a href="https://github.com/Tnk2209/ComHub-Csi204" target="_blank">https://github.com/Tnk2209/ComHub-Csi204</a></li>
+</ul>
+<hr/>
+<h2>บทที่ 7: ขั้นตอนที่ 7 - Maintenance (การบำรุงรักษาและพัฒนาต่อยอด)</h2>
+<h3>7.1 บันทึกการแก้ไขปัญหา (Issue Tracking Log)</h3>
+<ul>
+  <li><strong>ISSUE-01:</strong> แก้ไขปัญหาระบบต่อ DB บน Render (เปลี่ยนใช้ Supabase Transaction Pooler Port 6543 + SSL)</li>
+  <li><strong>ISSUE-02:</strong> แก้ไขปัญหา Slash ท้าย URL ใน <code>apiClient.js</code></li>
+  <li><strong>ISSUE-03:</strong> แก้ไขปัญหา Refresh หน้าเว็บแล้วขึ้น 404 บน Vercel (เพิ่ม <code>vercel.json</code> rewrite rule)</li>
+</ul>
+<h3>7.2 แนวทางพัฒนาต่อยอดในอนาคต (Future Enhancements)</h3>
+<p>1. เชื่อมต่อระบบ Payment Gateway อัตโนมัติ (Omise / Stripe)</p>
+<p>2. ขยายฐานข้อมูลเป็น PostgreSQL Full Production บน Cloud Cluster</p>
+<p>3. เพิ่มระบบแจ้งเตือนผ่าน LINE Notify เมื่อออเดอร์มีการเปลี่ยนสถานะ</p>
+
+    </div>
+</body>
+</html>
