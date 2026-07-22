@@ -720,11 +720,10 @@ classDiagram
 | Data Dictionary                  | พจนานุกรมข้อมูล **7 ตาราง MVP**                                              | [data-dictionary.md](./markdown/data-dictionary.md)     |
 | Database Schema (SQL DDL)        | SQL DDL Schema + Sample Queries                                                                   | [database-schema.md](./markdown/database-schema.md)     |
 | Project Structure                | โครงสร้างโฟลเดอร์ Monorepo (Frontend + Backend)                                | [project-structure.md](./markdown/project-structure.md) |
-| Frontend Pages                   | สรุปหน้าจอ Frontend (Customer + Admin)                                            | [frontend-pages.md](./markdown/frontend-pages.md)       |
 | User Persona                     | วิเคราะห์กลุ่มผู้ใช้จำลอง 4 Personas (3 Customer + 1 Admin)                    | [user-persona.md](./markdown/user-persona.md)           |
 | UML Diagrams                     | แผนภาพ UML (Use Case + Class) — แสดง inline พร้อม Source `.mermaid`             | [UML-Diagrams.md](./markdown/UML-Diagrams.md)           |
 | Testing (UAT)                    | แผนและเช็กลิสต์การทดสอบระบบด้วยมือ (Manual Testing Checklist) | [testing-uat.md](./markdown/testing-uat.md)             |
-| PRD                              | Product Requirement Document (User Stories, Missing Features, NFR)                 | [prd.md](./markdown/prd.md)                             |
+| PRD                              | Product Requirement Document (User Stories, Missing 
 
 ---
 
