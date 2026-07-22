@@ -28,6 +28,7 @@
 | 📂 Repository URL                                           | https://github.com/Tnk2209/ComHub-Csi204 |
 | 🌐 GitHub Pages (Live Document)                             | https://tnk2209.github.io/ComHub-Csi204/ |
 | 📄 เอกสารข้อกำหนดระบบเชิงลึก (SRS) | [SRS.md](./SRS.md)                        |
+| 🧪 เอกสารรายงานการทดสอบ UAT (35 Cases)                      | [docs/UAT_REPORT_TEMPLATE.md](./docs/UAT_REPORT_TEMPLATE.md) |
 
 ---
 
@@ -703,6 +704,25 @@ classDiagram
     Admin "1" --> "*" User : manages_rbac
 ```
 
+
+---
+
+## 🧪 ผลการทดสอบระบบ (User Acceptance Testing - UAT Report)
+
+โครงการ **ComHub** ได้ผ่านการทดสอบระบบแบบครอบคลุมทั้ง 5 มิติ รวมทั้งหมด **35 รายการทดสอบ (Pass Rate 100%)** บนสภาพแวดล้อม Production ([comhub-frontend.vercel.app](https://comhub-frontend.vercel.app)) ตามมาตรฐานวิชา **CSI204 — Software Engineering**
+
+### 📊 ตารางสรุปผลการทดสอบ (Overall UAT Metrics)
+
+| หมวดการทดสอบ (Test Category) | จำนวนเคส | ผลการทดสอบ (Pass/Fail) | รายละเอียดและข้อเน้นย้ำสำคัญ |
+| :--- | :---: | :---: | :--- |
+| **1. ลูกค้า (Customer Persona)** | 12 เคส | `Pass 100%` | ทดสอบครบ 12 ฟังก์ชันหลัก (Register, Login, PC Builder, Compatibility, Wattage, Order Tracking ฯลฯ) |
+| **2. ผู้ดูแลระบบ (Admin Persona)** | 6 เคส | `Pass 100%` | ตรวจสอบสิทธิ์ RBAC, CRUD สินค้า, อนุมัติสลิปโอนเงิน และ Dashboard รายงานยอดขาย |
+| **3. ความปลอดภัย (Security & Vulnerabilities)** | 8 เคส | `Pass 100%` | ป้องกัน File Upload Mime-Type (`shell.php`), Price Tampering, XSS Escaping, Atomic DB Lock และ JWT Signature |
+| **4. ขอบเขตข้อมูล (Data & Edge Cases)** | 5 เคส | `Pass 100%` | ทดสอบ SQL/JSON Injection, ตะกร้าว่างเปล่า, สั่งสินค้าเกินสต็อก และ Warning เมื่อจัดสเปคไม่ครบ |
+| **5. ประสิทธิภาพ (UI/UX & Performance)** | 4 เคส | `Pass 100%` | รองรับ Mobile 320px, Slow 3G Skeleton Loader, LocalStorage Fallback และ Refresh ($F5$) ดึงสเปคคืน |
+| **สรุปผลรวม (Total)** | **35 เคส** | **`Pass 100%`** | **ระบบมีความสมบูรณ์ เสถียรภาพสูง และพร้อมใช้งานบน Production** |
+
+> 📄 **ดูรายละเอียดผลการทดสอบรายข้อแบบฉบับเต็มได้ที่:** [docs/UAT_REPORT_TEMPLATE.md](./docs/UAT_REPORT_TEMPLATE.md) และ [markdown/testing-uat.md](./markdown/testing-uat.md)
 
 ---
 

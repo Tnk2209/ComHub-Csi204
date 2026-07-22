@@ -22,20 +22,25 @@ export function CartProvider({ children }) {
   const addItem = useCallback((product, quantity = 1) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.product_id === product.id);
+      const stockLimit = product.stock_quantity ?? product.stock ?? existing?.stock_quantity ?? 999;
       let next;
       if (existing) {
+        const newQty = Math.min(existing.quantity + quantity, stockLimit);
         next = prev.map((i) =>
           i.product_id === product.id
-            ? { ...i, quantity: i.quantity + quantity }
+            ? { ...i, quantity: newQty, stock_quantity: stockLimit, brand: product.brand || i.brand }
             : i
         );
       } else {
+        const newQty = Math.min(quantity, stockLimit);
         next = [...prev, {
           product_id: product.id,
           name: product.name,
           price: Number(product.price),
           image_url: product.image_url,
-          quantity,
+          brand: product.brand,
+          stock_quantity: stockLimit,
+          quantity: newQty,
         }];
       }
       saveCart(next);
@@ -51,11 +56,15 @@ export function CartProvider({ children }) {
     });
   }, []);
 
-  const updateQuantity = useCallback((productId, quantity) => {
+  const updateQuantity = useCallback((productId, quantity, maxStock) => {
     if (quantity < 1) return;
     setItems((prev) => {
+      const targetItem = prev.find((i) => i.product_id === productId);
+      const limit = maxStock ?? targetItem?.stock_quantity ?? targetItem?.stock ?? 999;
+      const validQty = Math.min(quantity, limit);
+
       const next = prev.map((i) =>
-        i.product_id === productId ? { ...i, quantity } : i
+        i.product_id === productId ? { ...i, quantity: validQty, stock_quantity: limit } : i
       );
       saveCart(next);
       return next;

@@ -459,7 +459,7 @@ function Catalog({ onNavigate }) {
                         <div className="flex gap-2">
                           <button
                             onClick={() => {
-                              addItem({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url });
+                              addItem({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url, brand: product.brand, stock_quantity: product.stock_quantity });
                               onNavigate && onNavigate('cart');
                             }}
                             disabled={product.stock_quantity === 0}
@@ -471,7 +471,7 @@ function Catalog({ onNavigate }) {
                           </button>
                           <button
                             onClick={() => {
-                              addItem({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url });
+                              addItem({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url, brand: product.brand, stock_quantity: product.stock_quantity });
                               Swal.fire({ icon: 'success', title: t('catalog.added_to_cart'), timer: 1500, showConfirmButton: false });
                             }}
                             disabled={product.stock_quantity === 0}

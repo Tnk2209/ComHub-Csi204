@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { ArrowLeft, ShoppingCart, Trash2, Upload, CheckCircle, MapPin, CreditCard, ArrowRight, ShieldCheck } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 import * as orderService from '../../services/orderService';
+import * as productService from '../../services/productService';
 import { compressImage } from '../../utils/imageCompressor';
 
 function CartCheckout({ onNavigate }) {
@@ -15,6 +16,34 @@ function CartCheckout({ onNavigate }) {
 
   // Selected item IDs in cart
   const [selectedIds, setSelectedIds] = useState([]);
+
+  // Stock Map to hold real-time stock quantities for cart items
+  const [stockMap, setStockMap] = useState({});
+
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      productService.list({ limit: 100 })
+        .then((res) => {
+          const products = res?.data || res || [];
+          if (Array.isArray(products)) {
+            const map = {};
+            products.forEach((p) => {
+              map[p.id] = p.stock_quantity ?? p.stock ?? 0;
+            });
+            setStockMap(map);
+
+            // Auto clamp quantity if cart item exceeds real stock
+            cartItems.forEach((item) => {
+              const realStock = map[item.product_id];
+              if (realStock !== undefined && item.quantity > realStock && realStock > 0) {
+                updateQuantity(item.product_id, realStock, realStock);
+              }
+            });
+          }
+        })
+        .catch(() => {});
+    }
+  }, [cartItems.length]);
 
   // Auto select all items when cart items change
   useEffect(() => {
@@ -226,6 +255,10 @@ function CartCheckout({ onNavigate }) {
                   <div className="divide-y divide-app-border/30">
                     {cartItems.map((item) => {
                       const isSelected = selectedIds.includes(item.product_id);
+                      const maxStock = stockMap[item.product_id] ?? item.stock_quantity ?? item.stock ?? 999;
+                      const isMinReached = item.quantity <= 1;
+                      const isMaxReached = item.quantity >= maxStock;
+
                       return (
                         <div
                           key={item.product_id}
@@ -251,9 +284,14 @@ function CartCheckout({ onNavigate }) {
                               />
                               <div className="min-w-0 flex-1">
                                 <h3 className="font-semibold text-sm sm:text-base text-app-text truncate">{item.name}</h3>
-                                {item.brand && (
-                                  <span className="text-[11px] font-bold text-blue uppercase tracking-wider block mt-0.5">{item.brand}</span>
-                                )}
+                                <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                                  {item.brand && (
+                                    <span className="text-[11px] font-bold text-blue uppercase tracking-wider">{item.brand}</span>
+                                  )}
+                                  <span className="text-xs text-app-text-muted font-medium">
+                                    • {t('cart.stock_available', 'มีในสต็อก')}: <span className="font-semibold text-emerald-600 dark:text-emerald-400 font-mono">{maxStock}</span> {t('cart.items_unit', 'ชิ้น')}
+                                  </span>
+                                </div>
                               </div>
                             </div>
 
@@ -266,17 +304,47 @@ function CartCheckout({ onNavigate }) {
                             <div className="md:col-span-2 flex items-center justify-start md:justify-center">
                               <div className="flex items-center gap-2 bg-app-bg rounded-lg px-3 py-1.5 border border-app-border/40 shadow-xs">
                                 <button
-                                  onClick={() => updateQuantity(item.product_id, item.quantity - 1)}
-                                  className="text-app-text hover:text-blue font-bold px-1 transition-colors cursor-pointer"
+                                  type="button"
+                                  disabled={isMinReached}
+                                  onClick={() => {
+                                    if (!isMinReached) {
+                                      updateQuantity(item.product_id, item.quantity - 1, maxStock);
+                                    }
+                                  }}
+                                  className={`font-bold px-1.5 py-0.5 rounded transition-colors ${
+                                    isMinReached
+                                      ? 'text-app-text-muted/40 cursor-not-allowed'
+                                      : 'text-app-text hover:text-blue cursor-pointer'
+                                  }`}
+                                  title={isMinReached ? t('cart.min_qty_reached', 'จำนวนขั้นต่ำคือ 1 ชิ้น') : ''}
                                 >
                                   −
                                 </button>
-                                <span className="text-app-text font-semibold min-w-[1.5rem] text-center text-sm font-mono">
+                                <span className="text-app-text font-semibold min-w-[1.75rem] text-center text-sm font-mono">
                                   {item.quantity}
                                 </span>
                                 <button
-                                  onClick={() => updateQuantity(item.product_id, item.quantity + 1)}
-                                  className="text-app-text hover:text-blue font-bold px-1 transition-colors cursor-pointer"
+                                  type="button"
+                                  disabled={isMaxReached}
+                                  onClick={() => {
+                                    if (!isMaxReached) {
+                                      updateQuantity(item.product_id, item.quantity + 1, maxStock);
+                                    } else {
+                                      Swal.fire({
+                                        icon: 'warning',
+                                        title: t('cart.max_stock_reached_title', 'เกินจำนวนสินค้าในสต็อก'),
+                                        text: t('cart.max_stock_reached_desc', `สินค้าชิ้นนี้มีในสต็อกทั้งหมด ${maxStock} ชิ้น ไม่สามารถสั่งซื้อเกินจำนวนที่มีอยู่จริงได้`),
+                                        confirmButtonColor: '#0284c7',
+                                        confirmButtonText: t('cart.ok', 'ตกลง')
+                                      });
+                                    }
+                                  }}
+                                  className={`font-bold px-1.5 py-0.5 rounded transition-colors ${
+                                    isMaxReached
+                                      ? 'text-app-text-muted/40 cursor-not-allowed opacity-50'
+                                      : 'text-app-text hover:text-blue cursor-pointer'
+                                  }`}
+                                  title={isMaxReached ? t('cart.max_qty_reached', `ไม่สามารถสั่งซื้อเกินจำนวนสต็อกที่มีอยู่จริง (${maxStock} ชิ้น)`) : ''}
                                 >
                                   +
                                 </button>

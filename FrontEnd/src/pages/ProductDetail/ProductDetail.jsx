@@ -220,7 +220,7 @@ function ProductDetail({ onNavigate, productId: propProductId }) {
 
   const handleAddToCart = () => {
     if (product && product.stock_quantity > 0) {
-      addItem({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url }, quantity);
+      addItem({ id: product.id, name: product.name, price: Number(product.price), image_url: product.image_url, brand: product.brand, stock_quantity: product.stock_quantity }, quantity);
       const Toast = Swal.mixin({
         toast: true,
         position: 'bottom-end',
